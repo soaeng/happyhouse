@@ -94,6 +94,7 @@ export default new Vuex.Store({
       busStopList: [],
       busStopList: [],
       showMap: false,
+      
     },
   },
    // state 상태를 변경하는 유일한 방법

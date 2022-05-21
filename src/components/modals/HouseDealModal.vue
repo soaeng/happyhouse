@@ -179,9 +179,22 @@ export default {
             //지도 객체를 등록합니다.
             //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
             this.map = new kakao.maps.Map(container, options);
-            
             //지도의 마우스 휠, 모바일 터치를 이용한 확대, 축소 기능을 막는다.
 	        this.map.setZoomable(false);
+
+
+            var customOverlay = new kakao.maps.CustomOverlay({
+                position: this.center,
+                content: `<div class="pt-4"><span class="badge bg-primary rounded-pill mt-2">아파트 위치</span></div>`
+	        });
+
+            var marker = new kakao.maps.Marker({  
+                map: this.map, 
+                position: this.center,
+                image: new kakao.maps.MarkerImage("assets/images/markers/marker_house.png", new kakao.maps.Size(24, 35))
+	        });
+
+            customOverlay.setMap(this.map);
         },
         getCenter(){
             this.center = new kakao.maps.LatLng(this.$store.state.house.lat, this.$store.state.house.lng)
@@ -190,7 +203,6 @@ export default {
             this.map.panTo(this.center);
         },
         setControl(){
-            
             if(!this.loadedMap){
                 setTimeout(() => {
                     
@@ -204,7 +216,6 @@ export default {
                     this.loadedMap = true;
                 }, 200);
             }
-
         },
         displayMarker(markerPositions) {
             if (this.markers.length > 0) {
