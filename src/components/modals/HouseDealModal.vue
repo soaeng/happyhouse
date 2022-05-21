@@ -53,11 +53,11 @@
                     <div class="house-map w-50">
                         <div class="map-box w-100">
                             <div class="btn-box d-flex justify-content-between mb-2 mt-4">
-                                <button class="btn rounded-pill btn-outline-primary" @click="testMap()">아파트</button>
+                                <button class="btn rounded-pill btn-outline-primary" @click="setCenter" @mouseup="setBlur">아파트</button>
                                 <div>
-                                    <button class="btn rounded-pill btn-outline-success">학교</button>
-                                    <button class="btn rounded-pill btn-outline-danger">카페</button>
-                                    <button class="btn rounded-pill btn-outline-info">버스정류장</button>
+                                    <button class="btn rounded-pill btn-outline-success" @click="btnToggle">학교</button>
+                                    <button class="btn rounded-pill btn-outline-danger" @click="btnToggle">카페</button>
+                                    <button class="btn rounded-pill btn-outline-warning" @click="btnToggle">버스정류장</button>
                                 </div>
                             </div>
                             <div id="map" style="width: 100%; height: 500px; background-color: beige;"></div>
@@ -67,8 +67,8 @@
 
 <!-- 상권 정보 ....... .. 기타 정보 들어갈 곳 -->
 
-                <div class="bg-danger">
-                    <ul class="nav nav-tabs" role="tablist">
+                <div>
+                    <ul class="nav nav-tabs mb-4" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#school" role="tab" aria-controls="school" aria-selected="true">학군정보</a>
                         </li>
@@ -78,20 +78,28 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="school" role="tabpanel" aria-labelledby="school-tab">
-                            <div>
-                                <h5 v-if="schoolList.length > 0"><i class="bi bi-pencil-fill"></i> 학교</h5>
+                            <div v-if="schoolList.length > 0">
                                 <ul v-for="(school, index) in schoolList" :key="index">
                                     <li>
-                                        {{school.name}} | {{school.distance}}
+                                        <span v-if="school.grade == '초등학교'" class="badge bg-warning">초등학교</span>
+                                        <span v-if="school.grade == '중학교'" class="badge bg-success">중학교</span>
+                                        <span v-if="school.grade == '고등학교'" class="badge bg-danger">고등학교</span>
+                                        {{school.name}} ({{school.address}}) <span class="text-gray-500" style="margin-left: .5rem; font-size: 14px;">{{Math.round(school.distance)}}m</span>
                                     </li>
                                 </ul>
-                            </div><!-- end of .surrounding-body-->
+                            </div>
+                            <div class="w-100 pt-5 pb-5 text-center" v-else><p>조회된 데이터가 없습니다.</p></div>
                         </div>
                         <div class="tab-pane fade" id="transport" role="tabpanel" aria-labelledby="transport-tab">
-                            <div class="surrounding-body">
-                                <h5 id="bus-title"></h5>
-                                <ul id="bus-list"></ul>
-                            </div><!-- end of .surrounding-body-->
+                            <div v-if="schoolList.length > 0">
+                                <h5 class="mb-3">버스</h5>
+                                <ul v-for="(busStop, index) in busStopList" :key="index">
+                                    <li>
+                                        {{busStop.name}} <span class="text-gray-500" style="margin-left: .5rem; font-size: 14px;">{{Math.round(busStop.distance)}}m</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="w-100 pt-5 pb-5 text-center" v-else><p>조회된 데이터가 없습니다.</p></div>
                         </div>
                     </div>
                 </div><!-- end of .surrounding -->
@@ -110,7 +118,10 @@ export default {
     data() {
         return {
             map: null,
-            center: [this.$store.state.house.lat, this.$store.state.house.lng],
+            center: null,
+            markerPositions: [],
+            markers: [],
+            loadedMap: false,
         };
     },
 
@@ -127,13 +138,19 @@ export default {
         schoolList(){
             return this.$store.getters.getSchoolList;
         },
+        busStopList(){
+            return this.$store.getters.getBusStopList;
+        },
     },
 
     watch:{
         showMap(value){
-            console.log("isShowing")
             if(value) setTimeout(() => {this.initMap()}, 200);
-            this.getSchoolList();
+            if(!this.loadedMap){
+                this.getSchoolList();
+                this.getBusStopList();
+                this.setControl();
+            }
         },
     },
 
@@ -153,17 +170,41 @@ export default {
     methods: {
         initMap() {
             const container = document.getElementById("map");
+            this.getCenter();
             const options = {
-                center: new kakao.maps.LatLng(this.$store.state.house.lat, this.$store.state.house.lng),
+                center: this.center,
                 level: 4,
             };
 
             //지도 객체를 등록합니다.
             //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
             this.map = new kakao.maps.Map(container, options);
+            
+            //지도의 마우스 휠, 모바일 터치를 이용한 확대, 축소 기능을 막는다.
+	        this.map.setZoomable(false);
         },
-        testMap(){
-            this.map.setCenter(this.center);
+        getCenter(){
+            this.center = new kakao.maps.LatLng(this.$store.state.house.lat, this.$store.state.house.lng)
+        },
+        setCenter(){
+            this.map.panTo(this.center);
+        },
+        setControl(){
+            
+            if(!this.loadedMap){
+                setTimeout(() => {
+                    
+                    //일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+                    var mapTypeControl = new kakao.maps.MapTypeControl();
+                    //지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+                    var zoomControl = new kakao.maps.ZoomControl();
+
+                    this.map.addControl(mapTypeControl);
+                    this.map.addControl(zoomControl);
+                    this.loadedMap = true;
+                }, 200);
+            }
+
         },
         displayMarker(markerPositions) {
             if (this.markers.length > 0) {
@@ -213,9 +254,18 @@ export default {
         },
         
         getSchoolList(){
-            console.log("getSchoolList!!!");
             this.$store.dispatch("schoolList");
-            console.log(this.schoolList);
+        },
+        
+        getBusStopList(){
+            this.$store.dispatch("busStopList");
+        },
+        btnToggle(e){
+            e.target.classList.toggle("active");
+            this.setBlur(e);
+        },
+        setBlur(e){
+            e.target.blur();
         }
     },
     
@@ -230,10 +280,10 @@ export default {
     .scroll-wrapper{height: 500px; overflow-y: scroll;}
     .th-wrapper{overflow-y: scroll}
     .th-wrapper::-webkit-scrollbar{width: 7px; height:0}
-    .scroll-wrapper::-webkit-scrollbar{width: 7px;}
-    .scroll-wrapper::-webkit-scrollbar-thumb{background-color: #ccc; border-radius: .5rem;}
-    .scroll-wrapper::-webkit-scrollbar-track{padding-left: 10px;}
-
+    .scroll-wrapper::-webkit-scrollbar, .modal-body::-webkit-scrollbar{width: 8px;}
+    .scroll-wrapper::-webkit-scrollbar-thumb, .modal-body::-webkit-scrollbar-thumb{background-color: #ccc; border-radius: .5rem;}
+    .scroll-wrapper::-webkit-scrollbar-track, .modal-body::-webkit-scrollbar-track{padding-left: 10px;}
+    
     tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
     tr td:first-child, tr th:first-child{width: 14%;}
     tr td:nth-child(2), tr th:nth-child(2){width: 17%;}
@@ -245,4 +295,7 @@ export default {
 
     .btn-box button{font-size:14px;}
     .btn-box div .btn{margin-left: 5px;}
+
+    ul{list-style: none; padding-left: 0;}
+    span.badge{width: 70px; margin-right: 10px;}
 </style>

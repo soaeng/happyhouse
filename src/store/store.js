@@ -91,6 +91,8 @@ export default new Vuex.Store({
 
       // markers position
       schoolList: [],
+      busStopList: [],
+      busStopList: [],
       showMap: false,
     },
   },
@@ -194,7 +196,10 @@ export default new Vuex.Store({
     ///////////////////////////////////////////////////////////////////////// mutations - SURROUNDING
     SET_SCHOOL_LIST(state, list) {
       state.house.schoolList = list;
-    }
+    },
+    SET_BUSSTOP_LIST(state, list) {
+      state.house.busStopList = list;
+    },
   },
 
 
@@ -310,7 +315,25 @@ export default new Vuex.Store({
           if (data.result == "login") {
             router.push("/login");
           } else {
-            context.commit("SET_SCHOOL_LIST", data.list);
+            context.commit("SET_SCHOOL_LIST", data);
+          }
+      } catch (error) {
+          console.error(error);
+      }
+    },
+    async busStopList(context) {
+      let params = { // vuex에서 가져옴
+        lat: this.state.house.lat,
+        lng: this.state.house.lng,
+      }
+      try {
+          let { data } = await http.get("/house/bus", {params});
+          console.log("busStopList data: ")
+          console.log(data);
+          if (data.result == "login") {
+            router.push("/login");
+          } else {
+            context.commit("SET_BUSSTOP_LIST", data);
           }
       } catch (error) {
           console.error(error);
@@ -404,9 +427,6 @@ export default new Vuex.Store({
     getDealList: function (state) {
       return state.house.dealList; // 아파트 거래 목록
     },
-    getSchoolList: function (state) {
-      return state.house.schoolList; // 아파트 거래 목록
-    },
     // pagination
     getHousePageCount: function (state) {
       return Math.ceil(state.house.totalListItemCount / state.house.listRowCount);
@@ -443,5 +463,12 @@ export default new Vuex.Store({
     },
 
 
+    ///////////////////////////////////////////////////////////////////////// getters - SURROUNDING
+    getSchoolList: function (state) {
+      return state.house.schoolList; // 아파트 거래 목록
+    },
+    getBusStopList: function (state) {
+      return state.house.busStopList; // 아파트 거래 목록
+    },
   },
 });
