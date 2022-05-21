@@ -23,12 +23,12 @@
 
                         <li class="sidebar-item has-sub">
                             <a href="#" class='sidebar-link' @click="sidebarToggle">
-                                <i class="bi bi-collection-fill"></i>
+                                <i class="bi bi-bookmark-heart-fill"></i>
                                 <span>즐겨찾기</span>
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <router-link to="/bookmark">관심 지역</router-link>
+                                    <router-link to="/bookmark/area">관심 지역</router-link>
                                 </li>
                                 <li class="submenu-item ">
                                     <a href="#">관심 아파트</a>

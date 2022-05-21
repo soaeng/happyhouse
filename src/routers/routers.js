@@ -4,7 +4,7 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter)
 
 import HouseMain from "@/components/HouseMain.vue";
-import Bookmark from "@/components/Bookmark.vue";
+import BookmarkArea from "@/components/BookmarkArea.vue";
 import store from "@/store/store.js";
 
 export default new VueRouter({
@@ -20,8 +20,11 @@ export default new VueRouter({
     },
     {
       name: 'Bookmark',
-      path: '/bookmark',
-      component: Bookmark,
+      path: '/bookmark/area',
+      component: BookmarkArea,
     },
   ]
 })
+
+
+

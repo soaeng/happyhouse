@@ -65,13 +65,13 @@
                                     </tr>
                                 </thead>
                                 <tbody v-if="houseList.length > 0">
-                                    <tr style="cursor:pointer" v-for="(house, index) in houseList" :key="index" @click="dealList(house.houseNo)">
+                                    <tr style="cursor:pointer" v-for="(house, index) in houseList" :key="index" @click="setHouseNo(house.houseNo)">
                                         <td>{{house.no}}</td>
                                         <td class="text-start">{{house.AptName}}</td>
                                         <td>{{house.address}}</td>
                                         <td>{{house.buildYear}}</td>
                                         <td>{{house.dealAmount}}만 원</td>
-                                        <td>{{house.dealYear}}-{{house.dealMonth | setDate}}-{{house.dealDay | setDate}}</td>
+                                        <td>{{house.dealYear}}-{{house.dealMonth | setDate }}-{{house.dealDay | setDate }}</td>
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import http from "@/common/axios.js";
 
 import Pagination from "./Pagination.vue";
 import houseDealModal from "./modals/HouseDealModal.vue";
@@ -201,27 +200,15 @@ export default {
         },
 
         ///////////////////////////////////////////////////////// methods - DEAL MODAL
-        showHouseDealModal(houseNo) {
-            this.houseDealModal.show();
-        },
-        // detail
-        async dealList(houseNo) {
+        setHouseNo(houseNo) {
             console.log("houseNo: " + houseNo);
-            try {
-                let { data } = await http.get("/house/deal/" + houseNo);
-                console.log(data);
-
-                if (data.result == "login") {
-                    this.doLogout();
-                } else {
-                    let dto = data;
-                    this.$store.commit("SET_HOUSE_DEAL_LIST", dto);
-                    this.houseDealModal.show();
-                }
-            } catch (error) {
-                console.log("HouseDealMainVue: error : ");
-                console.log(error);
-            }
+            this.$store.commit("SET_HOUSE_NO", houseNo);
+            this.houseDealModal.show();
+            this.dealList();
+            this.isShowing = true;
+        },
+        dealList(){
+            this.$store.dispatch("dealList");
         },
     },
 
@@ -254,19 +241,19 @@ export default {
 </script>
 
 <style scoped>
-select{width: 130px; margin-right: 10px;}
-input[type="text"]{width: 250px; margin-right: 10px;}
+    select{width: 130px; margin-right: 10px;}
+    input[type="text"]{width: 250px; margin-right: 10px;}
 
-.list-info{font-size: 14px;}
-.list-info p:first-child{margin-right: 20px;}
-tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-tr td:first-child{width: 8.8%;}
-tr td:nth-child(2){width: 28%;}
-tr td:nth-child(3){width: 27%;}
-tr td:nth-child(4){width: 10%;}
-tr td:nth-child(5){width: 14.2%;}
-tr td:nth-child(6){width: 12%;}
+    .list-info{font-size: 14px;}
+    .list-info p:first-child{margin-right: 20px;}
+    tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+    tr td:first-child{width: 8.8%;}
+    tr td:nth-child(2){width: 28%;}
+    tr td:nth-child(3){width: 27%;}
+    tr td:nth-child(4){width: 10%;}
+    tr td:nth-child(5){width: 14.2%;}
+    tr td:nth-child(6){width: 12%;}
 
-th{border-top: 1px solid #dedede; padding: 1.2rem .5rem;}
-td{font-size: 14px; padding: 1.2rem .5rem;}
+    th{border-top: 1px solid #dedede; padding: 1.2rem .5rem;}
+    td{font-size: 15px; padding: 1.2rem .5rem;}
 </style>

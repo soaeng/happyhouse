@@ -1,122 +1,102 @@
 <template>
-
-<div id="houseDealModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
-        <div class="modal-content house-detail">
-            <div class="modal-title">
-              <div class="d-flex justify-content-end">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-                <div class="house-title">
-                  <p class="d-none" id="house-houseNo"></p>
-                    <h3 class="house-name"></h3>
-                    <div class="house-info d-flex justify-content-between">
-                    <div class="deal-info d-flex">
-                      <p>총 <span id="total-data-detail"></span> 건</p>
+<div id="houseDealModal" class="modal fade w-100" tabindex="-1" @click="$store.commit('SET_HOUSE_SHOW_MAP', false)">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full">
+        <div class="modal-content">
+            <div class="modal-header bg-primary position-relative">
+                <div class="w-100 white">
+                    <div class="d-flex">
+                        <h2 class="mb-4 white">{{ $store.state.house.AptName }} <button class="btn btn-sm rounded-pill btn-light" style="margin-left: 20px;">관심 아파트 등록</button></h2>
                     </div>
-                    <div class="d-none"	>
-                      <p class="house-code"></p>
-                      <p class="house-dong"></p>
+                    <div>
+                        <p class="mb-0"><i class="bi bi-geo-alt-fill"></i>&nbsp;&nbsp;{{ $store.state.house.address }}</p>
+                        <p class="mb-0"><i class="bi bi-calendar2-date"></i>&nbsp;&nbsp;건축년도 : {{ $store.state.house.buildYear }}</p>
                     </div>
-                      <div>
-                          <p>
-                              <i class="fa-solid fa-map-location-dot fa-sm"></i><span class="house-addr"></span>
-                          </p>
-                          <p>건축년도 : <span class="house-buildYear"></span></p>
-                      </div>
-                    </div><!-- end of .house-info -->
-                </div><!-- end of .house-title -->
-            </div><!--  end of .modal-title -->
+                </div>
+                <button @click="$store.commit('SET_HOUSE_SHOW_MAP', false)" type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"><i data-feather="x"></i></button>
+            </div><!-- end of .modal-header -->
             <div class="modal-body">
-                <div class="house-content">
-                    <div class="house-inner">
-                    
-                        <table class="table">
-                            <colgroup>
-                                <col width="60px">
-                                <col width="100px">
-                                <col width="50px">
-                                <col width="155px">
-                                <col width="105px">
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th class="th-no">번호</th>
-                                    <th class="th-area">면적(㎡)</th>
-                                    <th class="th-floor">층</th>
-                                    <th class="th-dealAmount">거래금액</th>
-                                    <th class="th-dealDate">거래일시</th>
-                                </tr>
-                            </thead>
-                        </table>
-                        <div class="deal-list d-flex flex-column justify-content-between">
-                            <table class="table">
-                                <colgroup>
-                                    <col width="60px">
-                                    <col width="100px">
-                                    <col width="50px">
-                                    <col width="155px">
-                                    <col width="105px">
-                                </colgroup>
-                                <tbody id="tbody-dealList">
+                <div class="house-content d-flex mb-4">
+                    <div class="w-50" style="margin-right: 10px;">
+                        <p class="mb-1">총 <span class="text-primary">{{ dealList.length }}</span> 건</p>
+                        <div class="th-wrapper">
+                            <table class="table mb-0 text-center" style="margin-right:7px;">
+                                <thead>
                                     <tr>
-                                        <td class="td-no"></td>
-                                        <td class="td-area"></td>
-                                        <td class="td-floor"></td>
-                                        <td class="td-dealAmount"></td>
-                                        <td class="td-dealDate"></td>
+                                        <th>번호</th>
+                                        <th>면적(㎡)</th>
+                                        <th>층</th>
+                                        <th>거래금액</th>
+                                        <th>거래일시</th>
+                                        <th>관심거래</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="scroll-wrapper"><!-- div for scroll -->
+                            <table class="table text-center mb-0">
+                                <tbody id="tbody-dealList">
+                                    <tr style="cursor:pointer" v-for="(deal, index) in dealList" :key="index">
+                                        <td>{{ deal.no }}</td>
+                                        <td>{{ deal.area }}</td>
+                                        <td>{{ deal.floor }}</td>
+                                        <td>{{ deal.dealAmount }}만 원</td>
+                                        <td>{{ deal.dealYear }}-{{ deal.dealMonth | setDate }}-{{ deal.dealDay | setDate }}</td>
+                                        <td>
+                                            <a><i class="bi bi-star" v-if="!deal.bookmark"></i></a>
+                                            <a><i class="bi bi-star-fill" v-if="deal.bookmark"></i></a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            
-                        </div><!-- end of .deal-list -->
-                    </div><!-- end of .house-inner -->
-                    <div class="house-map">
-                        <iframe id="map-box"></iframe>
+                        </div><!-- end of .scroll-wrapper-->
+                    </div>
+                    <div class="house-map w-50">
+                        <div class="map-box w-100">
+                            <div class="btn-box d-flex justify-content-between mb-2 mt-4">
+                                <button class="btn rounded-pill btn-outline-primary" @click="testMap()">아파트</button>
+                                <div>
+                                    <button class="btn rounded-pill btn-outline-success">학교</button>
+                                    <button class="btn rounded-pill btn-outline-danger">카페</button>
+                                    <button class="btn rounded-pill btn-outline-info">버스정류장</button>
+                                </div>
+                            </div>
+                            <div id="map" style="width: 100%; height: 500px; background-color: beige;"></div>
+                        </div>
                     </div><!-- end of .house-map -->
                 </div><!-- end of .house-content -->
-    
-    <!-- 상권 정보 ....... .. 기타 정보 들어갈 곳 -->
-    
-                <div class="surrounding">
-                    <div class="surrounding-inner">
-                        <div class="surrounding-title">
-                          <ul class="nav nav-tabs" id="surroundingTab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab-info" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true">주변시설</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-transport" data-bs-toggle="tab" data-bs-target="#transport" type="button" role="tab" aria-controls="transport" aria-selected="false">대중교통</button>
-              </li>
-          </ul>
-        </div>
-        <div class="tab-content" id="surroundingTabContent">
-          <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="tab-info">
-              <div class="surrounding-body">
-                                <h5 id="school-title"></h5>
-                                <ul id="school-list"></ul>
+
+<!-- 상권 정보 ....... .. 기타 정보 들어갈 곳 -->
+
+                <div class="bg-danger">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#school" role="tab" aria-controls="school" aria-selected="true">학군정보</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#transport" role="tab" aria-controls="transport" aria-selected="false">대중교통</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="school" role="tabpanel" aria-labelledby="school-tab">
+                            <div>
+                                <h5 v-if="schoolList.length > 0"><i class="bi bi-pencil-fill"></i> 학교</h5>
+                                <ul v-for="(school, index) in schoolList" :key="index">
+                                    <li>
+                                        {{school.name}} | {{school.distance}}
+                                    </li>
+                                </ul>
                             </div><!-- end of .surrounding-body-->
-                            
+                        </div>
+                        <div class="tab-pane fade" id="transport" role="tabpanel" aria-labelledby="transport-tab">
                             <div class="surrounding-body">
-                                <h5 id="cafe-title"></h5>
-                                <ul id="cafe-list"></ul>
-                            </div><!-- end of .surrounding-body-->
-          </div>
-          <div class="tab-pane fade" id="transport" role="tabpanel" aria-labelledby="tab-transport">
-              <div class="surrounding-body">
                                 <h5 id="bus-title"></h5>
                                 <ul id="bus-list"></ul>
                             </div><!-- end of .surrounding-body-->
-          </div>
-        </div>
-                        
-
-                    </div><!-- end of .surrounding-surrounding-inner -->
+                        </div>
+                    </div>
                 </div><!-- end of .surrounding -->
 
-    
             </div><!-- end of .modal-body -->
-
         </div><!-- end of .modal-content -->
     </div><!-- end of .modal-dialog -->
 </div><!-- end of #modal-housedeal-->
@@ -125,24 +105,144 @@
 
 <script>
 export default {
-  name: 'VueCliHouseDetail',
+    name: 'HouseDealModal',
 
-  data() {
-    return {
-      
-    };
-  },
+    data() {
+        return {
+            map: null,
+            center: [this.$store.state.house.lat, this.$store.state.house.lng],
+        };
+    },
 
-  mounted() {
+    computed: {
+        houseNo(){
+            return this.$store.state.house.houseNo;
+        },
+        dealList(){
+            return this.$store.state.house.dealList;
+        },
+        showMap(){
+            return this.$store.state.house.showMap;
+        },
+        schoolList(){
+            return this.$store.getters.getSchoolList;
+        },
+    },
+
+    watch:{
+        showMap(value){
+            console.log("isShowing")
+            if(value) setTimeout(() => {this.initMap()}, 200);
+            this.getSchoolList();
+        },
+    },
+
+    mounted() {
+        if (window.kakao && window.kakao.maps) {
+            this.initMap();
+        } else {
+            const script = document.createElement("script");
+            /* global kakao */
+            script.onload = () => kakao.maps.load(this.initMap);
+            script.src =
+                "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=cb9b2686378a8d564494657ed1378fb9";
+            document.head.appendChild(script);
+        }
+    },
+
+    methods: {
+        initMap() {
+            const container = document.getElementById("map");
+            const options = {
+                center: new kakao.maps.LatLng(this.$store.state.house.lat, this.$store.state.house.lng),
+                level: 4,
+            };
+
+            //지도 객체를 등록합니다.
+            //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
+            this.map = new kakao.maps.Map(container, options);
+        },
+        testMap(){
+            this.map.setCenter(this.center);
+        },
+        displayMarker(markerPositions) {
+            if (this.markers.length > 0) {
+                this.markers.forEach((marker) => marker.setMap(null));
+            }
+
+            const positions = markerPositions.map(
+                (position) => new kakao.maps.LatLng(...position)
+            );
+
+            if (positions.length > 0) {
+                this.markers = positions.map(
+                (position) =>
+                    new kakao.maps.Marker({
+                    map: this.map,
+                    position,
+                    })
+                );
+
+                const bounds = positions.reduce(
+                (bounds, latlng) => bounds.extend(latlng),
+                new kakao.maps.LatLngBounds()
+                );
+
+                this.map.setBounds(bounds);
+            }
+        },
+        displayInfoWindow() {
+            if (this.infowindow && this.infowindow.getMap()) {
+                //이미 생성한 인포윈도우가 있기 때문에 지도 중심좌표를 인포윈도우 좌표로 이동시킨다.
+                this.map.setCenter(this.infowindow.getPosition());
+                return;
+            }
+
+            var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                iwPosition = new kakao.maps.LatLng(33.450701, 126.570667), //인포윈도우 표시 위치입니다
+                iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+            this.infowindow = new kakao.maps.InfoWindow({
+                map: this.map, // 인포윈도우가 표시될 지도
+                position: iwPosition,
+                content: iwContent,
+                removable: iwRemoveable,
+            });
+
+            this.map.setCenter(iwPosition);
+        },
+        
+        getSchoolList(){
+            console.log("getSchoolList!!!");
+            this.$store.dispatch("schoolList");
+            console.log(this.schoolList);
+        }
+    },
     
-  },
-
-  methods: {
-    
-  },
+    filters: {
+        setDate: function(date) {return date.length < 2 ? "0" + date : date;}
+    },
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+    button.btn-close{top:20px; right: 20px;}
+    .scroll-wrapper{height: 500px; overflow-y: scroll;}
+    .th-wrapper{overflow-y: scroll}
+    .th-wrapper::-webkit-scrollbar{width: 7px; height:0}
+    .scroll-wrapper::-webkit-scrollbar{width: 7px;}
+    .scroll-wrapper::-webkit-scrollbar-thumb{background-color: #ccc; border-radius: .5rem;}
+    .scroll-wrapper::-webkit-scrollbar-track{padding-left: 10px;}
 
+    tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+    tr td:first-child, tr th:first-child{width: 14%;}
+    tr td:nth-child(2), tr th:nth-child(2){width: 17%;}
+    tr td:nth-child(3), tr th:nth-child(3){width: 10%;}
+    tr td:nth-child(4), tr th:nth-child(4){width: 23%;}
+    tr td:nth-child(5), tr th:nth-child(5){width: 17%;}
+    tr td:nth-child(6), tr th:nth-child(6){width: 15%;}
+
+
+    .btn-box button{font-size:14px;}
+    .btn-box div .btn{margin-left: 5px;}
 </style>

@@ -14,10 +14,12 @@ url("./fonts/bootstrap-icons.woff2?4601c71fb26c9277391ec80789bfde9c") format("wo
   text-transform: none;
   line-height: 1;
   vertical-align: text-top;
+  margin-top: .1rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.bi-mortarboard-fill::before{ content: "\F6FD";}
 .bi-alarm-fill::before { content: "\f101"; }
 .bi-alarm::before { content: "\f102"; }
 .bi-align-bottom::before { content: "\f103"; }

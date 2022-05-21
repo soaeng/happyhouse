@@ -65,7 +65,7 @@ export default new Vuex.Store({
     ///////////////////////////////////////////////////////////////////////// state - HOUSE
     house: {
       // list
-      list: [],
+      list: [], // 아파트목록
       limit: 10,
       offset: 0,
       type: "init",
@@ -78,17 +78,20 @@ export default new Vuex.Store({
       currentPageIndex: 1,
       totalListItemCount: 0,
 
-      // detail
-      no: 0,
-      AptName: "",
-      dealAmount: "",
-      dealDate: "",
+      // deal
+      dealList: [], // 아파트거래목록
       houseNo: 0,
+      AptName: "",
       address: "",
+      buildYear: "",
+      code: "",
+      dong: "",
       lat: "",
       lng: "",
-      dong: "",
-      code: "",
+
+      // markers position
+      schoolList: [],
+      showMap: false,
     },
   },
    // state 상태를 변경하는 유일한 방법
@@ -168,21 +171,30 @@ export default new Vuex.Store({
       state.house.offset = (pageIndex - 1) * state.house.listRowCount;
       state.house.currentPageIndex = pageIndex;
     },
-    SET_HOUSE_DEAL_LIST(state, payload) {
-      state.house.no = payload.no;
+    SET_HOUSE_DEAL_LIST(state, list) {
+      state.house.dealList = list;
+    },
+    SET_HOUSE_NO(state, houseNo) {
+      state.house.houseNo = houseNo;
+    },
+    SET_HOUSE_DETAIL(state, payload) {
       state.house.AptName = payload.AptName;
-      state.house.dealAmount = payload.dealAmount;
-      state.house.dealYear = payload.dealYear;
-      state.house.dealMonth = payload.dealMonth;
-      state.house.dealDay = payload.dealDay;
-      state.house.buildYear = payload.buildYear;
-      state.house.houseNo = payload.houseNo;
       state.house.address = payload.address;
+      state.house.buildYear = payload.buildYear;
+      state.house.code = payload.code;
+      state.house.dong = payload.dong;
       state.house.lat = payload.lat;
       state.house.lng = payload.lng;
-      state.house.dong = payload.dong;
-      state.house.bookmark = payload.bookmark;
     },
+    SET_HOUSE_SHOW_MAP(state, value) {
+      state.house.showMap = value;
+    },
+
+
+    ///////////////////////////////////////////////////////////////////////// mutations - SURROUNDING
+    SET_SCHOOL_LIST(state, list) {
+      state.house.schoolList = list;
+    }
   },
 
 
@@ -251,7 +263,6 @@ export default new Vuex.Store({
           dongCode: this.state.house.dongCode,
           keyword: this.state.house.keyword,
       };
-
       try {
           let { data } = await http.get("/house/deal", { params }); // params: params shorthand property, let response 도 제거
           console.log("houseList params: ")
@@ -266,30 +277,50 @@ export default new Vuex.Store({
       } catch (error) {
           console.error(error);
       }
-
     },
-    async houseDealList(context) {
+
+    async dealList(context) {
+      try {
+          let { data } = await http.get("/house/deal/" + this.state.house.houseNo);
+          console.log("dealList data: ")
+          console.log(data);
+          if (data.result == "login") {
+            router.push("/login");
+          } else {
+            context.commit("SET_HOUSE_DEAL_LIST", data.list);
+            context.commit("SET_HOUSE_DETAIL", data.list[0]);
+            context.commit("SET_HOUSE_SHOW_MAP", true);
+          }
+      } catch (error) {
+          console.error(error);
+      }
+    },
+
+    ///////////////////////////////////////////////////////////////////////// actions - SURROUNDING
+    
+    async schoolList(context) {
       let params = { // vuex에서 가져옴
-        houseNo: this.statae.house.houseNo,
-      };
-
+        lat: this.state.house.lat,
+        lng: this.state.house.lng,
+      }
       try {
-          let { data } = await http.get("/house/deal", { params }); // params: params shorthand property, let response 도 제거
-          console.log("houseList params: ")
-          console.log(params)
+          let { data } = await http.get("/house/school", {params});
+          console.log("schoolList data: ")
           console.log(data);
           if (data.result == "login") {
             router.push("/login");
           } else {
-            context.commit("SET_HOUSE_LIST", data.list); // commit으로 요청하면 mutations에서 처리
-            context.commit("SET_HOUSE_TOTAL_LIST_ITEM_COUNT", data.count);
+            context.commit("SET_SCHOOL_LIST", data.list);
           }
       } catch (error) {
           console.error(error);
       }
-
     },
+
+
   },
+
+
     
     
     
@@ -370,14 +401,18 @@ export default new Vuex.Store({
     getHouseList: function (state) {
       return state.house.list; // 아파트 목록
     },
-
+    getDealList: function (state) {
+      return state.house.dealList; // 아파트 거래 목록
+    },
+    getSchoolList: function (state) {
+      return state.house.schoolList; // 아파트 거래 목록
+    },
     // pagination
     getHousePageCount: function (state) {
       return Math.ceil(state.house.totalListItemCount / state.house.listRowCount);
     },
     getHouseStartPageIndex: function (state) {
       if (state.house.currentPageIndex % state.house.pageLinkCount == 0) {
-          //10, 20...맨마지막
           return (state.house.currentPageIndex / state.house.pageLinkCount - 1) * state.house.pageLinkCount + 1;
       } else {
           return Math.floor(state.house.currentPageIndex / state.house.pageLinkCount) * state.house.pageLinkCount + 1;
@@ -386,12 +421,10 @@ export default new Vuex.Store({
     getHouseEndPageIndex: function (state, getters) {
       let ret = 0;
       if (state.house.currentPageIndex % state.house.pageLinkCount == 0) {
-          //10, 20...맨마지막
           ret = (state.house.currentPageIndex / state.house.pageLinkCount - 1) * state.house.pageLinkCount + state.house.pageLinkCount;
       } else {
           ret = Math.floor(state.house.currentPageIndex / state.house.pageLinkCount) * state.house.pageLinkCount + state.house.pageLinkCount;
       }
-      // 위 오류나는 코드를 아래와 같이 비교해서 처리
       return ret > getters.getHousePageCount ? getters.getHousePageCount : ret;
     },
     getHousePrev: function (state) {
