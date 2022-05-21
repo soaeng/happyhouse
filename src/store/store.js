@@ -168,7 +168,7 @@ export default new Vuex.Store({
       state.house.offset = (pageIndex - 1) * state.house.listRowCount;
       state.house.currentPageIndex = pageIndex;
     },
-    SET_HOUSE_DETAIL(state, payload) {
+    SET_HOUSE_DEAL_LIST(state, payload) {
       state.house.no = payload.no;
       state.house.AptName = payload.AptName;
       state.house.dealAmount = payload.dealAmount;
@@ -179,9 +179,9 @@ export default new Vuex.Store({
       state.house.houseNo = payload.houseNo;
       state.house.address = payload.address;
       state.house.lat = payload.lat;
-      state.house.lng = payload.address;
-      state.house.dong = payload.address;
-      state.house.address = payload.address;
+      state.house.lng = payload.lng;
+      state.house.dong = payload.dong;
+      state.house.bookmark = payload.bookmark;
     },
   },
 

@@ -65,7 +65,7 @@
                                     </tr>
                                 </thead>
                                 <tbody v-if="houseList.length > 0">
-                                    <tr style="cursor:pointer" v-for="(house, index) in houseList" :key="index" @click="showHouseDealModal">
+                                    <tr style="cursor:pointer" v-for="(house, index) in houseList" :key="index" @click="dealList(house.houseNo)">
                                         <td>{{house.no}}</td>
                                         <td class="text-start">{{house.AptName}}</td>
                                         <td>{{house.address}}</td>
@@ -94,6 +94,7 @@
 
 <script>
 import http from "@/common/axios.js";
+
 import Pagination from "./Pagination.vue";
 import houseDealModal from "./modals/HouseDealModal.vue";
 
@@ -191,15 +192,36 @@ export default {
             this.$store.state.house.currentPageIndex = 1;
             this.$store.state.house.offset = 0;
         },
-              // pagination (기존은 모두 props로 처리했지만 이제는 store에서 getters에서 처리)
+        // pagination (기존은 모두 props로 처리했지만 이제는 store에서 getters에서 처리)
         movePage(pageIndex) {
             console.log("HouseMainVue : movePage : pageIndex : " + pageIndex);
             this.$store.commit("SET_HOUSE_MOVE_PAGE", pageIndex);
 
             this.getHouseList();
         },
-        showHouseDealModal() {
+
+        ///////////////////////////////////////////////////////// methods - DEAL MODAL
+        showHouseDealModal(houseNo) {
             this.houseDealModal.show();
+        },
+        // detail
+        async dealList(houseNo) {
+            console.log("houseNo: " + houseNo);
+            try {
+                let { data } = await http.get("/house/deal/" + houseNo);
+                console.log(data);
+
+                if (data.result == "login") {
+                    this.doLogout();
+                } else {
+                    let dto = data;
+                    this.$store.commit("SET_HOUSE_DEAL_LIST", dto);
+                    this.houseDealModal.show();
+                }
+            } catch (error) {
+                console.log("HouseDealMainVue: error : ");
+                console.log(error);
+            }
         },
     },
 
