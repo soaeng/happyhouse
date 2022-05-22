@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <section class="section">
+        <section>
             <div class="card">
                 <div class="card-header">
                     <fieldset class="form-group d-flex align-items-center justify-content-center mb-0">
@@ -210,6 +210,8 @@ export default {
         dealList(){
             this.$store.dispatch("dealList");
         },
+
+
     },
 
     watch: {

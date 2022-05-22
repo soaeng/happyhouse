@@ -1,11 +1,12 @@
 <template>
 <div id="houseDealModal" class="modal fade w-100" tabindex="-1" @click="$store.commit('SET_HOUSE_SHOW_MAP', false)">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary position-relative">
                 <div class="w-100 white">
                     <div class="d-flex">
-                        <h2 class="mb-4 white">{{ $store.state.house.AptName }} <button class="btn btn-sm rounded-pill btn-light" style="margin-left: 20px;">관심 아파트 등록</button></h2>
+                        <h2 class="mb-4 white">{{ $store.state.house.AptName }}</h2>
+                        <button @click="setBlur" class="btn white rounded-pill" style="margin-left: 20px;"><i class="bi bi-suit-heart-fill"></i></button> 
                     </div>
                     <div>
                         <p class="mb-0"><i class="bi bi-geo-alt-fill"></i>&nbsp;&nbsp;{{ $store.state.house.address }}</p>
@@ -54,10 +55,13 @@
                         <div class="map-box w-100">
                             <div class="btn-box d-flex justify-content-between mb-2 mt-4">
                                 <button class="btn rounded-pill btn-outline-primary" @click="setCenter" @mouseup="setBlur">아파트</button>
-                                <div>
-                                    <button class="btn rounded-pill btn-outline-success" @click="btnToggle">학교</button>
-                                    <button class="btn rounded-pill btn-outline-danger" @click="btnToggle">카페</button>
-                                    <button class="btn rounded-pill btn-outline-warning" @click="btnToggle">버스정류장</button>
+                                <div id="category">
+                                    <button id="SC4" data-order="0" class="btn rounded-pill btn-outline-success" @click="btnToggle" @mouseup="setCategoryOrder">학교</button>
+                                    <button id="PO3" data-order="1" class="btn rounded-pill btn-outline-dark" @click="btnToggle" @mouseup="setCategoryOrder">공공기관</button>
+                                    <button id="BK9" data-order="2" class="btn rounded-pill btn-outline-danger" @click="btnToggle" @mouseup="setCategoryOrder">은행</button>
+                                    <button id="HP8" data-order="3" class="btn rounded-pill btn-outline-warning" @click="btnToggle" @mouseup="setCategoryOrder">병원</button>
+                                    <button id="CE7" data-order="4" class="btn rounded-pill btn-outline-secondary" @click="btnToggle" @mouseup="setCategoryOrder">카페</button>
+                                    <button id="CS2" data-order="5" class="btn rounded-pill btn-outline-info" @click="btnToggle" @mouseup="setCategoryOrder">편의점</button>
                                 </div>
                             </div>
                             <div id="map" style="width: 100%; height: 500px; background-color: beige;"></div>
@@ -70,10 +74,13 @@
                 <div>
                     <ul class="nav nav-tabs mb-4" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#school" role="tab" aria-controls="school" aria-selected="true">학군정보</a>
+                            <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#school" role="tab" aria-controls="school" aria-selected="false">학군정보</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#transport" role="tab" aria-controls="transport" aria-selected="false">대중교통</a>
+                            <a id="SW8" @click="setCategoryOrder" class="nav-link" data-bs-toggle="tab" data-bs-target="#transport" role="tab" aria-controls="transport" aria-selected="false">대중교통</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#search" role="tab" aria-controls="search" aria-selected="true">검색결과</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -91,11 +98,55 @@
                             <div class="w-100 pt-5 pb-5 text-center" v-else><p>조회된 데이터가 없습니다.</p></div>
                         </div>
                         <div class="tab-pane fade" id="transport" role="tabpanel" aria-labelledby="transport-tab">
+                            <div class="mb-3" v-if="search.results.length > 0">
+                            <h5 class="mb-3">{{search.results[0].category_group_name}}</h5>
+                                <ul v-for="data in search.results" :key="data.id">
+                                    <li>
+                                        <span v-if="data.place_name.split(' ')[1] == '1호선'" class="badge" style="background-color: #0D347F;">1호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '2호선'" class="badge" style="background-color: #3B9F37;">2호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '3호선'" class="badge" style="background-color: #FE5D10;">3호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '4호선'" class="badge" style="background-color: #3165A8;">4호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '5호선'" class="badge" style="background-color: #703E8C;">5호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '6호선'" class="badge" style="background-color: #904D23;">6호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '7호선'" class="badge" style="background-color: #5B692E;">7호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '8호선'" class="badge" style="background-color: #C82364;">8호선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '9호선'" class="badge" style="background-color: #B39627;">9호선</span>
+                                        
+                                        <span v-if="data.place_name.split(' ')[1] == '경강선'" class="badge" style="background-color: #267eff;">경강선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '신분당선'" class="badge" style="background-color: #971F2D;">신분당선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '인천선'" class="badge" style="background-color: #6084b4;">인천선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '경의중앙선'" class="badge" style="background-color: #76B69B; width: 80px;">경의중앙선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '경춘선'" class="badge" style="background-color: #2D9B76;">경춘선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '공항선'" class="badge" style="background-color: #6CA8CE;">공항선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '의정부선'" class="badge" style="background-color: #E78522;">의정부선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '수인분당선'" class="badge" style="background-color: #DBA829; width: 80px;">수인분당선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '에버라인선'" class="badge" style="background-color: #6FB26C; width: 80px;">에버라인선</span>
+                                        <span v-if="data.place_name.split(' ')[1] == '자기부상선'" class="badge" style="background-color: #E9945a; width: 80px;">자기부상선</span>
+                                        {{data.place_name.split(' ')[0]}} ({{data.address_name}})
+                                    </li>
+                                </ul>
+                            </div>
                             <div v-if="schoolList.length > 0">
                                 <h5 class="mb-3">버스</h5>
                                 <ul v-for="(busStop, index) in busStopList" :key="index">
                                     <li>
                                         {{busStop.name}} <span class="text-gray-500" style="margin-left: .5rem; font-size: 14px;">{{Math.round(busStop.distance)}}m</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="w-100 pt-5 pb-5 text-center" v-else><p>조회된 데이터가 없습니다.</p></div>
+                        </div>
+                        <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
+                            <div v-if="search.results.length > 0">
+                                <h5 class="mb-3">{{search.results[0].category_group_name}}</h5>
+                                <ul v-for="data in search.results" :key="data.id">
+                                    <li>
+                                        <span v-if="search.results[0].category_group_name === '학교'">
+                                            <span v-if="data.category_name.split(' > ')[2] == '초등학교'" class="badge bg-warning">초등학교</span>
+                                            <span v-if="data.category_name.split(' > ')[2] == '중학교'" class="badge bg-success">중학교</span>
+                                            <span v-if="data.category_name.split(' > ')[2] == '고등학교'" class="badge bg-danger">고등학교</span>
+                                        </span>
+                                        {{data.place_name}} ({{data.address_name}})
                                     </li>
                                 </ul>
                             </div>
@@ -119,8 +170,16 @@ export default {
         return {
             map: null,
             center: null,
-            markerPositions: [],
+
+            search:{
+                order: '',
+                results: [],
+                currCategory: '',
+                pagination: null,
+            },
             markers: [],
+            infos: [],
+
             loadedMap: false,
         };
     },
@@ -162,7 +221,7 @@ export default {
             /* global kakao */
             script.onload = () => kakao.maps.load(this.initMap);
             script.src =
-                "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=cb9b2686378a8d564494657ed1378fb9";
+                "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=cb9b2686378a8d564494657ed1378fb9&libraries=services";
             document.head.appendChild(script);
         }
     },
@@ -182,25 +241,28 @@ export default {
             //지도의 마우스 휠, 모바일 터치를 이용한 확대, 축소 기능을 막는다.
 	        this.map.setZoomable(false);
 
-
             var customOverlay = new kakao.maps.CustomOverlay({
                 position: this.center,
                 content: `<div class="pt-4"><span class="badge bg-primary rounded-pill mt-2">아파트 위치</span></div>`
 	        });
-
+            
             var marker = new kakao.maps.Marker({  
                 map: this.map, 
                 position: this.center,
-                image: new kakao.maps.MarkerImage("assets/images/markers/marker_house.png", new kakao.maps.Size(24, 35))
+                image: new kakao.maps.MarkerImage("assets/images/markers/marker_primary.png", new kakao.maps.Size(24, 35))
 	        });
 
             customOverlay.setMap(this.map);
+
+            kakao.maps.event.addListener(this.map, 'idle', this.searchPlace);
+            
         },
         getCenter(){
             this.center = new kakao.maps.LatLng(this.$store.state.house.lat, this.$store.state.house.lng)
         },
         setCenter(){
             this.map.panTo(this.center);
+            this.removeMarker();
         },
         setControl(){
             if(!this.loadedMap){
@@ -217,53 +279,77 @@ export default {
                 }, 200);
             }
         },
-        displayMarker(markerPositions) {
-            if (this.markers.length > 0) {
-                this.markers.forEach((marker) => marker.setMap(null));
-            }
-
-            const positions = markerPositions.map(
-                (position) => new kakao.maps.LatLng(...position)
-            );
-
-            if (positions.length > 0) {
-                this.markers = positions.map(
-                (position) =>
-                    new kakao.maps.Marker({
-                    map: this.map,
-                    position,
-                    })
-                );
-
-                const bounds = positions.reduce(
-                (bounds, latlng) => bounds.extend(latlng),
-                new kakao.maps.LatLngBounds()
-                );
-
-                this.map.setBounds(bounds);
-            }
-        },
-        displayInfoWindow() {
-            if (this.infowindow && this.infowindow.getMap()) {
-                //이미 생성한 인포윈도우가 있기 때문에 지도 중심좌표를 인포윈도우 좌표로 이동시킨다.
-                this.map.setCenter(this.infowindow.getPosition());
+        setCategoryOrder(e){
+            console.log(e.target.id);
+            let currCategory = e.target.id;
+            if (!currCategory) {
                 return;
             }
+            let order = document.getElementById(currCategory).getAttribute('data-order');
+            this.search.currCategory = currCategory;
+            this.search.order = order;
+            this.searchPlace();
+        },
+        searchPlace(){
+            this.removeMarker();
 
-            var iwContent = '<div style="padding:5px;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-                iwPosition = new kakao.maps.LatLng(33.450701, 126.570667), //인포윈도우 표시 위치입니다
-                iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+            const ps = new kakao.maps.services.Places(this.map);
+            
+            ps.categorySearch(this.search.currCategory, (data, status, pagination) => {
+                console.log(data);
+                this.search.results = data;
+                this.search.pagination = pagination;
+                if(this.search.currCategory != 'SW8') this.displayPlaces(data);
+            },  {useMapBounds:true});
+        },
 
-            this.infowindow = new kakao.maps.InfoWindow({
-                map: this.map, // 인포윈도우가 표시될 지도
-                position: iwPosition,
-                content: iwContent,
-                removable: iwRemoveable,
+        displayPlaces(places) {
+
+            for ( var i=0; i<places.length; i++ ) {
+
+                // 마커를 생성하고 지도에 표시합니다
+                this.addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), places[i].place_name);
+                
+            }
+        },
+        addMarker(position, name){
+            var color = '';
+            if(this.search.order === '0') color = 'success';
+            else if(this.search.order === '1') color = 'dark';
+            else if(this.search.order === '2') color = 'danger';
+            else if(this.search.order === '3') color = 'warning';
+            else if(this.search.order === '4') color = 'secondary';
+            else if(this.search.order === '5') color = 'info';
+            var marker = new kakao.maps.Marker({
+                position: position,
+                clickable: true,
+                image: new kakao.maps.MarkerImage("assets/images/markers/marker_" + color + ".png", new kakao.maps.Size(24, 35))
+	        });
+
+            var overlay = new kakao.maps.CustomOverlay({
+                position: position,
+                content: `<span class="badge rounded-pill bg-` + color + `">` + name + `</span>`,
+                yAnchor: 2.5
             });
 
-            this.map.setCenter(iwPosition);
+            marker.setMap(this.map);
+            overlay.setMap(this.map);
+            this.markers.push(marker);
+            this.infos.push(overlay);
+            
+            return marker;
+
         },
-        
+        removeMarker() {
+            for ( var i = 0; i < this.markers.length; i++ ) {
+                this.markers[i].setMap(null);
+                this.infos[i].setMap(null);
+            }   
+            this.markers = [];
+            this.infos = [];
+        },
+
+
         getSchoolList(){
             this.$store.dispatch("schoolList");
         },
@@ -272,12 +358,21 @@ export default {
             this.$store.dispatch("busStopList");
         },
         btnToggle(e){
-            e.target.classList.toggle("active");
             this.setBlur(e);
+            this.siblings(e.target, 'active');
         },
         setBlur(e){
             e.target.blur();
+        },
+        siblings(t, removeClass) { 
+            const children = t.parentElement.children;
+            const tempArr = []; 
+            for (var i = 0; i < children.length; i++) {
+                children[i].classList.remove(removeClass);
+            }
+            t.classList.add(removeClass)
         }
+
     },
     
     filters: {
@@ -291,9 +386,9 @@ export default {
     .scroll-wrapper{height: 500px; overflow-y: scroll;}
     .th-wrapper{overflow-y: scroll}
     .th-wrapper::-webkit-scrollbar{width: 7px; height:0}
-    .scroll-wrapper::-webkit-scrollbar, .modal-body::-webkit-scrollbar{width: 8px;}
-    .scroll-wrapper::-webkit-scrollbar-thumb, .modal-body::-webkit-scrollbar-thumb{background-color: #ccc; border-radius: .5rem;}
-    .scroll-wrapper::-webkit-scrollbar-track, .modal-body::-webkit-scrollbar-track{padding-left: 10px;}
+    .scroll-wrapper::-webkit-scrollbar, .modal-body::-webkit-scrollbar, .tab-content::-webkit-scrollbar{width: 8px;}
+    .scroll-wrapper::-webkit-scrollbar-thumb, .modal-body::-webkit-scrollbar-thumb, .tab-content::-webkit-scrollbar-thumb{background-color: #ccc; border-radius: .5rem;}
+    .scroll-wrapper::-webkit-scrollbar-track, .modal-body::-webkit-scrollbar-track, .tab-content::-webkit-scrollbar-track{padding-left: 10px;}
     
     tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
     tr td:first-child, tr th:first-child{width: 14%;}
@@ -309,4 +404,7 @@ export default {
 
     ul{list-style: none; padding-left: 0;}
     span.badge{width: 70px; margin-right: 10px;}
+
+    .tab-content{max-height: 290px; overflow-y: scroll;}
+    .tab-content::-webkit-scrollbar{width: 8px;}
 </style>
