@@ -226,7 +226,6 @@ export default new Vuex.Store({
       state.house.bookmarkDealList = list;
     },
 
-
     ///////////////////////////////////////////////////////////////////////// mutations - NEWS
     SET_NEWS_LIST(state, list) {
       state.news.list = list;

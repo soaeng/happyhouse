@@ -200,7 +200,6 @@ export default {
             this.$store.dispatch("dealList");
         },
 
-
     },
 
     watch: {

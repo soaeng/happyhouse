@@ -104,7 +104,6 @@ export default {
             }
             t.classList.add(removeClass);
         },
-
     },
 };
 </script>

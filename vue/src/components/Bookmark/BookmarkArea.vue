@@ -42,13 +42,15 @@
                             <col width="25%">
                             <col width="25%">
                             <col width="25%">
-                            <col width="25%">
+                            <col width="20%">
+                            <col width="5%">
                         </colgroup>
                         <thead class="bg-primary text-white">
                             <tr>
                                 <th>시/도</th>
                                 <th>구/군</th>
                                 <th>읍/면/동</th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -57,6 +59,11 @@
                                 <td>{{ area.cityName }}</td>
                                 <td>{{ area.gugunName }}</td>
                                 <td>{{ area.name }}</td>
+                                <td>
+                                    <button style="cursor:pointer" class="btn btn-warning text-black-50" @click="go2HouseMain">
+                                        <span :data-code="area.code">매물 보러 가기</span>
+                                    </button>
+                                </td>
                                 <td>
                                     <a style="cursor:pointer"  class="text-danger" @click="removeBookmarkArea">
                                         <i class="bi bi-dash-circle-fill" :data-code="area.code"></i>
@@ -212,6 +219,10 @@ export default {
             }
         },
 
+        go2HouseMain(e){
+            this.$store.commit("SET_ADDRESS_DONG", e.target.dataset.code);
+            this.$router.push('/house');
+        }
     },
     
 };

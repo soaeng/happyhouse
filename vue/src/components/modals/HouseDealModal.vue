@@ -54,7 +54,7 @@
                                 <tbody>
                                     <tr style="cursor:pointer" v-for="(deal) in dealList" :key="deal.no">
                                         <td>{{ deal.no }}</td>
-                                        <td>{{ deal.area }}</td>
+                                        <td>{{ parseFloat(deal.area).toFixed(1) }}</td>
                                         <td>{{ deal.floor }}</td>
                                         <td>{{ deal.dealAmount }}만 원</td>
                                         <td>{{ deal.dealYear }}-{{ deal.dealMonth | setDate }}-{{ deal.dealDay | setDate }}</td>
