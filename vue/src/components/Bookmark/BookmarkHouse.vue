@@ -4,14 +4,15 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3><i class="bi bi-bookmark-heart-fill"></i>관심 거래 목록</h3>
-                    <p class="text-subtitle text-muted"></p>
+                    <h3><i class="bi bi-bookmark-heart-fill"></i>관심 아파트 목록</h3>
+<!-- TODO: 고민! !!! !!! -->
+                    <p class="text-subtitle text-muted">넣을지 말지 고민ing 흠음음 귀ㅏ찬은데</p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">즐겨찾기</li>
-                            <li class="breadcrumb-item active"><router-link to="/bookmark/deal">관심거래</router-link></li>
+                            <li class="breadcrumb-item active"><router-link to="/bookmark/house">관심아파트</router-link></li>
                         </ol>
                     </nav>
                 </div>

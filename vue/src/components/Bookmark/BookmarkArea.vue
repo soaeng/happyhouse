@@ -1,5 +1,21 @@
 <template>
 <div>
+    <!-- TODO: 일단 매물 바로가기 하면 셀렉트박스에 설정 안된다 ㅅㅂ 삽질 존나게 햇음 ㅎㅎ
+
+    글구 다시 아파트 검색 누르면 reload 되게 하고 싶은데 페이지 이동만 됨 머 어쩌라고 진 짜 ㅡ ㅡ 
+    찾아보기 귀찬코 눈알 처빠질거같음
+    
+    1. 매물보러가기 누르면 아파트 검색 페이지에서 셀렉트 박스 선택하고 해당 동 보여주게 하던가
+    2. 아래에 아파트 목록 리스트만 보여주기
+
+    사실 2번으로 하면 관심 아파트 메뉴는 필요한가 싶기도 하고
+    헉 아니면 관심지역 관련 뉴스 크롤링해서 보여주기 ?!??
+    사유: 아파트 보여주는건 이미 한 거도 망칠거같아서 ㅜ 귀찬아지면 어케
+    흠 그럼 어디서 가져올지 고민해봐야겟군 . ..
+    
+    아  담타 땡겨~~ ~ ~~~~~~~~~~~~~~~ 낼  고민해야징 까먹지만말어라 이자시가
+    
+    -->
     <main class="page-heading">
         <div class="page-title">
             <div class="row">
@@ -37,7 +53,7 @@
                     </fieldset>
                 </div><!-- end of .card-header -->
                 <div class="card-body">
-                    <table class="table table-md table-hover mb-0 text-center">
+                    <table class="table table-hover mb-0 text-center">
                         <colgroup>
                             <col width="25%">
                             <col width="25%">
@@ -231,6 +247,8 @@ export default {
 <style scoped>
 select{width: 130px; margin-right: 10px;}
 input[type="text"]{width: 250px; margin-right: 10px;}
+
+thead th{padding: 1rem;}
 
 .bi.bi-dash-circle-fill::before{font-size: 22px;}
 </style>
