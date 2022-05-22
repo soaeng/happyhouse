@@ -18,6 +18,7 @@ export default new Vuex.Store({
 
       userName: "",
       userProfileImageUrl: "",
+      userSeq: 1,
 
       // Login
       userEmail: "dskim@my.com",
@@ -294,8 +295,11 @@ export default new Vuex.Store({
     },
 
     async dealList(context) {
+      let params = { 
+        userSeq: this.state.login.userSeq,
+      };
       try {
-          let { data } = await http.get("/house/deal/" + this.state.house.houseNo);
+          let { data } = await http.get("/house/deal/" + this.state.house.houseNo, { params });
           console.log("dealList data: ")
         console.log(data);
         

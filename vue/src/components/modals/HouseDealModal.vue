@@ -5,15 +5,15 @@
             <div class="modal-header bg-primary position-relative">
                 <div class="w-100 white">
                     <div class="d-flex">
-                        <h2 class="mb-4 white">{{ $store.state.house.AptName }}</h2>
-                        <button @click="setBlur" class="btn white rounded-pill" style="margin-left: 20px;"><i class="bi bi-suit-heart-fill"></i></button> 
+                        <h2 class="mb-4 white">{{ $store.state.house.AptName }} <button @click="setBlur" class="btn white rounded-pill bg-danger d-none" style="margin-left: 20px;">관심아파트</button> </h2>
+                        
                     </div>
                     <div>
                         <p class="mb-0"><i class="bi bi-geo-alt-fill"></i>&nbsp;&nbsp;{{ $store.state.house.address }}</p>
                         <p class="mb-0"><i class="bi bi-calendar2-date"></i>&nbsp;&nbsp;건축년도 : {{ $store.state.house.buildYear }}</p>
                     </div>
                 </div>
-                <button @click="$store.commit('SET_HOUSE_SHOW_MAP', false)" type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"><i data-feather="x"></i></button>
+                <button @click="$store.commit('SET_HOUSE_SHOW_MAP', false)" type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"></button>
             </div><!-- end of .modal-header -->
             <div class="modal-body">
                 <div class="house-content d-flex mb-4">
@@ -36,15 +36,17 @@
                         <div class="scroll-wrapper"><!-- div for scroll -->
                             <table class="table text-center mb-0">
                                 <tbody id="tbody-dealList">
-                                    <tr style="cursor:pointer" v-for="(deal, index) in dealList" :key="index">
+                                    <tr style="cursor:pointer" v-for="(deal) in dealList" :key="deal.no">
                                         <td>{{ deal.no }}</td>
                                         <td>{{ deal.area }}</td>
                                         <td>{{ deal.floor }}</td>
                                         <td>{{ deal.dealAmount }}만 원</td>
                                         <td>{{ deal.dealYear }}-{{ deal.dealMonth | setDate }}-{{ deal.dealDay | setDate }}</td>
                                         <td>
-                                            <a><i class="bi bi-star" v-if="!deal.bookmark"></i></a>
-                                            <a><i class="bi bi-star-fill" v-if="deal.bookmark"></i></a>
+                                            <a @click="addBookmarkDeal" class="text-warning">
+                                                <i class="bi bi-star" v-if="!deal.bookmark" :data-no="deal.no" :data-bookmark="deal.bookmark"></i>
+                                                <i class="bi bi-star-fill" v-if="deal.bookmark" :data-no="deal.no" :data-bookmark="deal.bookmark"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -98,34 +100,7 @@
                             <div class="w-100 pt-5 pb-5 text-center" v-else><p>조회된 데이터가 없습니다.</p></div>
                         </div>
                         <div class="tab-pane fade" id="transport" role="tabpanel" aria-labelledby="transport-tab">
-                            <div class="mb-3" v-if="search.results.length > 0">
-                            <h5 class="mb-3">{{search.results[0].category_group_name}}</h5>
-                                <ul v-for="data in search.results" :key="data.id">
-                                    <li>
-                                        <span v-if="data.place_name.split(' ')[1] == '1호선'" class="badge" style="background-color: #0D347F;">1호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '2호선'" class="badge" style="background-color: #3B9F37;">2호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '3호선'" class="badge" style="background-color: #FE5D10;">3호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '4호선'" class="badge" style="background-color: #3165A8;">4호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '5호선'" class="badge" style="background-color: #703E8C;">5호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '6호선'" class="badge" style="background-color: #904D23;">6호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '7호선'" class="badge" style="background-color: #5B692E;">7호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '8호선'" class="badge" style="background-color: #C82364;">8호선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '9호선'" class="badge" style="background-color: #B39627;">9호선</span>
-                                        
-                                        <span v-if="data.place_name.split(' ')[1] == '경강선'" class="badge" style="background-color: #267eff;">경강선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '신분당선'" class="badge" style="background-color: #971F2D;">신분당선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '인천선'" class="badge" style="background-color: #6084b4;">인천선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '경의중앙선'" class="badge" style="background-color: #76B69B; width: 80px;">경의중앙선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '경춘선'" class="badge" style="background-color: #2D9B76;">경춘선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '공항선'" class="badge" style="background-color: #6CA8CE;">공항선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '의정부선'" class="badge" style="background-color: #E78522;">의정부선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '수인분당선'" class="badge" style="background-color: #DBA829; width: 80px;">수인분당선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '에버라인선'" class="badge" style="background-color: #6FB26C; width: 80px;">에버라인선</span>
-                                        <span v-if="data.place_name.split(' ')[1] == '자기부상선'" class="badge" style="background-color: #E9945a; width: 80px;">자기부상선</span>
-                                        {{data.place_name.split(' ')[0]}} ({{data.address_name}})
-                                    </li>
-                                </ul>
-                            </div>
+                            
                             <div v-if="schoolList.length > 0">
                                 <h5 class="mb-3">버스</h5>
                                 <ul v-for="(busStop, index) in busStopList" :key="index">
@@ -163,6 +138,9 @@
 </template>
 
 <script>
+
+import http from "@/common/axios.js";
+
 export default {
     name: 'HouseDealModal',
 
@@ -177,6 +155,7 @@ export default {
                 currCategory: '',
                 pagination: null,
             },
+
             markers: [],
             infos: [],
 
@@ -200,6 +179,9 @@ export default {
         busStopList(){
             return this.$store.getters.getBusStopList;
         },
+        userSeq(){
+            return this.$store.state.login.userSeq;
+        }
     },
 
     watch:{
@@ -213,6 +195,12 @@ export default {
         },
     },
 
+    created(){
+        const script = document.createElement("script");
+        script.src = "assets/vendors/toastify/toastify.js"
+        document.head.appendChild(script);
+    },
+
     mounted() {
         if (window.kakao && window.kakao.maps) {
             this.initMap();
@@ -223,7 +211,8 @@ export default {
             script.src =
                 "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=cb9b2686378a8d564494657ed1378fb9&libraries=services";
             document.head.appendChild(script);
-        }
+        };
+
     },
 
     methods: {
@@ -254,8 +243,9 @@ export default {
 
             customOverlay.setMap(this.map);
 
+        },
+        setIdleEvent(){
             kakao.maps.event.addListener(this.map, 'idle', this.searchPlace);
-            
         },
         getCenter(){
             this.center = new kakao.maps.LatLng(this.$store.state.house.lat, this.$store.state.house.lng)
@@ -285,6 +275,7 @@ export default {
             if (!currCategory) {
                 return;
             }
+            this.setIdleEvent();
             let order = document.getElementById(currCategory).getAttribute('data-order');
             this.search.currCategory = currCategory;
             this.search.order = order;
@@ -349,7 +340,9 @@ export default {
             this.infos = [];
         },
 
-
+        getDealList(){
+            this.$store.dispatch("dealList");
+        },
         getSchoolList(){
             this.$store.dispatch("schoolList");
         },
@@ -366,12 +359,39 @@ export default {
         },
         siblings(t, removeClass) { 
             const children = t.parentElement.children;
-            const tempArr = []; 
             for (var i = 0; i < children.length; i++) {
                 children[i].classList.remove(removeClass);
             }
             t.classList.add(removeClass)
-        }
+        },
+
+        async addBookmarkDeal(e){
+            let dealNo = e.target.dataset.no;
+            let userSeq = this.userSeq;
+            let bookmark = e.target.dataset.bookmark;
+            let data = null;
+                console.log(e.target);
+
+            try{
+                console.log(dealNo);
+                console.log(userSeq);
+                console.log(bookmark);
+                
+                if(!bookmark)
+                    data = await http.post('/bookmark/deal?dealNo=' + dealNo + '&userSeq=' + userSeq);
+                else data = await http.delete('/bookmark/deal?dealNo=' + dealNo + '&userSeq=' + userSeq);
+
+                if( data.result == 'login' ){
+                    this.doLogout();
+                }else{
+                    this.getDealList();
+                }
+
+            } catch(error){
+                console.log("addBookmarkDeal: error ");
+                console.log(error);
+            }
+        },
 
     },
     

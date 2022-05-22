@@ -1,0 +1,9 @@
+search
+bookmark-heart-fill
+newspaper
+star
+star-fill
+suit-heart-fill
+suit-heart
+geo-alt-fill
+calendar2-date

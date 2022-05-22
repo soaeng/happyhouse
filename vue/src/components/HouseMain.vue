@@ -8,15 +8,6 @@
 
     <main class="page-heading">
         <div class="page-title mb-4">
-            <!-- <div class="row">
-                <div class="col-12">
-                    <nav aria-label="breadcrumb" class="breadcrumb-header float-start">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active" aria-current="page"><a href="#">아파트 검색</a></li>
-                        </ol>
-                    </nav>
-                </div>
-            </div> -->
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
                     <h3><i class="bi bi-search"></i>아파트 검색</h3>
