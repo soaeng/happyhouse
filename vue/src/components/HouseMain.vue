@@ -65,12 +65,10 @@
                                         <td>{{house.dealYear}}-{{house.dealMonth | setDate }}-{{house.dealDay | setDate }}</td>
                                     </tr>
                                 </tbody>
-                                <tbody v-else>
-                                    <tr class="table-text">
-                                        <td colspan="6" class="pt-5 pb-5">조회된 데이터가 없습니다.</td>
-                                    </tr>
-                                </tbody>
                             </table>
+                            <div v-if="houseList.length == 0" class="w-100 text-center" style="border-bottom: 1px solid #DEDEDE">
+                                <p class="pt-5 pb-5 mb-0">조회된 데이터가 없습니다.</p>
+                            </div>
                         </div><!-- end of .table-responsive -->
                     </div><!-- end of .card-body -->
                     <pagination class="mb-4" v-if="houseList.length > 0" v-on:call-parent="movePage" :targetObj="target"></pagination>
@@ -94,7 +92,7 @@ export default {
     components: {Pagination, houseDealModal},
     data() {
         return {
-            target: "house",
+            target: "house", // for pagination
             houseDealModal: null,
         };
     },

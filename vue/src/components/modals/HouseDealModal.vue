@@ -1,5 +1,5 @@
 <template>
-<div id="houseDealModal" class="modal fade w-100" tabindex="-1" @click="$store.commit('SET_HOUSE_SHOW_MAP', false)">
+<div id="houseDealModal" class="modal fade w-100" tabindex="-1" @click="[$store.commit('SET_HOUSE_SHOW_MAP', false), getBookmarkDealList()]">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-primary position-relative">
@@ -13,7 +13,7 @@
                         <p class="mb-0"><i class="bi bi-calendar2-date"></i>&nbsp;&nbsp;건축년도 : {{ $store.state.house.buildYear }}</p>
                     </div>
                 </div>
-                <button @click="$store.commit('SET_HOUSE_SHOW_MAP', false)" type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button @click="[$store.commit('SET_HOUSE_SHOW_MAP', false), getBookmarkDealList()]" type="button" class="btn-close position-absolute" data-bs-dismiss="modal" aria-label="Close"></button>
             </div><!-- end of .modal-header -->
             <div class="modal-body">
                 <div class="house-content d-flex mb-4">
@@ -21,6 +21,14 @@
                         <p class="mb-1">총 <span class="text-primary">{{ dealList.length }}</span> 건</p>
                         <div class="th-wrapper">
                             <table class="table mb-0 text-center" style="margin-right:7px;">
+                                <colgroup>
+                                    <col width="14%">
+                                    <col width="17%">
+                                    <col width="10%">
+                                    <col width="23%">
+                                    <col width="17%">
+                                    <col width="15%">
+                                </colgroup> 
                                 <thead>
                                     <tr>
                                         <th>번호</th>
@@ -35,7 +43,15 @@
                         </div>
                         <div class="scroll-wrapper"><!-- div for scroll -->
                             <table class="table text-center mb-0">
-                                <tbody id="tbody-dealList">
+                                <colgroup>
+                                    <col width="14%">
+                                    <col width="17%">
+                                    <col width="10%">
+                                    <col width="23%">
+                                    <col width="17%">
+                                    <col width="15%">
+                                </colgroup>
+                                <tbody>
                                     <tr style="cursor:pointer" v-for="(deal) in dealList" :key="deal.no">
                                         <td>{{ deal.no }}</td>
                                         <td>{{ deal.area }}</td>
@@ -79,7 +95,7 @@
                             <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#school" role="tab" aria-controls="school" aria-selected="false">학군정보</a>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <a id="SW8" @click="setCategoryOrder" class="nav-link" data-bs-toggle="tab" data-bs-target="#transport" role="tab" aria-controls="transport" aria-selected="false">대중교통</a>
+                            <a id="SW8" class="nav-link" data-bs-toggle="tab" data-bs-target="#transport" role="tab" aria-controls="transport" aria-selected="false">대중교통</a>
                         </li>
                         <li class="nav-item" role="presentation">
                             <a class="nav-link" data-bs-toggle="tab" data-bs-target="#search" role="tab" aria-controls="search" aria-selected="true">검색결과</a>
@@ -193,12 +209,6 @@ export default {
                 this.setControl();
             }
         },
-    },
-
-    created(){
-        const script = document.createElement("script");
-        script.src = "assets/vendors/toastify/toastify.js"
-        document.head.appendChild(script);
     },
 
     mounted() {
@@ -370,12 +380,8 @@ export default {
             let userSeq = this.userSeq;
             let bookmark = e.target.dataset.bookmark;
             let data = null;
-                console.log(e.target);
-
+            
             try{
-                console.log(dealNo);
-                console.log(userSeq);
-                console.log(bookmark);
                 
                 if(!bookmark)
                     data = await http.post('/bookmark/deal?dealNo=' + dealNo + '&userSeq=' + userSeq);
@@ -393,6 +399,9 @@ export default {
             }
         },
 
+        getBookmarkDealList(){
+            this.$store.dispatch("bookmarkDealList");
+        },
     },
     
     filters: {
@@ -411,13 +420,6 @@ export default {
     .scroll-wrapper::-webkit-scrollbar-track, .modal-body::-webkit-scrollbar-track, .tab-content::-webkit-scrollbar-track{padding-left: 10px;}
     
     tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-    tr td:first-child, tr th:first-child{width: 14%;}
-    tr td:nth-child(2), tr th:nth-child(2){width: 17%;}
-    tr td:nth-child(3), tr th:nth-child(3){width: 10%;}
-    tr td:nth-child(4), tr th:nth-child(4){width: 23%;}
-    tr td:nth-child(5), tr th:nth-child(5){width: 17%;}
-    tr td:nth-child(6), tr th:nth-child(6){width: 15%;}
-
 
     .btn-box button{font-size:14px;}
     .btn-box div .btn{margin-left: 5px;}

@@ -95,6 +95,12 @@ export default new Vuex.Store({
       busStopList: [],
       busStopList: [],
       showMap: false,
+
+
+      ///////////////////////////////////////////////////////////////////////// state - BOOKMARK
+      bookmarkDealList: [],
+      bookmarkHouseList: [],
+      bookmarkAreaList: [],
     },
     
 
@@ -208,6 +214,19 @@ export default new Vuex.Store({
       state.house.busStopList = list;
     },
 
+
+    ///////////////////////////////////////////////////////////////////////// mutations - BOOKMARK
+    SET_BOOKMARK_AREA_LIST(state, list) {
+      state.house.bookmarkAreaList = list;
+    },
+    SET_BOOKMARK_HOUSE_LIST(state, list) {
+      state.house.bookmarkHouseList = list;
+    },
+    SET_BOOKMARK_DEAL_LIST(state, list) {
+      state.house.bookmarkDealList = list;
+    },
+
+
     ///////////////////////////////////////////////////////////////////////// mutations - NEWS
     SET_NEWS_LIST(state, list) {
       state.news.list = list;
@@ -311,6 +330,45 @@ export default new Vuex.Store({
       }
     },
 
+    async bookmarkAreaList(context) {
+      let params = { 
+        userSeq: this.state.login.userSeq,
+      };
+      try {
+        let { data } = await http.get("/bookmark/area", { params });
+        console.log(data);
+          console.log("bookmarkAreaList data: ")
+          context.commit("SET_BOOKMARK_AREA_LIST", data);
+      } catch (error) {
+          console.error(error);
+      }
+    },
+
+    async bookmarkHouseList(context) {
+      let params = { 
+        userSeq: this.state.login.userSeq,
+      };
+      try {
+        let { data } = await http.get("/bookmark/house", { params });
+          console.log("bookmarkHouseList data: ")
+          context.commit("SET_BOOKMARK_HOUSE_LIST", data);
+      } catch (error) {
+          console.error(error);
+      }
+    },
+    
+    async bookmarkDealList(context) {
+      let params = { 
+        userSeq: this.state.login.userSeq,
+      };
+      try {
+        let { data } = await http.get("/bookmark/deal", { params });
+          console.log("bookmarkDealList data: ")
+          context.commit("SET_BOOKMARK_DEAL_LIST", data);
+      } catch (error) {
+          console.error(error);
+      }
+    },
     ///////////////////////////////////////////////////////////////////////// actions - SURROUNDING
     
     async schoolList(context) {
@@ -474,13 +532,20 @@ export default new Vuex.Store({
       }
     },
 
-
     ///////////////////////////////////////////////////////////////////////// getters - SURROUNDING
     getSchoolList: function (state) {
       return state.house.schoolList; // 아파트 거래 목록
     },
     getBusStopList: function (state) {
       return state.house.busStopList; // 아파트 거래 목록
+    },
+
+    ///////////////////////////////////////////////////////////////////////// getters - BOOKMARK
+    getDealList: function (state) {
+      return state.house.dealList; 
+    },
+    getBookmarkDealList: function (state) {
+      return state.house.bookmarkDealList;
     },
 
     ///////////////////////////////////////////////////////////////////////// getters - NEWS
