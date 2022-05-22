@@ -89,12 +89,17 @@ export default new Vuex.Store({
       lat: "",
       lng: "",
 
-      // markers position
+      ///////////////////////////////////////////////////////////////////////// state - SURROUNDING
       schoolList: [],
       busStopList: [],
       busStopList: [],
       showMap: false,
-      
+    },
+    
+
+    ///////////////////////////////////////////////////////////////////////// state - NEWS
+    news: {
+      list: [],
     },
   },
    // state 상태를 변경하는 유일한 방법
@@ -201,6 +206,11 @@ export default new Vuex.Store({
     SET_BUSSTOP_LIST(state, list) {
       state.house.busStopList = list;
     },
+
+    ///////////////////////////////////////////////////////////////////////// mutations - NEWS
+    SET_NEWS_LIST(state, list) {
+      state.news.list = list;
+    },
   },
 
 
@@ -274,12 +284,10 @@ export default new Vuex.Store({
           console.log("houseList params: ")
           console.log(params)
           console.log(data);
-          if (data.result == "login") {
-            router.push("/login");
-          } else {
-            context.commit("SET_HOUSE_LIST", data.list); // commit으로 요청하면 mutations에서 처리
-            context.commit("SET_HOUSE_TOTAL_LIST_ITEM_COUNT", data.count);
-          }
+          
+          context.commit("SET_HOUSE_LIST", data.list); // commit으로 요청하면 mutations에서 처리
+          context.commit("SET_HOUSE_TOTAL_LIST_ITEM_COUNT", data.count);
+        
       } catch (error) {
           console.error(error);
       }
@@ -289,14 +297,11 @@ export default new Vuex.Store({
       try {
           let { data } = await http.get("/house/deal/" + this.state.house.houseNo);
           console.log("dealList data: ")
-          console.log(data);
-          if (data.result == "login") {
-            router.push("/login");
-          } else {
-            context.commit("SET_HOUSE_DEAL_LIST", data.list);
-            context.commit("SET_HOUSE_DETAIL", data.list[0]);
-            context.commit("SET_HOUSE_SHOW_MAP", true);
-          }
+        console.log(data);
+        
+          context.commit("SET_HOUSE_DEAL_LIST", data.list);
+          context.commit("SET_HOUSE_DETAIL", data.list[0]);
+          context.commit("SET_HOUSE_SHOW_MAP", true);
       } catch (error) {
           console.error(error);
       }
@@ -313,11 +318,7 @@ export default new Vuex.Store({
           let { data } = await http.get("/house/school", {params});
           console.log("schoolList data: ")
           console.log(data);
-          if (data.result == "login") {
-            router.push("/login");
-          } else {
-            context.commit("SET_SCHOOL_LIST", data);
-          }
+          context.commit("SET_SCHOOL_LIST", data);
       } catch (error) {
           console.error(error);
       }
@@ -331,17 +332,23 @@ export default new Vuex.Store({
           let { data } = await http.get("/house/bus", {params});
           console.log("busStopList data: ")
           console.log(data);
-          if (data.result == "login") {
-            router.push("/login");
-          } else {
-            context.commit("SET_BUSSTOP_LIST", data);
-          }
+          context.commit("SET_BUSSTOP_LIST", data);
       } catch (error) {
           console.error(error);
       }
     },
 
-
+    ///////////////////////////////////////////////////////////////////////// actions - BOARD
+    async newsList(context) {
+      try {
+        let { data } = await http.get("/craw/news");
+        console.log("newsList data: ");
+        console.log(data);
+        context.commit("SET_NEWS_LIST", data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
   },
 
 
@@ -471,5 +478,10 @@ export default new Vuex.Store({
     getBusStopList: function (state) {
       return state.house.busStopList; // 아파트 거래 목록
     },
+
+    ///////////////////////////////////////////////////////////////////////// getters - NEWS
+    getNewsList: function (state) {
+      return state.news.list;
+    }
   },
 });

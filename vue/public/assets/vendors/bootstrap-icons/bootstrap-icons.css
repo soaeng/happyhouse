@@ -18,6 +18,10 @@ url("./fonts/bootstrap-icons.woff2?4601c71fb26c9277391ec80789bfde9c") format("wo
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+h3 [class*=" bi-"]::before {
+  margin-top: .4rem;
+  margin-right: .8rem;
+}
 
 .bi-mortarboard-fill::before{ content: "\F6FD";}
 .bi-alarm-fill::before { content: "\f101"; }

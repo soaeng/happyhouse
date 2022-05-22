@@ -39,6 +39,13 @@
                             </ul>
                         </li>
 
+                        <li class="sidebar-item">
+                            <router-link to="/news" class='sidebar-link'>
+                                <i class="bi bi-newspaper"></i>
+                                <span>주요 뉴스</span>
+                            </router-link>
+                        </li>
+
                     </ul>
                 </div>
             </div>

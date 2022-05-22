@@ -8,6 +8,7 @@ import Bookmark from "@/components/Bookmark.vue";
 import BookmarkArea from "@/components/Bookmark/BookmarkArea.vue";
 import BookmarkHouse from "@/components/Bookmark/BookmarkHouse.vue";
 import BookmarkDeal from "@/components/Bookmark/BookmarkDeal.vue";
+import News from "@/components/News";
 import store from "@/store/store.js";
 
 export default new VueRouter({
@@ -32,6 +33,11 @@ export default new VueRouter({
         { path: 'deal', component: BookmarkDeal },
       ],
     },
+    {
+      name: 'News',
+      path: '/news',
+      component: News,
+    }
   ]
 })
 
