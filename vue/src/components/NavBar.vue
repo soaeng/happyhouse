@@ -31,10 +31,10 @@
                                     <router-link to="/bookmark/area">관심 지역</router-link>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="#">관심 아파트</a>
+                                    <router-link to="/bookmark/house">관심 아파트</router-link>
                                 </li>
                                 <li class="submenu-item ">
-                                    <a href="#">관심 거래</a>
+                                    <router-link to="/bookmark/deal">관심 거래</router-link>
                                 </li>
                             </ul>
                         </li>
