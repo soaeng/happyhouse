@@ -21,7 +21,7 @@
               <li style="cursor:pointer; list-style: none;" v-for="(news, index) in newsList" :key="index" class="rounded-3 mb-3">
                 <a :href="news.url" target="_blank" class="list-group-item list-group-item-action d-flex" style=" padding: 1rem;">
                     <div style="margin-right: 1rem; width: 260px;" class="d-flex">
-                      <img class="w-100" :src="news.img" style="max-height: 112px; object-fit: cover;">
+                      <img class="w-100 bg-light-secondary" :src="news.img" style="max-height: 112px; object-fit: cover;">
                     </div>
                     <div>
                       <div class="d-flex w-100 justify-content-between">

@@ -88,10 +88,6 @@ export default {
         bookmarkDealList(){
             return this.$store.state.house.bookmarkDealList;
         },
-        
-        userSeq(){
-            return this.$store.state.login.userSeq;
-        }
     },
 
     mounted() {
@@ -118,7 +114,7 @@ export default {
                 console.log(dealNo);
                 console.log(userSeq);
 
-                let data = data = await http.delete('/bookmark/deal?dealNo=' + dealNo + '&userSeq=' + userSeq);
+                let data = data = await http.delete('/bookmark/deal?dealNo=' + dealNo);
                 
                 if( data.result == 'login' ){
                     this.doLogout();

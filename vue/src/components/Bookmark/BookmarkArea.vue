@@ -106,7 +106,7 @@
                         <li style="cursor:pointer; list-style: none;" v-for="(news, index) in areaNewsList" :key="index" class="rounded-3 mb-3">
                             <a :href="news.url" target="_blank" class="list-group-item list-group-item-action d-flex" style=" padding: 1rem;">
                                 <div style="margin-right: 1rem; width: 260px;" class="d-flex">
-                                <img class="w-100" :src="news.img" style="max-height: 112px; object-fit: cover;">
+                                <img class="w-100 bg-light-secondary" :src="news.img" style="max-height: 112px; object-fit: cover;">
                                 </div>
                                 <div>
                                 <div class="d-flex w-100 justify-content-between">
@@ -230,7 +230,7 @@ export default {
                 console.log(dongCode);
                 console.log(userSeq);
 
-                let data = data = await http.post('/bookmark/area?dongCode=' + dongCode + '&userSeq=' + userSeq);
+                let data = data = await http.post('/bookmark/area?dongCode=' + dongCode);
                 
                 if( data.result == 'login' ){
                     this.doLogout();
@@ -253,7 +253,7 @@ export default {
                 console.log(dongCode);
                 console.log(userSeq);
 
-                let data = data = await http.delete('/bookmark/area?dongCode=' + dongCode + '&userSeq=' + userSeq);
+                let data = data = await http.delete('/bookmark/area?dongCode=' + dongCode);
                 
                 if( data.result == 'login' ){
                     this.doLogout();

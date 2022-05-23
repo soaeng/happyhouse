@@ -384,8 +384,8 @@ export default {
             try{
                 
                 if(!bookmark)
-                    data = await http.post('/bookmark/deal?dealNo=' + dealNo + '&userSeq=' + userSeq);
-                else data = await http.delete('/bookmark/deal?dealNo=' + dealNo + '&userSeq=' + userSeq);
+                    data = await http.post('/bookmark/deal?dealNo=' + dealNo);
+                else data = await http.delete('/bookmark/deal?dealNo=' + dealNo);
 
                 if( data.result == 'login' ){
                     this.doLogout();

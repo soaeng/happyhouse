@@ -42,6 +42,21 @@
                                 <span>주요 뉴스</span>
                             </router-link>
                         </li>
+                        
+                        <li class="sidebar-item">
+                            <router-link to="/userInfo" class='sidebar-link'>
+                                <i class="bi bi-person-fill"></i>
+                                <span>개인 정보 수정</span>
+                            </router-link>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <router-link to="/login" class='sidebar-link'>
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>로그아웃</span>
+                            </router-link>
+                        </li>
+
 
                     </ul>
                 </div>

@@ -14,12 +14,10 @@ export default new Vuex.Store({
     ///////////////////////////////////////////////////////////////////////// state - LOGIN
     login: {
         // NavBar
-      isLogin: false,
+      isLogin: true,
 
       userName: "",
       userProfileImageUrl: "",
-      userSeq: 1,
-
       // Login
       userEmail: "dskim@my.com",
       userPassword: "1234",
@@ -325,7 +323,7 @@ export default new Vuex.Store({
         userSeq: this.state.login.userSeq,
       };
       try {
-          let { data } = await http.get("/house/deal/" + this.state.house.houseNo, { params });
+          let { data } = await http.get("/house/deal/" + this.state.house.houseNo);
           console.log("dealList data: ")
         console.log(data);
         
@@ -342,7 +340,7 @@ export default new Vuex.Store({
         userSeq: this.state.login.userSeq,
       };
       try {
-        let { data } = await http.get("/bookmark/area", { params });
+        let { data } = await http.get("/bookmark/area");
         console.log(data);
           console.log("bookmarkAreaList data: ")
           context.commit("SET_BOOKMARK_AREA_LIST", data);
@@ -351,25 +349,25 @@ export default new Vuex.Store({
       }
     },
 
-    async bookmarkHouseList(context) {
-      let params = { 
-        userSeq: this.state.login.userSeq,
-      };
-      try {
-        let { data } = await http.get("/bookmark/house", { params });
-          console.log("bookmarkHouseList data: ")
-          context.commit("SET_BOOKMARK_HOUSE_LIST", data);
-      } catch (error) {
-          console.error(error);
-      }
-    },
+    // async bookmarkHouseList(context) {
+    //   let params = { 
+    //     userSeq: this.state.login.userSeq,
+    //   };
+    //   try {
+    //     let { data } = await http.get("/bookmark/house");
+    //       console.log("bookmarkHouseList data: ")
+    //       context.commit("SET_BOOKMARK_HOUSE_LIST", data);
+    //   } catch (error) {
+    //       console.error(error);
+    //   }
+    // },
     
     async bookmarkDealList(context) {
       let params = { 
         userSeq: this.state.login.userSeq,
       };
       try {
-        let { data } = await http.get("/bookmark/deal", { params });
+        let { data } = await http.get("/bookmark/deal");
           console.log("bookmarkDealList data: ")
           context.commit("SET_BOOKMARK_DEAL_LIST", data);
       } catch (error) {
