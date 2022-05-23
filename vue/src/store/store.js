@@ -107,6 +107,8 @@ export default new Vuex.Store({
     ///////////////////////////////////////////////////////////////////////// state - NEWS
     news: {
       list: [],
+      city: '', // 시도번호
+      dvsn: '', // 구군번호
     },
   },
    // state 상태를 변경하는 유일한 방법
@@ -229,6 +231,12 @@ export default new Vuex.Store({
     ///////////////////////////////////////////////////////////////////////// mutations - NEWS
     SET_NEWS_LIST(state, list) {
       state.news.list = list;
+    },
+    SET_NEWS_CITY(state, city) {
+      state.news.city = city;
+    },
+    SET_NEWS_DVSN(state, dvsn) {
+      state.news.dvsn = dvsn;
     },
   },
 
@@ -404,6 +412,23 @@ export default new Vuex.Store({
       try {
         let { data } = await http.get("/craw/news");
         console.log("newsList data: ");
+        console.log(data);
+        context.commit("SET_NEWS_LIST", data);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    
+    async areaNewsList(context) {
+      let params = {
+        cityCode: this.state.news.city,
+        gugunCode: this.state.news.dvsn,
+      }
+      console.log(this.state.news.city);
+      console.log(this.state.news.dvsn);
+      try {
+        let { data } = await http.get("/craw/news/area", {params});
+        console.log("areaNewsList data: ");
         console.log(data);
         context.commit("SET_NEWS_LIST", data);
       } catch (error) {

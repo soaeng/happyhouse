@@ -76,8 +76,8 @@
                                 <td>{{ area.gugunName }}</td>
                                 <td>{{ area.name }}</td>
                                 <td>
-                                    <button style="cursor:pointer" class="btn btn-warning text-black-50" @click="go2HouseMain">
-                                        <span :data-code="area.code">매물 보러 가기</span>
+                                    <button style="cursor:pointer" class="btn btn-warning text-black-50" @click="getAreaNews">
+                                        <span :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode">지역별 주요 뉴스</span>
                                     </button>
                                 </td>
                                 <td>
@@ -93,6 +93,34 @@
                     </div>
                 </div><!-- end of .card-body -->
             </div><!-- end of .card -->
+        </section>
+
+        <section>
+            <div class="card">
+                <div class="card-head bg-primary d-flex justify-content-between" style="padding: 1rem;">
+                    <h3 class="card-title text-white mb-0">dd</h3>
+                    <a><i class="bi bi-caret-down-fill text-white"></i></a>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li style="cursor:pointer; list-style: none;" v-for="(news, index) in areaNewsList" :key="index" class="rounded-3 mb-3">
+                            <a :href="news.url" target="_blank" class="list-group-item list-group-item-action d-flex" style=" padding: 1rem;">
+                                <div style="margin-right: 1rem; width: 260px;" class="d-flex">
+                                <img class="w-100" :src="news.img" style="max-height: 112px; object-fit: cover;">
+                                </div>
+                                <div>
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{news.title}}</h5>
+                                    <small></small>
+                                </div>
+                                <p class="mb-3">{{news.content}}</p>
+                                <small class="float-end"><span class="text-danger">{{news.publish}}</span> | <span class="text-gray-600">{{news.date}}</span></small>
+                                </div>
+                            </a>
+                        </li>
+                    </ul><!-- end of .list-group -->
+                </div><!-- end of .card-body -->
+            </div>
         </section>
     </main>
 </div>
@@ -146,6 +174,10 @@ export default {
 
         bookmarkAreaList(){
             return this.$store.state.house.bookmarkAreaList;
+        },
+
+        areaNewsList(){
+            return this.$store.state.news.list;
         },
         
         userSeq(){
@@ -235,9 +267,13 @@ export default {
             }
         },
 
-        go2HouseMain(e){
-            this.$store.commit("SET_ADDRESS_DONG", e.target.dataset.code);
-            this.$router.push('/house');
+        getAreaNews(e){
+            console.log(">>>>>>>>>>>>>>>>>>>> getAreaNews");
+            console.log(e.target.dataset.city);
+            this.$store.commit("SET_NEWS_CITY", e.target.dataset.city);
+            this.$store.commit("SET_NEWS_DVSN", e.target.dataset.gugun);
+
+            this.$store.dispatch("areaNewsList");
         }
     },
     
@@ -250,5 +286,5 @@ input[type="text"]{width: 250px; margin-right: 10px;}
 
 thead th{padding: 1rem;}
 
-.bi.bi-dash-circle-fill::before{font-size: 22px;}
+.bi.bi-dash-circle-fill::before, .bi.bi-caret-down-fill::before{font-size: 22px;}
 </style>

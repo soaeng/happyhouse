@@ -15,10 +15,10 @@
                     <ul class="menu">
 
                         <li class="sidebar-item">
-                            <router-link to="/house" class='sidebar-link'>
+                            <a href="/house" class='sidebar-link'>
                                 <i class="bi bi-search"></i>
                                 <span>아파트 검색</span>
-                            </router-link>
+                            </a>
                         </li>
 
                         <li class="sidebar-item has-sub">
@@ -29,9 +29,6 @@
                             <ul class="submenu ">
                                 <li class="submenu-item ">
                                     <router-link to="/bookmark/area">관심 지역</router-link>
-                                </li>
-                                <li class="submenu-item ">
-                                    <router-link to="/bookmark/house">관심 아파트</router-link>
                                 </li>
                                 <li class="submenu-item ">
                                     <router-link to="/bookmark/deal">관심 거래</router-link>
