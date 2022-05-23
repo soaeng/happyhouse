@@ -28,7 +28,7 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item ">
-                                    <router-link to="/bookmark/area">관심 지역</router-link>
+                                    <router-link to="/bookmark/area" @click.native="initArea">관심 지역</router-link>
                                 </li>
                                 <li class="submenu-item ">
                                     <router-link to="/bookmark/deal">관심 거래</router-link>
@@ -116,6 +116,12 @@ export default {
             }
             t.classList.add(removeClass);
         },
+        initArea(){
+            console.log("dddddddddddd");
+            this.$store.state.address.sido = "0";
+            this.$store.state.address.gugun = "0";
+            this.$store.state.address.dong = "0";
+        }
     },
 };
 </script>

@@ -239,8 +239,6 @@ export default new Vuex.Store({
   },
 
 
-
-
   // for async method
   actions: {
     ///////////////////////////////////////////////////////////////////////// actions - BOARD

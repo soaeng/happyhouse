@@ -38,7 +38,7 @@
                                 <th>층</th>
                                 <th>거래금액</th>
                                 <th>거래일시</th>
-                                <th></th>
+                                <th>삭제</th>
                             </tr>
                         </thead>
                         <tbody v-if="bookmarkDealList.length > 0">

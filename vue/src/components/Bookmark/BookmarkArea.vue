@@ -1,21 +1,5 @@
 <template>
 <div>
-    <!-- TODO: 일단 매물 바로가기 하면 셀렉트박스에 설정 안된다 ㅅㅂ 삽질 존나게 햇음 ㅎㅎ
-
-    글구 다시 아파트 검색 누르면 reload 되게 하고 싶은데 페이지 이동만 됨 머 어쩌라고 진 짜 ㅡ ㅡ 
-    찾아보기 귀찬코 눈알 처빠질거같음
-    
-    1. 매물보러가기 누르면 아파트 검색 페이지에서 셀렉트 박스 선택하고 해당 동 보여주게 하던가
-    2. 아래에 아파트 목록 리스트만 보여주기
-
-    사실 2번으로 하면 관심 아파트 메뉴는 필요한가 싶기도 하고
-    헉 아니면 관심지역 관련 뉴스 크롤링해서 보여주기 ?!??
-    사유: 아파트 보여주는건 이미 한 거도 망칠거같아서 ㅜ 귀찬아지면 어케
-    흠 그럼 어디서 가져올지 고민해봐야겟군 . ..
-    
-    아  담타 땡겨~~ ~ ~~~~~~~~~~~~~~~ 낼  고민해야징 까먹지만말어라 이자시가
-    
-    -->
     <main class="page-heading">
         <div class="page-title">
             <div class="row">
@@ -33,7 +17,7 @@
                 </div>
             </div>
         </div> <!-- end of .page-title -->
-        <section class="section">
+        <section class="section mb-10">
             <div class="card">
                 <div class="card-header">
                     <fieldset class="form-group d-flex align-items-center justify-content-center mb-0">
@@ -56,18 +40,20 @@
                     <table class="table table-hover mb-0 text-center">
                         <colgroup>
                             <col width="25%">
-                            <col width="25%">
-                            <col width="25%">
-                            <col width="20%">
-                            <col width="5%">
+                            <col width="22.5%">
+                            <col width="22.5%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
                         </colgroup>
                         <thead class="bg-primary text-white">
                             <tr>
                                 <th>시/도</th>
                                 <th>구/군</th>
                                 <th>읍/면/동</th>
-                                <th></th>
-                                <th></th>
+                                <th>뉴스</th>
+                                <th>검색</th>
+                                <th>삭제</th>
                             </tr>
                         </thead>
                         <tbody v-if="bookmarkAreaList.length > 0">
@@ -76,9 +62,14 @@
                                 <td>{{ area.gugunName }}</td>
                                 <td>{{ area.name }}</td>
                                 <td>
-                                    <button style="cursor:pointer" class="btn btn-warning text-black-50" @click="getAreaNews">
-                                        <span :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode">지역별 주요 뉴스</span>
-                                    </button>
+                                    <a style="cursor:pointer" @click="getAreaNews" @mouseup="closeNews">
+                                        <i class="bi bi-newspaper" :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a style="cursor:pointer"  class="text-success" @click="go2HouseMain">
+                                        <i class="bi bi-arrow-right-circle-fill" :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode"></i>
+                                    </a>
                                 </td>
                                 <td>
                                     <a style="cursor:pointer"  class="text-danger" @click="removeBookmarkArea">
@@ -97,12 +88,13 @@
 
         <section>
             <div class="card">
-                <div class="card-head bg-primary d-flex justify-content-between" style="padding: 1rem;">
-                    <h3 class="card-title text-white mb-0">dd</h3>
-                    <a><i class="bi bi-caret-down-fill text-white"></i></a>
+                <div class="card-head bg-dark d-flex justify-content-between" style="padding: 1rem;">
+                    <h3 class="card-title text-white mb-0">지역별 주요 뉴스</h3>
+                    <i @click="showToggle" id="openNews" class="bi bi-caret-down-fill d-none text-white" style="margin-right: 5px;"></i>
+                    <i @click="showToggle" id="closeNews" class="bi bi-caret-up-fill text-white" style="margin-right: 5px;"></i>
                 </div>
-                <div class="card-body">
-                    <ul class="list-group">
+                <div class="card-body d-none" id="news-box">
+                    <ul class="list-group" v-if="areaNewsList.length > 0">
                         <li style="cursor:pointer; list-style: none;" v-for="(news, index) in areaNewsList" :key="index" class="rounded-3 mb-3">
                             <a :href="news.url" target="_blank" class="list-group-item list-group-item-action d-flex" style=" padding: 1rem;">
                                 <div style="margin-right: 1rem; width: 260px;" class="d-flex">
@@ -119,6 +111,9 @@
                             </a>
                         </li>
                     </ul><!-- end of .list-group -->
+                    <ul class="list-group" v-if="areaNewsList.length == 0">
+                        <p class="text-center pt-5 pb-5 mb-0">지역 선택 후 조회가 가능합니다.</p>
+                    </ul>
                 </div><!-- end of .card-body -->
             </div>
         </section>
@@ -206,7 +201,43 @@ export default {
         sidebarToggle(){
             document.getElementById('sidebar').classList.toggle('active');
         },
+        showToggle(){
+            document.getElementById('news-box').classList.toggle('d-none');
+            document.getElementById('openNews').classList.toggle('d-none');
+            document.getElementById('closeNews').classList.toggle('d-none');
+        },
+        closeNews(){
+            document.getElementById('news-box').classList.add('d-none');
+            document.getElementById('openNews').classList.remove('d-none');
+            document.getElementById('closeNews').classList.add('d-none');
+        },
+        setBlur(e){
+            e.target.blur();
+        },
 
+        initArea(){
+            this.sido = "0";
+        },
+        getBookmarkAreaList(){
+            this.$store.dispatch("bookmarkAreaList");
+        },
+        getAreaNews(e){
+            console.log(e.target.dataset.city);
+            this.$store.commit("SET_NEWS_CITY", e.target.dataset.city);
+            this.$store.commit("SET_NEWS_DVSN", e.target.dataset.gugun);
+
+            this.$store.dispatch("areaNewsList");
+            document.getElementById('news-box').classList.remove('d-none');
+        },
+        go2HouseMain(e){
+            this.sido = e.target.dataset.city;
+            this.gugun = e.target.dataset.gugun;
+            console.log(">>>>>>>>go2HouseMain")
+            console.log(this.gugun);
+            this.dong = e.target.dataset.code;
+            this.$router.push("/house");
+        },
+        
         async getSidoList() {
             this.$store.dispatch("getSidoList");
         },
@@ -216,12 +247,9 @@ export default {
         async getDongList() {
             this.$store.dispatch("getDongList");
         },
-
-        getBookmarkAreaList(){
-            this.$store.dispatch("bookmarkAreaList");
-        },
                 
         async addBookmarkArea(e){
+            document.querySelector('#news-box').classList.add('d-none');
             let dongCode = this.dong;
             let userSeq = this.userSeq;
             console.log(e.target);
@@ -236,6 +264,7 @@ export default {
                     this.doLogout();
                 }else{
                     this.getBookmarkAreaList();
+                    this.initArea();
                 }
 
             } catch(error){
@@ -266,15 +295,6 @@ export default {
                 console.log(error);
             }
         },
-
-        getAreaNews(e){
-            console.log(">>>>>>>>>>>>>>>>>>>> getAreaNews");
-            console.log(e.target.dataset.city);
-            this.$store.commit("SET_NEWS_CITY", e.target.dataset.city);
-            this.$store.commit("SET_NEWS_DVSN", e.target.dataset.gugun);
-
-            this.$store.dispatch("areaNewsList");
-        }
     },
     
 };
@@ -286,5 +306,9 @@ input[type="text"]{width: 250px; margin-right: 10px;}
 
 thead th{padding: 1rem;}
 
-.bi.bi-dash-circle-fill::before, .bi.bi-caret-down-fill::before{font-size: 22px;}
+.bi.bi-caret-down-fill::before,
+.bi.bi-caret-up-fill::before,
+.bi.bi-dash-circle-fill::before,
+.bi.bi-newspaper::before,
+.bi.bi-arrow-right-circle-fill::before{font-size: 22px;}
 </style>

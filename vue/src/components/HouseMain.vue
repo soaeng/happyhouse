@@ -19,11 +19,11 @@
             <div class="card">
                 <div class="card-header">
                     <fieldset class="form-group d-flex align-items-center justify-content-center mb-0">
-                        <select class="form-select" id="sido" v-model="sido">
+                        <select class="form-select" id="sido" v-model="sido" @blur="getGugunList">
                             <option value="0" selected>시/도</option>
                             <option v-for="(sido, index) in sidoList" :key="index" :value="sido.code">{{ sido.name }}</option>
                         </select>
-                        <select class="form-select" id="gugun" v-model="gugun">
+                        <select class="form-select" id="gugun" v-model="gugun" @blur="getDongList">
                             <option value="0" selected>구/군</option>
                             <option v-for="(gugun, index) in gugunList" :key="index" :value="gugun.code">{{ gugun.name }}</option>
                         </select>
@@ -143,39 +143,6 @@ export default {
             document.getElementById('sidebar').classList.toggle('active');
         },
 
-        async getSidoList() {
-            this.$store.dispatch("getSidoList");
-        },
-        async getGugunList() {
-            this.$store.dispatch("getGugunList");
-        },
-        async getDongList() {
-            this.$store.dispatch("getDongList");
-        },
-        async getHouseDealList() {
-            this.$store.state.address.dong;
-        },
-
-        //////////////////////////////////////////// methods - HOUSE
-        async getHouseList(){
-            if(this.$store.state.house.keyword == "" && this.dong == 0){
-        		this.$store.state.house.type = "init"; 	// 전체 목록
-        	} else if(this.$store.state.house.keyword == "" && this.dong != 0){
-        		this.$store.state.house.type = "dong";	// 동 검색 목록
-        	} else if(this.$store.state.house.keyword != "" && this.dong == 0) {
-        		this.$store.state.house.type = "name";	// 아파트명 검색 목록
-        	} else if(this.$store.state.house.keyword != "" && this.dong != 0) {
-        		this.$store.state.house.type = "all";	// 동, 아파트 검색 목록
-        	}
-            this.$store.state.house.dongCode = this.dong;
-            this.$store.dispatch("houseList");
-        },
-
-        async getHouseDealList(houseNo){
-            this.$store.state.house.houseNo = houseNo;
-            this.$store.dispatch("houseDealList");
-        },
-
         initPage(){
             this.$store.state.house.currentPageIndex = 1;
             this.$store.state.house.offset = 0;
@@ -200,15 +167,41 @@ export default {
             this.$store.dispatch("dealList");
         },
 
+        async getSidoList() {
+            this.$store.dispatch("getSidoList");
+        },
+        async getGugunList() {
+            this.$store.dispatch("getGugunList");
+        },
+        async getDongList() {
+            this.$store.dispatch("getDongList");
+        },
+        async getHouseDealList() {
+            this.$store.state.address.dong;
+        },
+        //////////////////////////////////////////// methods - HOUSE
+        async getHouseList(){
+            if(this.$store.state.house.keyword == "" && this.dong == 0){
+        		this.$store.state.house.type = "init"; 	// 전체 목록
+        	} else if(this.$store.state.house.keyword == "" && this.dong != 0){
+        		this.$store.state.house.type = "dong";	// 동 검색 목록
+        	} else if(this.$store.state.house.keyword != "" && this.dong == 0) {
+        		this.$store.state.house.type = "name";	// 아파트명 검색 목록
+        	} else if(this.$store.state.house.keyword != "" && this.dong != 0) {
+        		this.$store.state.house.type = "all";	// 동, 아파트 검색 목록
+        	}
+            this.$store.state.house.dongCode = this.dong;
+            this.$store.dispatch("houseList");
+        },
+
+        async getHouseDealList(houseNo){
+            this.$store.state.house.houseNo = houseNo;
+            this.$store.dispatch("houseDealList");
+        },
+
     },
 
     watch: {
-        sido: function () {
-            if (this.sido != "0") this.getGugunList();
-        },
-        gugun: function () {
-            if (this.gugun != "0") this.getDongList();
-        },
         dong: function () {
             this.getHouseList();
             this.initPage();
@@ -217,6 +210,10 @@ export default {
 
     created() {
         this.getSidoList();
+        if(this.sido != "0"){
+            this.getGugunList();
+            if(this.gugun != "0") this.getDongList();
+        }
         this.getHouseList();
     },
 

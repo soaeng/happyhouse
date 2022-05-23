@@ -21,6 +21,7 @@ export default {
 
 <style>
 #app {
+  word-break: keep-all;
   font-family: 'Noto Sans KR', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
