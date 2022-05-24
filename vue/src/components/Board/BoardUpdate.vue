@@ -1,40 +1,44 @@
 <template>
     <section class="section">
-        <div class="card board-update">
+        <div class="card">
             <div class="card-header">
-                <input type="text" class="form-control mb-3 mt-3" id="updateTitle" v-model="storeTitle">
+                <input type="text" class="form-control" v-model="storeTitle">
             </div>
-            <div class="card-body">
-                <div id="divEditorUpdate"></div>
-
-                <div v-if="$store.state.board.fileList.length > 0" class="mb-3">
-                    첨부파일 :
-                    <ul id="updateFileList">
-                        <div v-for="(file, index) in $store.state.board.fileList" class="fileName" :key="index"><i class="fa-solid fa-file"></i>{{ file.fileName }}</div>
-                    </ul>
-                </div>
-
-                <div class="form-check mb-3">
-                    <input v-model="attachFile" class="form-check-input" type="checkbox" value="" id="chkFileUploadUpdate" />
-                    <label class="form-check-label" for="chkFileUploadUpdate">파일 변경</label>
-                </div>
-
-                <div class="mb-3" v-show="attachFile" id="imgFileUploadUpdateWrapper">
-                    <input @change="changeFile" type="file" id="inputFileUploadUpdate" multiple />
-                    <div id="imgFileUploadUpdateThumbnail" class="thumbnail-wrapper">
-                        <img v-for="(file, index) in fileList" v-bind:src="file" v-bind:key="index" />
+            <div class="card-content">
+                <div class="card-body pt-0">
+                    <div id="divEditorUpdate"></div>
+                    <div v-if="$store.state.board.fileList.length > 0" class="mb-4 mt-4">
+                        <p class="mb-3 fw-bold">첨부파일</p>
+                        <ul id="updateFileList" class="text-sm" v-for="(file, index) in $store.state.board.fileList" :key="index" style="padding-left: 0;">
+                            <li class="list-unstyled">
+                                <span class="bg-light-secondary rounded" style="padding: .3rem .6rem">
+                                    <i class="bi bi-file-earmark-text"></i>{{ file.fileName }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
-                </div>
-            </div>
+                    <hr>
+                    <div class="form-check mt-3 mb-3">
+                        <input v-model="attachFile" class="form-check-input" type="checkbox" value="" id="chkFileUploadUpdate" />
+                        <label class="form-check-label" for="chkFileUploadUpdate">파일 변경</label>
+                    </div>
 
-            <div class="btn-box">
-                <button @click="boardUpdate" class="btn btn-primary">수정</button>
-                <router-link to="/board/detail" >
-                    <button class="btn btn-secondary" aria-label="Close">취소</button>     
-                </router-link></div>
-            
-        </div>
-
+                    <div class="mb-3" v-show="attachFile" id="imgFileUploadUpdateWrapper">
+                        <div class="input-group">
+                            <label class="input-group-text" for="inputFileUploadInsert"><i class="bi bi-upload"></i></label>
+                            <input @change="changeFile" type="file" class="form-control" id="inputFileUploadUpdate" multiple>
+                        </div><!-- end of .input-group -->
+                        <div id="imgFileUploadUpdateThumbnail" class="thumbnail-wrapper">
+                            <img v-for="(file, index) in fileList" v-bind:src="file" v-bind:key="index" />
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button @click="boardUpdate" class="btn btn-primary">수정</button>
+                        <router-link to="/board/detail" class="btn btn-secondary" style="margin-left: 10px;">취소</router-link>
+                    </div>
+                </div><!-- end of .card-body -->
+            </div><!-- end of .card-content -->
+        </div><!-- end of .card -->
     </section>
 </template>
 
@@ -55,7 +59,7 @@ export default {
         return {
         CKEditor: "",
         attachFile: false,
-         fileList: [], // store 의 fileList 와 구분됨. 새로 첨부되는 파일을 위한.
+        fileList: [],
         };
     },
     computed: {
@@ -107,15 +111,14 @@ export default {
             let attachFiles = document.querySelector("#inputFileUploadUpdate").files;
 
             if (attachFiles.length > 0) {
-            const fileArray = Array.from(attachFiles);
-            fileArray.forEach((file) => formData.append("file", file));
+                const fileArray = Array.from(attachFiles);
+                fileArray.forEach((file) => formData.append("file", file));
             }
 
             let options = {
-            headers: { "Content-Type": "multipart/form-data" },
+                headers: { "Content-Type": "multipart/form-data" },
             };
 
-            // not put, REST but FileUpload
             try {
                 let { data } = await http.post("/boards/" + this.$store.state.board.boardId, formData, options);
 
@@ -125,6 +128,7 @@ export default {
                 this.doLogout();
                 } else {
                 this.$alertify.success("글이 수정되었습니다.");
+                this.$store.dispatch("boardList");
                 this.$router.push("/board")
                 }
             } catch (error) {
@@ -161,17 +165,5 @@ export default {
     max-width: 100%;
 }
 
-/*-- board-detail --*/
-.board-detail, .board-insert, .board-update{box-shadow: 0 0 10px rgba(0, 0, 0, .1); border-radius: 1rem; padding: 40px; margin-top: 30px;}
-
-ul[id$="FileList"] {padding: 0;}
-ul[id$="FileList"] .fileName{font-size: 14px;}
-ul[id$="FileList"] a[type="button"]{background-color:#F5F5F5; padding: 0 .5rem;}
-
-
-/*-- board-update --*/
-#imgFileUploadUpdateWrapper{display:none}
-.btn-box{display: flex; justify-content: flex-end; margin-bottom: 10px;}
-.modal-body .btn-box .btn{margin-left: 10px; padding: .5rem 2rem; font-size: 14px;}
-.ck.ck-editor__editable{height: 650px;}
+.bi.bi-file-earmark-text::before{margin-top: .2rem; margin-right: .5rem;}
 </style>

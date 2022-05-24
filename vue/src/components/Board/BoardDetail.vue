@@ -1,44 +1,44 @@
 <template>
     <section class="section">
-        <div class="card board-detail">
+        <div class="card">
             <div class="card-header">
-                <p id="detailBoardId" class="d-none"></p>
-                <h2 id="detailTitle">{{ $store.state.board.title }}</h2>
-                <div class="board-info">
-                    <p>작성자<span id="detailWriter">{{ $store.state.board.userName }}</span></p>
-                    <p>작성일<span id="detailRegdate">{{ $store.state.board.regDate }} {{ $store.state.board.regTime }}</span></p>
-                    <p>조회수<span id="detailCount">{{ $store.state.board.readCount }}</span></p>
+                <h5 class="text-center mb-4">{{ $store.state.board.title }}</h5>
+                <div class="d-flex justify-content-between board-info text-gray-600">
+                    <p class="mb-0"><i class="bi bi-person"></i>작성자<span>{{ $store.state.board.userName }}</span></p>
+                    <div class="d-flex">
+                        <p class="mb-0"><i class="bi bi-calendar-date"></i>작성일<span>{{ $store.state.board.regDate }} {{ $store.state.board.regTime }}</span></p>
+                        <p class="mb-0"><i class="bi bi-eye"></i>조회수<span>{{ $store.state.board.readCount }}</span></p>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div id="detailContent" v-html="$store.state.board.content"></div>
-            
-                <div id="detailFile-box">
-                    <p class="d-none">첨부파일</p>
-                    <ul id="detailFileList" v-if="$store.state.board.fileList.length > 0">
-                        <li class="mb-2"  v-for="(file, index) in $store.state.board.fileList" :key="index">
-                        <a type="button" class="btn btn-outline btn-default btn-xs" v-bind:href="file.fileUrl" v-bind:download="file.fileName">
-                            &nbsp;<i class="fa-solid fa-paperclip"></i>&nbsp;
-                            <span class="fileName">{{ file.fileName }}</span>&nbsp;&nbsp;
-                            <i class="fa-solid fa-download" stype="margin:0"></i>
-                        </a>	
-                        </li>
-                    </ul>
-                </div>
+            </div><!-- end of .card-header -->
+            <hr class="mt-0 mb-0">
+            <div class="card-content">
+                <div class="card-body">
+                    <div v-html="$store.state.board.content" style="min-height: 300px;"></div>
+                    <div>
+                        <p class="d-none">첨부파일</p>
+                        <div v-if="$store.state.board.fileList.length > 0">
+                            <hr>
+                            <p class="mb-3 fw-bold">첨부파일</p>
+                            <ul class="text-sm" v-for="(file, index) in $store.state.board.fileList" :key="index" style="padding-left: 0;">
+                                <li class="list-unstyled">
+                                    <a v-bind:href="file.fileUrl" v-bind:download="file.fileName">
+                                        <span class="bg-light-secondary rounded" style="padding: .3rem .6rem; margin-right: 1rem;">
+                                            <i class="bi bi-download"></i>{{ file.fileName }}
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-                <div class="btn-box">
-                    <router-link to="/board/update">
-                        <button v-show="$store.state.board.sameUser" class="btn btn-primary" type="button">
-                            글 수정하기
-                        </button>
-                    </router-link>
-                    <button v-show="$store.state.board.sameUser" @click="changeToDelete" class="btn btn-secondary" type="button">글 삭제하기</button>
-                </div>
-            </div>
-
-            
-        </div>
-
+                    <div class="btn-box text-end" v-show="$store.state.board.sameUser">
+                        <router-link to="/board/update" class="btn btn-primary">글 수정하기</router-link>
+                        <button @click="changeToDelete" class="btn btn-secondary" style="margin-left: 10px;">글 삭제하기</button>
+                    </div>
+                </div><!-- end of .card-body -->
+            </div><!-- end of .card-content-->
+        </div><!-- end of .card -->
     </section>
 </template>
 
@@ -114,27 +114,10 @@ export default {
 
 <style scoped>
 /*-- board-detail --*/
-.board-detail, .board-insert, .board-update{box-shadow: 0 0 10px rgba(0, 0, 0, .1); border-radius: 1rem; padding: 40px; margin-top: 30px;}
-.board-detail #detailTitle{font-size:20px; text-align: center; background-color: #F5F5F5; padding: 10px; margin-bottom: 15px;}
-.board-detail .board-info{display: flex; justify-content: flex-end; padding-right:10px}
-.board-detail .board-info p{font-weight: 500;}
-.board-detail .board-info p span{font-weight: 400; margin-left: 10px;}
-.board-detail .board-info p::before{content:""; display: inline-block; width: 2px; height: 13px; background-color: #AAA; margin: 0 12px;}
-.board-detail .board-info p:first-child::before{display: none;}
-.board-detail #detailContent{ border-top: 1px solid #AAA; border-bottom:1px solid #AAA; padding: 30px 20px; word-break: keep-all; margin-bottom: 50px;}
-.board-detail .move-box ul{padding: 0; margin-bottom: 50px; border-bottom: 2px solid #CCC;border-top: 2px solid #CCC;}
-.board-detail .move-box li {height: 40px; display: flex;}
-.board-detail .move-box li:first-child{ border-bottom: 1px solid #CCC;}
-.board-detail .move-box li .list-title{display: inline-block; width:100px; height: 40px; line-height: 40px; background-color: #EEE; font-size: 14px; text-align: center;}
-.board-detail .move-box li .list-title i{margin-left: 8px; margin-right: 0;}
-.board-detail .move-box li:first-child .list-title{height: 39px;}
-.board-detail .move-box .list-text{display:block; width:824px; height:40px; line-height: 40px; font-size: 14px; color: #555; padding-left: 20px;}
-.board-detail .move-box .list-text:hover{color: #333;}
-.board-detail .move-box .text-ellipsis{white-space:nowrap;word-break: keep-all; overflow: hidden; text-overflow: ellipsis; display: block;}
-
-ul[id$="FileList"] {padding: 0;}
-ul[id$="FileList"] .fileName{font-size: 14px;}
-ul[id$="FileList"] a[type="button"]{background-color:#F5F5F5; padding: 0 .5rem;}
-.board-detail #detailFileList span{font-weight: 500; line-height: 34px;}
-.board-detail #detailFileList a{font-size: 13px;}
+.board-info i::before{margin-top: .25rem; margin-right: .35rem;}
+.board-info p{font-weight: 500; font-size: 14px;  color: #6C757D;}
+.board-info p span{font-weight: 400; margin-left: 10px; color:#435ebe;}
+.board-info p::before{content:""; display: inline-block; width: 1px; height: 13px; background-color: #435ebe; margin: 0 12px;}
+.board-info p:first-child::before{display: none;}
+.bi.bi-download::before{margin-top: .3rem; margin-right: .8rem;}
 </style>
