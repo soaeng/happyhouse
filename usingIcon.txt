@@ -7,3 +7,5 @@ suit-heart-fill
 suit-heart
 geo-alt-fill
 calendar2-date
+
+dash-circle-fill

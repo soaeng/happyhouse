@@ -7,7 +7,7 @@ import Login from "@/components/Login.vue";
 import UserRegister from "@/components/UserRegister.vue";
 import UserInfo from "@/components/UserInfo.vue";
 import HouseMain from "@/components/HouseMain.vue";
-import Bookmark from "@/components/Bookmark.vue";
+import Bookmark from "@/components/Bookmark/Bookmark.vue";
 import BookmarkArea from "@/components/Bookmark/BookmarkArea.vue";
 import BookmarkHouse from "@/components/Bookmark/BookmarkHouse.vue";
 import BookmarkDeal from "@/components/Bookmark/BookmarkDeal.vue";
