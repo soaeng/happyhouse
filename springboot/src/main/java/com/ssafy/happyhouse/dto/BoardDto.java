@@ -5,10 +5,17 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class BoardDto {
 	
 	private int boardId;
@@ -37,6 +44,6 @@ public class BoardDto {
 	public void setRegDt(Date regDt) {
 		this.regDt = LocalDateTime.ofInstant(
 				regDt.toInstant(), ZoneId.systemDefault()
-		);	// for Mybatis Date Mapping
+		);
 	}
 }

@@ -31,14 +31,21 @@ import lombok.extern.log4j.Log4j2;
 		/* for production code */
 		//uploadPath = getServletContext().getRealPath("/");
 		// C:\Users\sodud\Desktop\SSAFY\ssafy_spring\HappyHouse\src\main\resources
-		
+		// C:\Users\sodud\Desktop\SSAFY\vue\vue_cli\happyhouse-final\springboot
 		/* for eclipse development code */
-		String uploadPath = "C:" + File.separator + "Users" +File.separator + "sodud" +File.separator + "Desktop" +File.separator + "SSAFY" + File.separator + "ssafy_spring_boot" 
-				+ File.separator + "Happy_House_7_Vue" 
-				+ File.separator + "src" 
-				+ File.separator + "main"
-				+ File.separator + "resources"
-				+ File.separator + "static";
+//		String uploadPath = "C:" + File.separator + "Users" +File.separator + "sodud" +File.separator + "Desktop" +File.separator + "SSAFY"
+//				+ File.separator + "vue" + File.separator + "vue_cli"  
+//				+ File.separator + "happyhouse-final" + File.separator + "springboot"  
+//				+ File.separator + "src" 
+//				+ File.separator + "main"
+//				+ File.separator + "resources"
+//				+ File.separator + "static";
+		
+		String uploadPath = "C:" + File.separator + "Users" +File.separator + "sodud" +File.separator + "Desktop" +File.separator + "SSAFY"
+				+ File.separator + "vue" + File.separator + "vue_cli"  
+				+ File.separator + "happyhouse-final" + File.separator + "vue"  
+				+ File.separator + "public" 
+				+ File.separator + "assets";
 		
 	private static final int SUCCESS = 1;
 	private static final int FAIL = -1;
@@ -161,52 +168,52 @@ import lombok.extern.log4j.Log4j2;
 			File uploadDir = new File(uploadPath + File.separator + uploadFolder);
 			if (!uploadDir.exists()) uploadDir.mkdir();
 			
-			// 물리 파일 삭제, 첨부파일 여러개 고려
-	    	List<String> fileUrlList = dao.boardFileUrlDeleteList(dto.getBoardId());
-	    	// log.info("----- 게시판에 저장된 삭제될 첨부파일 주소 -----");
-	    	// fileUrlList.forEach(url -> log.info(url));
-	    	
-			for(String fileUrl : fileUrlList) {	
-				File file = new File(uploadPath + File.separator, fileUrl);
-				if(file.exists()) {
-					file.delete();
+			if(fileList.size() > 0) {
+				// 물리 파일 삭제, 첨부파일 여러개 고려
+		    	List<String> fileUrlList = dao.boardFileUrlDeleteList(dto.getBoardId());
+		    	// log.info("----- 게시판에 저장된 삭제될 첨부파일 주소 -----");
+		    	// fileUrlList.forEach(url -> log.info(url));
+		    	
+				for(String fileUrl : fileUrlList) {	
+					File file = new File(uploadPath + File.separator, fileUrl);
+					if(file.exists()) {
+						file.delete();
+					}
+				}
+	
+		    	dao.boardFileDelete(dto.getBoardId()); // 테이블 파일 삭제
+		    	// log.info("해당 게시물에 있는 파일 DB 삭제");
+		    	
+				for (MultipartFile part : fileList) {
+					int boardId = dto.getBoardId();
+					
+					String fileName = part.getOriginalFilename();
+					
+					//Random File Id
+					UUID uuid = UUID.randomUUID();
+					
+					//file extension
+					String extension = FilenameUtils.getExtension(fileName); // vs FilenameUtils.getBaseName()
+				
+					String savingFileName = uuid + "." + extension;
+				
+					File destFile = new File(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
+					
+					// System.out.println(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
+					part.transferTo(destFile);
+			    
+				    // Table Insert
+				    BoardFileDto boardFileDto = new BoardFileDto();
+				    boardFileDto.setBoardId(boardId);
+				    boardFileDto.setFileName(fileName);
+				    boardFileDto.setFileSize(part.getSize());
+					boardFileDto.setFileContentType(part.getContentType());
+					String boardFileUrl = uploadFolder + "/" + savingFileName;
+					boardFileDto.setFileUrl(boardFileUrl);
+					
+					dao.boardFileInsert(boardFileDto);
 				}
 			}
-
-	    	dao.boardFileDelete(dto.getBoardId()); // 테이블 파일 삭제
-	    	// log.info("해당 게시물에 있는 파일 DB 삭제");
-	    	
-			for (MultipartFile part : fileList) {
-				int boardId = dto.getBoardId();
-				
-				String fileName = part.getOriginalFilename();
-				
-				//Random File Id
-				UUID uuid = UUID.randomUUID();
-				
-				//file extension
-				String extension = FilenameUtils.getExtension(fileName); // vs FilenameUtils.getBaseName()
-			
-				String savingFileName = uuid + "." + extension;
-			
-				File destFile = new File(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
-				
-				// System.out.println(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
-				part.transferTo(destFile);
-		    
-			    // Table Insert
-			    BoardFileDto boardFileDto = new BoardFileDto();
-			    boardFileDto.setBoardId(boardId);
-			    boardFileDto.setFileName(fileName);
-			    boardFileDto.setFileSize(part.getSize());
-				boardFileDto.setFileContentType(part.getContentType());
-				String boardFileUrl = uploadFolder + "/" + savingFileName;
-				boardFileDto.setFileUrl(boardFileUrl);
-				
-				dao.boardFileInsert(boardFileDto);
-				// log.info("해당 게시물에 다시 첨부파일 등록");
-			}
-
 			boardResultDto.setResult(SUCCESS);
 			
 		}catch(IOException e) {
@@ -261,19 +268,19 @@ import lombok.extern.log4j.Log4j2;
 	public BoardResultDto boardList(BoardParamDto boardParamDto) {
 		log.info("===== 게시글 목록 service =====");
 		BoardResultDto boardResultDto = new BoardResultDto();
-		
 		try {
+			log.info("boardParamDto: " + boardParamDto);
 			List<BoardDto> list = dao.boardList(boardParamDto);
-			// log.info("----- 게시글 -----");
+			log.info("----- 게시글 -----");
 			list.forEach(board -> {
 				List<BoardFileDto> fileList = dao.boardDetailFileList(board.getBoardId());
 				board.setFileList(fileList);
-				// log.info(board);	
+				log.info(board);	
 				
 			});
 	    	
 			int count = dao.boardListTotalCount();
-			// log.info("게시글 총 수: " + count);
+			log.info("게시글 총 수: " + count);
 			
 			boardResultDto.setList(list);
 			boardResultDto.setCount(count);
