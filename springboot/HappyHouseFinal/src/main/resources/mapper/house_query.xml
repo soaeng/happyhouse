@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.ssafy.happyhouse.dao.HouseDao">
+
+
+
+	<!-- # 지역코드 -->
+	<!-- 시도코드 -->
+	<select id="sidoList" resultType="com.ssafy.happyhouse.dto.AreaCodeDto">
+		SELECT code, name 
+		FROM sido_code;
+	</select>
+	
+	<!-- 구군코드 -->
+	<select id="gugunList" parameterType="string" resultType="com.ssafy.happyhouse.dto.AreaCodeDto">
+		SELECT code, name
+		FROM gugun_code 
+		WHERE sido_code = #{sidoCode} 
+		ORDER BY name;
+	</select>
+	
+	<!-- 동코드 -->
+	<select id="dongList"  parameterType="string" resultType="com.ssafy.happyhouse.dto.AreaCodeDto">
+		SELECT code, name, city_code, city_name, gugun_code, gugun_name
+		FROM dong_code
+		WHERE gugun_code = #{gugunCode} 
+		ORDER BY name;
+	</select>
+	
+	<!-- 동조회 -->
+	<select id="dongDetail" parameterType="map" resultType="com.ssafy.happyhouse.dto.AreaCodeDto">
+		SELECT * FROM dong_code 
+		WHERE gugun_code = #{gugunCode} AND name = #{name};
+	</select>
+	
+
+
+	<!-- # 아파트 목록 -->
+	<!-- 전체 아파트 목록 -->
+	<select id="initAptList"  parameterType="com.ssafy.happyhouse.dto.HouseParamDto"  resultType="com.ssafy.happyhouse.dto.HouseDto">
+		SELECT * FROM
+			(SELECT hd.no, hd.dong, hd.AptName, hd.code, hd.dealAmount, hd.buildYear, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area, hd.floor, hi.lat, hi.lng, hd.house_no
+	 		 FROM housedeal hd, houseinfo hi 
+			 WHERE hd.house_no = hi.no
+			 ORDER BY hd.no DESC
+			 LIMIT 18446744073709551615) a
+		GROUP BY house_no
+		LIMIT #{limit} OFFSET #{offset};
+	</select>
+	
+	<!-- 아파트 총 수 -->
+	<select id="initAptListTotalCount" resultType="int">
+		SELECT count(DISTINCT no)
+		FROM houseinfo;
+	</select>
+
+	<!-- 동별 아파트 검색 목록 -->
+	<select id="dongAptList" parameterType="com.ssafy.happyhouse.dto.HouseParamDto" resultType="com.ssafy.happyhouse.dto.HouseDto">
+		SELECT * FROM
+			(SELECT hd.no, hd.dong, hd.AptName, hd.code, hd.dealAmount, hd.buildYear, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area, hd.floor, hi.lat, hi.lng, hd.house_no
+	   		 FROM housedeal hd, houseinfo hi,
+	   			(SELECT name, gugun_code
+	   			 FROM dong_code
+	   			 WHERE code = #{dongCode}) dc
+		   	 WHERE hd.house_no = hi.no AND hd.dong = dc.name
+		   	 ORDER BY hd.no DESC
+		   	 LIMIT 18446744073709551615) a
+		GROUP BY house_no
+		LIMIT #{limit} OFFSET #{offset};
+	</select>
+	
+	<!-- 동별 아파트 검색 총 수 -->
+	<select id="dongAptListTotalCount" parameterType="string"  resultType="int">
+		SELECT count(DISTINCT no) FROM houseinfo,
+			(SELECT name, gugun_code
+			 FROM dong_code
+			 WHERE code = #{dongCode}) dc
+		WHERE dong = dc.name;
+	</select>
+
+	<!-- 아파트명 검색 목록 -->
+	<select id="nameAptList" parameterType="com.ssafy.happyhouse.dto.HouseParamDto" resultType="com.ssafy.happyhouse.dto.HouseDto">
+		SELECT * FROM
+			(SELECT hd.no, hd.dong, hd.AptName, hd.code, hd.dealAmount, hd.buildYear, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area, hd.floor, hi.lat, hi.lng, hd.house_no
+			 FROM housedeal hd, houseinfo hi
+			 WHERE hd.house_no = hi.no AND hd.AptName LIKE concat('%', #{keyword}, '%')
+			 ORDER BY no DESC
+			 LIMIT 18446744073709551615) a
+		GROUP BY house_no
+	   	LIMIT #{limit} OFFSET #{offset};
+	</select>
+	
+	<!-- 아파트 검색 총 수 -->
+	<select id="nameAptListTotalCount" parameterType="string" resultType="int">
+		SELECT count(DISTINCT no) FROM houseinfo
+	   	WHERE AptName LIKE concat('%', #{keyword}, '%');
+	</select>
+	
+	<!-- 동 아파트명 검색 목록 -->
+	<select id="allAptList" parameterType="com.ssafy.happyhouse.dto.HouseParamDto" resultType="com.ssafy.happyhouse.dto.HouseDto">
+		SELECT * FROM
+			(SELECT hd.no, hd.dong, hd.AptName, hd.code, hd.dealAmount, hd.buildYear, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area, hd.floor, hi.lat, hi.lng, hd.house_no
+			 FROM housedeal hd, houseinfo hi,
+			 	(SELECT name, gugun_code
+			 	 FROM dong_code
+			 	 WHERE code = #{dongCode}) dc
+			 WHERE hd.house_no = hi.no AND hd.AptName LIKE concat('%', #{keyword}, '%') AND hd.dong = dc.name
+			 ORDER BY no DESC
+			 LIMIT 18446744073709551615) a
+		GROUP BY house_no
+	   	LIMIT #{limit} OFFSET #{offset};
+	</select>
+	
+	<!-- 동 아파트 검색 총 수 -->
+	<select id="allAptListTotalCount" parameterType="map" resultType="int">
+		SELECT count(DISTINCT no) FROM houseinfo,
+			(SELECT name, gugun_code
+			FROM dong_code
+			WHERE code = #{dongCode}) dc
+		WHERE dong = dc.name AND AptName LIKE concat('%', #{keyword}, '%');
+	</select>
+	
+	
+	
+	<!-- # 거래 목록 -->
+	<!-- 아파트별 거래 상세 목록 -->
+	<select id="aptDealList" parameterType="int" resultType="com.ssafy.happyhouse.dto.HouseDto">
+		SELECT hd.no, hd.dong, hd.AptName, hd.code, hd.dealAmount, hd.buildYear, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area, hd.floor, hi.lat, hi.lng, hd.house_no
+ 		FROM housedeal hd, houseinfo hi 
+		WHERE hd.house_no = hi.no AND hd.house_no = #{houseNo}
+		ORDER BY hd.no DESC;
+	</select>
+
+	<!-- 아파트별 거래 수 -->
+	<select id="aptDealListTotalCount" parameterType="int" resultType="int">
+		SELECT count(*)
+	   	FROM housedeal
+	   	WHERE house_no = #{houseNo};
+	</select>
+	
+	
+	
+	<!-- # 거래 목록 -->
+	<!-- 관심지역 등록 -->
+	<insert id="insertBookmarkArea" parameterType="com.ssafy.happyhouse.dto.BookmarkDto">
+		INSERT INTO bookmark_area(dong_code, user_seq) VALUES(#{dongCode}, #{userSeq});
+	</insert>
+	
+	<!-- 관심지역 조회 -->
+	<select id="bookmarkAreaList" parameterType="int" resultType="com.ssafy.happyhouse.dto.AreaCodeDto">
+		SELECT code, name, city_code, city_name, gugun_code, gugun_name 
+		FROM bookmark_area ba
+		JOIN dong_code dc ON ba.dong_code = dc.code
+		WHERE ba.user_seq = #{userSeq};
+	</select>
+	
+	<!-- 관심지역 삭제 -->
+	<delete id="deleteBookmarkArea" parameterType="com.ssafy.happyhouse.dto.BookmarkDto">
+		DELETE FROM bookmark_area WHERE dong_code = #{dongCode} AND user_seq = #{userSeq};
+	</delete>
+	
+	
+	<!-- 관심아파트 등록 -->
+	<insert id="insertBookmarkHouse" parameterType="com.ssafy.happyhouse.dto.BookmarkDto">
+		INSERT INTO bookmark_house(house_no, user_seq) VALUES(#{houseNo}, #{userSeq});
+	</insert>
+		
+	<!-- 관심아파트 조회 -->
+	<select id="bookmarkHouseList" parameterType="int" resultType="com.ssafy.happyhouse.dto.BookmarkDto">
+		SELECT * FROM bookmark_house WHERE user_seq = #{userSeq};
+	</select>
+		
+	<!-- 관심아파트 여부 -->
+	<select id="checkBookmarkHouse" parameterType="com.ssafy.happyhouse.dto.BookmarkDto" resultType="boolean">
+		SELECT EXISTS (SELECT * FROM bookmark_house WHERE house_no=#{houseNo} AND user_seq=#{userSeq} LIMIT 1) bookmark;
+	</select>
+	
+	<!-- 관심아파트 삭제 -->
+	<delete id="deleteBookmarkHouse" parameterType="com.ssafy.happyhouse.dto.BookmarkDto">
+		DELETE FROM bookmark_house WHERE house_no = #{houseNo} AND user_seq = #{userSeq};
+	</delete>
+	
+	
+	<!-- 관심거래 등록 -->
+	<insert id="insertBookmarkDeal" parameterType="com.ssafy.happyhouse.dto.BookmarkDto">
+		INSERT INTO bookmark_deal(deal_no, user_seq) VALUES(#{dealNo}, #{userSeq});
+	</insert>
+		
+	<!-- 관심거래 조회 -->
+	<select id="bookmarkDealList" parameterType="int" resultType="com.ssafy.happyhouse.dto.HouseDto">
+		SELECT h.no, h.dong, h.AptName, h.code, h.dealAmount, h.buildYear, h.dealYear, h.dealMonth, h.dealDay, h.area, h.floor, h.lat, h.lng, h.house_no
+		FROM bookmark_deal bd JOIN (
+			SELECT hd.no, hd.dong, hd.AptName, hd.code, hd.dealAmount, hd.buildYear, hd.dealYear, hd.dealMonth, hd.dealDay, hd.area, hd.floor, hi.lat, hi.lng, hd.house_no
+			FROM housedeal hd, houseinfo hi 
+			WHERE hd.house_no = hi.no
+		) h ON bd.deal_no = h.no
+		WHERE bd.user_seq = #{userSeq};
+	</select>
+			
+	<!-- 관심거래 여부 -->
+	<select id="checkBookmarkDeal" parameterType="com.ssafy.happyhouse.dto.BookmarkDto" resultType="boolean">
+		SELECT EXISTS (SELECT * FROM bookmark_deal WHERE deal_no=#{dealNo} AND user_seq=#{userSeq} LIMIT 1) bookmark;
+	</select>
+	
+	<!-- 관심거래 삭제 -->
+	<delete id="deleteBookmarkDeal" parameterType="com.ssafy.happyhouse.dto.BookmarkDto">
+		DELETE FROM bookmark_deal WHERE deal_no = #{dealNo} AND user_seq = #{userSeq};
+	</delete>
+	
+	
+</mapper>
+

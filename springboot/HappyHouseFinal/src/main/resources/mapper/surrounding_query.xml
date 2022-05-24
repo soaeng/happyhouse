@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="com.ssafy.happyhouse.dao.SurroundingDao">
+
+	<select id="cafeList" parameterType="map" resultType="com.ssafy.happyhouse.dto.SurroundingDto">
+		<!-- select * from starbucks where gugun_code = #{code} and dong=#{dong}; -->
+		<![CDATA[
+			SELECT *,
+			ST_DISTANCE_SPHERE(POINT(#{lng} , #{lat}), POINT(lng , lat)) AS distance
+			FROM starbucks
+			WHERE ST_DISTANCE_SPHERE(POINT(#{lng} , #{lat}),  POINT(lng , lat)) <= 1000
+			ORDER BY distance;
+		]]>
+	</select>
+	
+	<select id="schoolList" parameterType="map" resultType="com.ssafy.happyhouse.dto.SurroundingDto">
+		<!-- select * from school where gugun_code = #{code} and dong=#{dong}; -->
+		<![CDATA[
+			SELECT *,
+			ST_DISTANCE_SPHERE(POINT(#{lng} , #{lat}), POINT(lng , lat)) AS distance
+			FROM school
+			WHERE ST_DISTANCE_SPHERE(POINT(#{lng} , #{lat}),  POINT(lng , lat)) <= 1000
+			ORDER BY distance;
+		]]>
+	</select>
+	
+	<select id="busStopList" parameterType="map" resultType="com.ssafy.happyhouse.dto.SurroundingDto">
+		
+		<![CDATA[
+			SELECT *,
+			ST_DISTANCE_SPHERE(POINT(#{lng} , #{lat}), POINT(lng , lat)) AS distance
+			FROM bus
+			WHERE ST_DISTANCE_SPHERE(POINT(#{lng} , #{lat}),  POINT(lng , lat)) <= 300
+			ORDER BY distance;
+		]]>
+	</select>
+</mapper>
