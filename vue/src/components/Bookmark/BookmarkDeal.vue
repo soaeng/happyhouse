@@ -19,48 +19,50 @@
         </div> <!-- end of .page-title -->
         <section class="section">
             <div class="card">
-                <div class="card-body">
-                    <table class="table table-md table-hover mb-0 text-center">
-                        <colgroup>
-                            <col width="10%">
-                            <col width="27%">
-                            <col width="12%">
-                            <col width="10%">
-                            <col width="15%">
-                            <col width="14%">
-                            <col width="12%">
-                        </colgroup>
-                        <thead class="bg-primary text-white">
-                            <tr>
-                                <th>번호</th>
-                                <th>아파트명</th>
-                                <th>면적(㎡)</th>
-                                <th>층</th>
-                                <th>거래금액</th>
-                                <th>거래일시</th>
-                                <th>삭제</th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="bookmarkDealList.length > 0">
-                            <tr v-for="(deal, index) in bookmarkDealList" :key="index">
-                                <td>{{ deal.no }}</td>
-                                <td style="cursor:pointer" @click="setHouseNo(deal.houseNo)">{{ deal.AptName }}</td>
-                                <td>{{ deal.area }}</td>
-                                <td>{{ deal.floor }}</td>
-                                <td>{{ deal.dealAmount }}만 원</td>
-                                <td>{{ deal.dealYear }}-{{ deal.dealMonth | setDate }}-{{ deal.dealDay | setDate }}</td>
-                                <td>
-                                    <a style="cursor:pointer"  class="text-danger" @click="removeBookmarkDeal">
-                                        <i class="bi bi-dash-circle-fill" :data-no="deal.no"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div v-if="bookmarkDealList.length == 0" class="w-100 text-center" style="border-bottom: 1px solid #DEDEDE;">
-                        <p class="pt-5 pb-5 text-sm mb-0">등록된 관심거래가 없습니다.</p>
-                    </div>
-                </div><!-- end of .card-body -->
+                <div class="card-content">
+                    <div class="card-body">
+                        <table class="table table-md table-hover mb-0 text-center">
+                            <colgroup>
+                                <col width="10%">
+                                <col width="27%">
+                                <col width="12%">
+                                <col width="10%">
+                                <col width="15%">
+                                <col width="14%">
+                                <col width="12%">
+                            </colgroup>
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th>번호</th>
+                                    <th>아파트명</th>
+                                    <th>면적(㎡)</th>
+                                    <th>층</th>
+                                    <th>거래금액</th>
+                                    <th>거래일시</th>
+                                    <th>삭제</th>
+                                </tr>
+                            </thead>
+                            <tbody v-if="bookmarkDealList.length > 0">
+                                <tr v-for="(deal, index) in bookmarkDealList" :key="index">
+                                    <td>{{ deal.no }}</td>
+                                    <td style="cursor:pointer" @click="setHouseNo(deal.houseNo)">{{ deal.AptName }}</td>
+                                    <td>{{ deal.area }}</td>
+                                    <td>{{ deal.floor }}</td>
+                                    <td>{{ deal.dealAmount }}만 원</td>
+                                    <td>{{ deal.dealYear }}-{{ deal.dealMonth | setDate }}-{{ deal.dealDay | setDate }}</td>
+                                    <td>
+                                        <a style="cursor:pointer"  class="text-danger" @click="removeBookmarkDeal">
+                                            <i class="bi bi-dash-circle-fill" :data-no="deal.no"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div v-if="bookmarkDealList.length == 0" class="w-100 text-center" style="border-bottom: 1px solid #DEDEDE;">
+                            <p class="pt-5 pb-5 text-sm mb-0">등록된 관심거래가 없습니다.</p>
+                        </div>
+                    </div><!-- end of .card-body -->
+                </div>
             </div><!-- end of .card -->
         </section>
     </main>

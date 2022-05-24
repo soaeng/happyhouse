@@ -15,6 +15,13 @@
                     <ul class="menu">
 
                         <li class="sidebar-item">
+                            <router-link to="/board" class='sidebar-link'>
+                                <i class="bi bi-megaphone-fill"></i>
+                                <span>공지사항</span>
+                            </router-link>
+                        </li>
+
+                        <li class="sidebar-item">
                             <a href="/house" class='sidebar-link'>
                                 <i class="bi bi-search"></i>
                                 <span>아파트 검색</span>

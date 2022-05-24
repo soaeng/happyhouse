@@ -6,11 +6,19 @@ Vue.use(VueRouter)
 import Login from "@/components/Login.vue";
 import UserRegister from "@/components/UserRegister.vue";
 import UserInfo from "@/components/UserInfo.vue";
+
 import HouseMain from "@/components/HouseMain.vue";
+
 import Bookmark from "@/components/Bookmark/Bookmark.vue";
 import BookmarkArea from "@/components/Bookmark/BookmarkArea.vue";
 import BookmarkHouse from "@/components/Bookmark/BookmarkHouse.vue";
 import BookmarkDeal from "@/components/Bookmark/BookmarkDeal.vue";
+
+import BoardMain from "@/components/BoardMain.vue";
+import BoardList from "@/components/Board/BoardList.vue";
+import BoardEditer from "@/components/Board/BoardEditer.vue";
+import BoardDetail from "@/components/Board/BoardDetail.vue";
+import BoardUpdate  from "@/components/Board/BoardUpdate.vue";
 
 import News from "@/components/News";
 import store from "@/store/store.js";
@@ -29,6 +37,7 @@ export default new VueRouter({
       },
     },
     
+    //////////////////////////////////////////////////////////// USER
     {
       name: 'Login',
       path: '/login',
@@ -65,6 +74,8 @@ export default new VueRouter({
         }
       },
     },
+
+    //////////////////////////////////////////////////////////// HOUSE
     {
       name: 'HouseMain',
       path: '/house',
@@ -99,7 +110,27 @@ export default new VueRouter({
       name: 'News',
       path: '/news',
       component: News,
-    }
+    },
+
+    //////////////////////////////////////////////////////////// BOARD
+    {
+      name: 'BoardMain',
+      path: '/board',
+      component: BoardMain,
+      children: [
+        { path: '', component: BoardList },
+        { path: 'edit', component: BoardEditer },
+        { path: 'detail', component: BoardDetail },
+        { path: 'update', component: BoardUpdate },
+      ],
+      beforeEnter: (to, from, next) => {
+        if (store.state.login.isLogin) {
+          next();
+        } else {
+          return next("/login");
+        }
+      },
+    },
   ]
 })
 

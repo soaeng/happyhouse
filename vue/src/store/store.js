@@ -29,7 +29,7 @@ export default new Vuex.Store({
       list: [],
       limit: 10,
       offset: 0,
-      searchWord: "",
+      keyword: "",
 
       // pagination
       listRowCount: 10,
@@ -246,7 +246,7 @@ export default new Vuex.Store({
       let params = { // vuex에서 가져옴
           limit: this.state.board.limit,
           offset: this.state.board.offset,
-          searchWord: this.state.board.searchWord,
+          keyword: this.state.board.keyword,
       };
 
       try {

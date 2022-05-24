@@ -420,6 +420,7 @@ export default {
     .scroll-wrapper::-webkit-scrollbar-track, .modal-body::-webkit-scrollbar-track, .tab-content::-webkit-scrollbar-track{padding-left: 10px;}
     
     tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+    .bi.bi-star::before, .bi.bi-star-fill::before{margin-top:.2rem;}
 
     .btn-box button{font-size:14px;}
     .btn-box div .btn{margin-left: 5px;}

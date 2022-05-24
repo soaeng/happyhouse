@@ -40,11 +40,19 @@
                 <div class="card-content">
                     <div class="card-body">
                         <div class="list-info d-flex">
-                            <p>총 <span class="text-primary">{{$store.state.house.totalListItemCount}}</span> 건</p>
-                            <p><span class="text-primary">{{$store.state.house.currentPageIndex}}</span> / <span>{{Math.ceil($store.state.house.totalListItemCount/$store.state.house.listRowCount)}}</span> 페이지</p>
-                        </div><!-- end of .notice-info -->
+                            <p>총&nbsp;<span class="text-primary">{{$store.state.house.totalListItemCount}}</span>&nbsp;건</p>
+                            <p><span class="text-primary">{{$store.state.house.currentPageIndex}}</span>&nbsp;/&nbsp;<span>{{Math.ceil($store.state.house.totalListItemCount/$store.state.house.listRowCount)}}</span>&nbsp;페이지</p>
+                        </div><!-- end of .list-info -->
                         <div class="table-responsive">
                             <table class="table table-hover text-center mb-0">
+                                <colgroup>
+                                    <col width="8.8%">
+                                    <col width="28%">
+                                    <col width="27%">
+                                    <col width="10%">
+                                    <col width="14.2%">
+                                    <col width="12%">
+                                </colgroup>
                                 <thead>
                                     <tr>
                                         <th>번호</th>
@@ -234,12 +242,6 @@ export default {
     .list-info{font-size: 14px;}
     .list-info p:first-child{margin-right: 20px;}
     tr td{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-    tr td:first-child{width: 8.8%;}
-    tr td:nth-child(2){width: 28%;}
-    tr td:nth-child(3){width: 27%;}
-    tr td:nth-child(4){width: 10%;}
-    tr td:nth-child(5){width: 14.2%;}
-    tr td:nth-child(6){width: 12%;}
 
     th{border-top: 1px solid #dedede; padding: 1.2rem .5rem;}
     td{font-size: 15px; padding: 1.2rem .5rem;}
