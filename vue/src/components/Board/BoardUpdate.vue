@@ -9,7 +9,7 @@
                     <div id="divEditorUpdate"></div>
                     <div v-if="$store.state.board.fileList.length > 0" class="mb-4 mt-4">
                         <p class="mb-3 fw-bold">첨부파일</p>
-                        <ul id="updateFileList" class="text-sm" v-for="(file, index) in $store.state.board.fileList" :key="index" style="padding-left: 0;">
+                        <ul class="text-sm" v-for="(file, index) in $store.state.board.fileList" :key="index" style="padding-left: 0;">
                             <li class="list-unstyled">
                                 <span class="bg-light-secondary rounded" style="padding: .3rem .6rem">
                                     <i class="bi bi-file-earmark-text"></i>{{ file.fileName }}
@@ -89,7 +89,7 @@ export default {
             this.CKEditor.setData(this.$store.state.board.content);
             this.attachFile = false;
             this.fileList = [];
-            document.querySelector("#inputFileUploadUpdate").value = "";
+            // document.querySelector("#inputFileUploadUpdate").value = "";
         },
         changeFile(fileEvent) {
             this.fileList = []; // thumbnail 초기화
@@ -98,6 +98,8 @@ export default {
             fileArray.forEach((file) => {
                 this.fileList.push(URL.createObjectURL(file)); // push : array 에 항목 추가
             });
+            console.log(">>>>>>>>>>>>>>>>> changeFile")
+            console.log(fileArray);
         },
         // 굳이 actions 에 있을 필요 없다. backend async 작업이지만, 그 결과로 store 를 변경하는 내용이 없다.
         async boardUpdate() {
@@ -107,28 +109,27 @@ export default {
             formData.append("title", this.$store.state.board.title);
             formData.append("content", this.CKEditor.getData()); // store X !!!!
 
-            // file upload
+            console.log(">>>>>> boardUpdate: ");
+            console.log(document.querySelector("chkFileUploadUpdate"));
+            
             let attachFiles = document.querySelector("#inputFileUploadUpdate").files;
+let reader = new FileReader();
+					reader.readAsDataURL(file);
 
-            if (attachFiles.length > 0) {
-                const fileArray = Array.from(attachFiles);
-                fileArray.forEach((file) => formData.append("file", file));
-            }
+                if (attachFiles.length > 0) {
+                    const fileArray = Array.from(attachFiles);
+                    fileArray.forEach((file) => formData.append("file", file));
+                }
 
-            let options = {
-                headers: { "Content-Type": "multipart/form-data" },
-            };
+            let options = { headers: { "Content-Type": "multipart/form-data" },};
 
             try {
                 let { data } = await http.post("/boards/" + this.$store.state.board.boardId, formData, options);
 
-                console.log("UpdateModalVue: data : ");
-                console.log(data);
                 if (data.result == "login") {
                 this.doLogout();
                 } else {
                 this.$alertify.success("글이 수정되었습니다.");
-                this.$store.dispatch("boardList");
                 this.$router.push("/board")
                 }
             } catch (error) {

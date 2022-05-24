@@ -23,7 +23,7 @@
                     <div style="margin-right: 1rem; width: 260px;" class="d-flex">
                       <img class="w-100 bg-light-secondary" :src="news.img" style="max-height: 112px; object-fit: cover;">
                     </div>
-                    <div>
+                    <div class=" w-100">
                       <div class="d-flex w-100 justify-content-between">
                           <h5 class="mb-1">{{news.title}}</h5>
                           <small></small>

@@ -22,10 +22,10 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a href="/house" class='sidebar-link'>
+                            <router-link to="/house" class='sidebar-link'>
                                 <i class="bi bi-search"></i>
                                 <span>아파트 검색</span>
-                            </a>
+                            </router-link>
                         </li>
 
                         <li class="sidebar-item has-sub">

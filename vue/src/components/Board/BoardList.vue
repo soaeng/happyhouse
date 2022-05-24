@@ -98,22 +98,11 @@ export default {
             return this.$store.getters.getBoardList; // no getBoardList()
         },
     },
-    mounted() {
-        
-    },
-    created() {
-        this.boardList();
-    },
-    filters: {
-        makeDateStr: function (date, separator) {
-            return date.year + separator + (date.month < 10 ? "0" + date.month : date.month) + separator + (date.day < 10 ? "0" + date.day : date.day);
-        },
-    },
     methods: {
         // list
         // store actions 에 구현
         // 가능한 한 가지 방법
-        boardList() {
+        getBoardList() {
             this.$store.dispatch("boardList"); // 비동기 처리 시에는 dispatch
         },
 
@@ -126,18 +115,24 @@ export default {
             // this.currentPageIndex = pageIndex;
             this.$store.commit("SET_BOARD_MOVE_PAGE", pageIndex);
 
-            this.boardList();
+            this.getBoardList();
         },
 
+        sidebarToggle(){
+            document.getElementById('sidebar').classList.toggle('active');
+        },
+        sidebarHide(){
+            document.getElementById('sidebar').classList.remove('active');
+        },
+        doLogout() { // 기존 값 다 초기화 작업 하고 login 페이지
+            this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userProfileImageUrl: "" });
+            this.$router.push("/login");
+        },
         // util
         makeDateStr: util.makeDateStr,
 
         // detail
         async boardDetail(boardId) {
-            // store 변경
-            // this.boardId = boardId;
-            // this.$store.commit('mutateSetBoardBoardId', boardId);
-
             try {
                 let { data } = await http.get("/boards/" + boardId);
                 console.log(data);
@@ -156,16 +151,17 @@ export default {
             }
             
         },
+    },
+    
+    mounted() {
         
-        sidebarToggle(){
-            document.getElementById('sidebar').classList.toggle('active');
-        },
-        sidebarHide(){
-            document.getElementById('sidebar').classList.remove('active');
-        },
-        doLogout() { // 기존 값 다 초기화 작업 하고 login 페이지
-        this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userProfileImageUrl: "" });
-        this.$router.push("/login");
+    },
+    created() {
+        this.getBoardList();
+    },
+    filters: {
+        makeDateStr: function (date, separator) {
+            return date.year + separator + (date.month < 10 ? "0" + date.month : date.month) + separator + (date.day < 10 ? "0" + date.day : date.day);
         },
     },
 };

@@ -52,14 +52,14 @@
                                     <col width="15%">
                                 </colgroup>
                                 <tbody>
-                                    <tr style="cursor:pointer" v-for="(deal) in dealList" :key="deal.no">
+                                    <tr v-for="(deal) in dealList" :key="deal.no">
                                         <td>{{ deal.no }}</td>
                                         <td>{{ parseFloat(deal.area).toFixed(1) }}</td>
                                         <td>{{ deal.floor }}</td>
                                         <td>{{ deal.dealAmount }}만 원</td>
                                         <td>{{ deal.dealYear }}-{{ deal.dealMonth | setDate }}-{{ deal.dealDay | setDate }}</td>
                                         <td>
-                                            <a @click="addBookmarkDeal" class="text-warning">
+                                            <a @click="addBookmarkDeal" class="text-warning" style="cursor:pointer" >
                                                 <i class="bi bi-star" v-if="!deal.bookmark" :data-no="deal.no" :data-bookmark="deal.bookmark"></i>
                                                 <i class="bi bi-star-fill" v-if="deal.bookmark" :data-no="deal.no" :data-bookmark="deal.bookmark"></i>
                                             </a>
@@ -91,13 +91,13 @@
 
                 <div>
                     <ul class="nav nav-tabs mb-4" role="tablist">
-                        <li class="nav-item" role="presentation">
+                        <li class="nav-item" role="presentation" style="cursor:pointer" >
                             <a class="nav-link active" data-bs-toggle="tab" data-bs-target="#school" role="tab" aria-controls="school" aria-selected="false">학군정보</a>
                         </li>
-                        <li class="nav-item" role="presentation">
+                        <li class="nav-item" role="presentation" style="cursor:pointer" >
                             <a id="SW8" class="nav-link" data-bs-toggle="tab" data-bs-target="#transport" role="tab" aria-controls="transport" aria-selected="false">대중교통</a>
                         </li>
-                        <li class="nav-item" role="presentation">
+                        <li class="nav-item" role="presentation" style="cursor:pointer" >
                             <a class="nav-link" data-bs-toggle="tab" data-bs-target="#search" role="tab" aria-controls="search" aria-selected="true">검색결과</a>
                         </li>
                     </ul>
@@ -375,6 +375,10 @@ export default {
             t.classList.add(removeClass)
         },
 
+        getBookmarkDealList(){
+            this.$store.dispatch("bookmarkDealList");
+        },
+
         async addBookmarkDeal(e){
             let dealNo = e.target.dataset.no;
             let userSeq = this.userSeq;
@@ -399,9 +403,6 @@ export default {
             }
         },
 
-        getBookmarkDealList(){
-            this.$store.dispatch("bookmarkDealList");
-        },
     },
     
     filters: {

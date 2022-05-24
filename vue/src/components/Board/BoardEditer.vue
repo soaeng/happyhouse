@@ -7,17 +7,17 @@
             <div class="card-content">
                 <div class="card-body pt-0">
                     <div id="editor"></div>
-                    <div class="mt-4" id="imgFileUploadInsertWrapper">
+                    <div class="mt-4">
                         <div class="input-group">
                             <label class="input-group-text" for="inputFileUploadInsert"><i class="bi bi-upload"></i></label>
                             <input @change="changeFile" type="file" class="form-control" id="inputFileUploadInsert" multiple>
                         </div>
-                        <div id="imgFileUploadInsertThumbnail" class="thumbnail-wrapper d-flex mb-4 mt-4">
+                        <div class="thumbnail-wrapper d-flex mb-4 mt-4">
                             <div>
                                 <img v-for="(file, index) in fileList" v-bind:src="file" v-bind:key="index">
                             </div>
                         </div>
-                    </div><!-- end of #imgFileUploadInsertWrapper -->
+                    </div>
                     <div class="text-end">
                         <button @click="boardInsert" class="btn btn-primary">등록</button>
                         <router-link to="/board" class="btn btn-secondary" style="margin-left: 10px;">취소</router-link>
@@ -68,14 +68,16 @@ export default {
 
             // file upload
             let attachFiles = document.querySelector("#inputFileUploadInsert").files;
+            console.log(attachFiles);
+
 
             if( attachFiles.length > 0 ) {
-            const fileArray = Array.from(attachFiles);
-            fileArray.forEach( file => formData.append("file", file) )
-            }
+                const fileArray = Array.from(attachFiles);
+                    fileArray.forEach( file => formData.append("file", file) )
+                }
 
-            let options = { 
-            headers: { 'Content-Type': 'multipart/form-data' }
+                let options = { 
+                headers: { 'Content-Type': 'multipart/form-data' }
             }
 
             try{
@@ -83,8 +85,9 @@ export default {
                 if( data.result == 'login' ){
                     this.doLogout();
                 }else{
+                    console.log(">>>>>> boardInsert");
+                    console.log(data);
                     this.$alertify.success('글이 등록되었습니다.');
-                    this.$store.dispatch("boardList");
                     this.$router.push("/board");
                 }
             } catch(error){

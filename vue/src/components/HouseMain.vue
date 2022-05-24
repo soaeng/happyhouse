@@ -175,13 +175,13 @@ export default {
             this.$store.dispatch("dealList");
         },
 
-        async getSidoList() {
+        getSidoList() {
             this.$store.dispatch("getSidoList");
         },
-        async getGugunList() {
+        getGugunList() {
             this.$store.dispatch("getGugunList");
         },
-        async getDongList() {
+        getDongList() {
             this.$store.dispatch("getDongList");
         },
         async getHouseDealList() {

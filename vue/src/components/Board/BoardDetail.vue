@@ -22,7 +22,7 @@
                             <p class="mb-3 fw-bold">첨부파일</p>
                             <ul class="text-sm" v-for="(file, index) in $store.state.board.fileList" :key="index" style="padding-left: 0;">
                                 <li class="list-unstyled">
-                                    <a v-bind:href="file.fileUrl" v-bind:download="file.fileName">
+                                    <a v-bind:href="'assets/'+file.fileUrl" v-bind:download="file.fileName">
                                         <span class="bg-light-secondary rounded" style="padding: .3rem .6rem; margin-right: 1rem;">
                                             <i class="bi bi-download"></i>{{ file.fileName }}
                                         </span>
@@ -115,9 +115,9 @@ export default {
 <style scoped>
 /*-- board-detail --*/
 .board-info i::before{margin-top: .25rem; margin-right: .35rem;}
-.board-info p{font-weight: 500; font-size: 14px;  color: #6C757D;}
-.board-info p span{font-weight: 400; margin-left: 10px; color:#435ebe;}
-.board-info p::before{content:""; display: inline-block; width: 1px; height: 13px; background-color: #435ebe; margin: 0 12px;}
+.board-info p{font-weight: 500; font-size: 14px;}
+.board-info p span{font-weight: 400; margin-left: 10px;}
+.board-info p::before{content:""; display: inline-block; width: 1px; height: .8rem; background-color: #CCC; margin: 0 .9rem;}
 .board-info p:first-child::before{display: none;}
 .bi.bi-download::before{margin-top: .3rem; margin-right: .8rem;}
 </style>

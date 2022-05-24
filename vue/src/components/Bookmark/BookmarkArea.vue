@@ -238,13 +238,13 @@ export default {
             this.$router.push("/house");
         },
         
-        async getSidoList() {
+        getSidoList() {
             this.$store.dispatch("getSidoList");
         },
-        async getGugunList() {
+        getGugunList() {
             this.$store.dispatch("getGugunList");
         },
-        async getDongList() {
+        getDongList() {
             this.$store.dispatch("getDongList");
         },
                 
