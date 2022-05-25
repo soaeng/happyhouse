@@ -117,19 +117,22 @@ import lombok.extern.log4j.Log4j2;
 		BoardResultDto boardResultDto = new BoardResultDto();
 		
 		try {
-			int userReadCnt = dao.boardUserReadCount(boardParamDto);
-			// log.info("게시글 조회수 조회: " + userReadCnt);
-			if( userReadCnt == 0 ) {
-				dao.boardUserReadInsert(boardParamDto.getBoardId(), boardParamDto.getUserSeq());
-				dao.boardReadCountUpdate(boardParamDto.getBoardId());
-			}
 			
 			BoardDto boardDto = dao.boardDetail(boardParamDto);
-			// log.info("게시글 상세 조회: " + boardDto);
+			log.info("게시글 상세 조회: " + boardDto);
+			
 			if( boardDto.getUserSeq() == boardParamDto.getUserSeq() ) {
 				boardDto.setSameUser(true);
 			}else {
 				boardDto.setSameUser(false);
+			}
+			log.info("게시글 상세 조회: " + boardDto);
+			
+			int userReadCnt = dao.boardUserReadCount(boardParamDto);
+			// log.info("게시글 조회수 조회: " + userReadCnt);
+			if( userReadCnt == 0 && !boardDto.isSameUser()) {
+				dao.boardUserReadInsert(boardParamDto.getBoardId(), boardParamDto.getUserSeq());
+				dao.boardReadCountUpdate(boardParamDto.getBoardId());
 			}
 			
 			List<BoardFileDto> fileList = dao.boardDetailFileList(boardDto.getBoardId());
@@ -137,11 +140,8 @@ import lombok.extern.log4j.Log4j2;
 			// fileList.forEach(file -> log.info(file));
 			// log.info(fileList);
 			boardDto.setFileList(fileList);
-			// log.info(boardDto);
 			boardResultDto.setDto(boardDto);
-			// log.info(boardResultDto);
 			boardResultDto.setResult(SUCCESS);
-			// log.info(boardResultDto);
 			
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -272,12 +272,12 @@ import lombok.extern.log4j.Log4j2;
 			log.info("boardParamDto: " + boardParamDto);
 			List<BoardDto> list = dao.boardList(boardParamDto);
 			log.info("----- 게시글 -----");
-			list.forEach(board -> {
-				List<BoardFileDto> fileList = dao.boardDetailFileList(board.getBoardId());
-				board.setFileList(fileList);
-				log.info(board);	
-				
-			});
+			int len = list.size();
+			for(int i=0; i<len; i++) {
+				List<BoardFileDto> fileList = dao.boardDetailFileList(list.get(i).getBoardId());
+				list.get(i).setFileList(fileList);
+				log.info(list.get(i));
+			}
 	    	
 			int count = dao.boardListTotalCount();
 			log.info("게시글 총 수: " + count);
@@ -298,7 +298,7 @@ import lombok.extern.log4j.Log4j2;
 	// 게시글 검색 결과
 	@Override
 	public BoardResultDto boardListKeyword(BoardParamDto boardParamDto) {
-		// log.info("===== 게시글 검색 목록 service =====");
+		log.info("===== 게시글 검색 목록 service =====");
 		BoardResultDto boardResultDto = new BoardResultDto();
 		
 		try {
@@ -306,7 +306,13 @@ import lombok.extern.log4j.Log4j2;
 			
 			// log.info("----- 게시글 검색 -----");
 			list.forEach(board -> log.info(board));
-			
+			int len = list.size();
+			for(int i=0; i<len; i++) {
+				List<BoardFileDto> fileList = dao.boardDetailFileList(list.get(i).getBoardId());
+				list.get(i).setFileList(fileList);
+				log.info(list.get(i));
+			}
+	    	
 			int count = dao.boardListKeywordTotalCount(boardParamDto);
 			// log.info("검색된 게시글 총 수: " + count);
 			

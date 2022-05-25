@@ -17,9 +17,7 @@
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <router-link to="/house" class='sidebar-link'>
-                                Happy House
-                                </router-link>
+                                <router-link to="/house" class='sidebar-link'>Happy House</router-link>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">공지사항</li>
                         </ol>
@@ -62,7 +60,6 @@ export default {
         
     },
     created() {
-        this.boardList();
     },
     filters: {
         makeDateStr: function (date, separator) {
@@ -103,12 +100,12 @@ export default {
                 console.log(data);
 
                 if (data.result == "login") {
-                this.doLogout(); // this.$router.push("/login"); 에서 변경
+                    this.doLogout(); // this.$router.push("/login"); 에서 변경
                 } else {
                 let { dto } = data;
-                this.$store.commit("SET_BOARD_DETAIL", dto);
-
-                this.$router.push("/boardDetail");
+                    console.log(dto);
+                    this.$store.commit("SET_BOARD_DETAIL", dto);
+                    this.$router.push("/board/detail");
                 }
             } catch (error) {
                 console.log("BoardMainVue: error : ");
@@ -124,8 +121,8 @@ export default {
             document.getElementById('sidebar').classList.remove('active');
         },
         doLogout() { // 기존 값 다 초기화 작업 하고 login 페이지
-        this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userProfileImageUrl: "" });
-        this.$router.push("/login");
+            this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userProfileImageUrl: "" });
+            this.$router.push("/login");
         },
     },
 };

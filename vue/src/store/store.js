@@ -21,7 +21,6 @@ export default new Vuex.Store({
       // Login
       userEmail: "dskim@my.com",
       userPassword: "1234",
-      // getters와 mutations 사용해서도 처리
     },
     ///////////////////////////////////////////////////////////////////////// state - BOARD
     board: {
@@ -29,6 +28,7 @@ export default new Vuex.Store({
       list: [],
       limit: 10,
       offset: 0,
+      type: "",
       keyword: "",
 
       // pagination
@@ -246,6 +246,7 @@ export default new Vuex.Store({
       let params = { // vuex에서 가져옴
           limit: this.state.board.limit,
           offset: this.state.board.offset,
+          type: this.state.board.type,
           keyword: this.state.board.keyword,
       };
 
@@ -317,9 +318,6 @@ export default new Vuex.Store({
     },
 
     async dealList(context) {
-      let params = { 
-        userSeq: this.state.login.userSeq,
-      };
       try {
           let { data } = await http.get("/house/deal/" + this.state.house.houseNo);
           console.log("dealList data: ")
@@ -334,9 +332,6 @@ export default new Vuex.Store({
     },
 
     async bookmarkAreaList(context) {
-      let params = { 
-        userSeq: this.state.login.userSeq,
-      };
       try {
         let { data } = await http.get("/bookmark/area");
         console.log(data);
@@ -361,9 +356,6 @@ export default new Vuex.Store({
     // },
     
     async bookmarkDealList(context) {
-      let params = { 
-        userSeq: this.state.login.userSeq,
-      };
       try {
         let { data } = await http.get("/bookmark/deal");
           console.log("bookmarkDealList data: ")

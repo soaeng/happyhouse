@@ -9,19 +9,16 @@
                     </div><!-- end of .list-info -->
                     <!-- end of .board-info -->
                     <fieldset class="form-group d-flex align-items-center justify-content-center mb-0 w-50">
-                        <select class="form-select w-auto" style="margin-right: .5rem;">
-                            <option selected>전체</option>
-                            <option value="title">제목</option>
+                        <select @change="setType" id="searchType" class="form-select w-auto" style="margin-right: .5rem;">
+                            <option value="title" selected>제목</option>
                             <option value="content">내용</option>
                             <option value="writer">작성자</option>
                         </select>
-                        <input v-model="$store.state.board.keyword" @keydown.enter="boardList" type="text" class="form-control" placeholder="검색어를 입력하세요"  style="margin-right: .5rem;"/>
-                        <button @click="boardList" class="btn btn-outline-dark" type="button">검색</button>
+                        <input v-model="$store.state.board.keyword" @keydown.enter="getBoardList" type="text" class="form-control" placeholder="검색어를 입력하세요"  style="margin-right: .5rem;"/>
+                        <button @click="getBoardList" class="btn btn-outline-dark" type="button">검색</button>
                     </fieldset>
-                    <!-- end of #board-search-form -->
                 </div>
-                <!-- end of .board-search -->
-            </div>
+            </div><!-- end of .card-header -->
             <hr class="mb-0 mt-0">
             <div class="card-content">
                 <div class="card-body">
@@ -48,7 +45,7 @@
                             <tr style="cursor: pointer" v-for="(board, index) in boardList" @click="boardDetail(board.boardId)" v-bind:key="index">
                                 <td>{{ board.boardId }}</td>
                                 <td class="text-start">{{ board.title }}</td>
-                                <td><i class="fa-solid fa-file-lines" v-if="board.fileList.length > 0"></i></td>
+                                <td><i class="bi bi-file-earmark-text-fill" v-if="board.fileList.length > 0"></i></td>
                                 <td>{{ board.userName }}</td>
                                 <td>{{ board.regDt.date | makeDateStr(".") }}</td>
                                 <td>{{ board.readCount }}</td>
@@ -92,44 +89,37 @@ export default {
         };
     },
     computed: {
-        // gttters 이용
-        // computed 사용 안하고 위에서(26line) 주석처리된 것처럼 사용해도 됨
         boardList() {
-            return this.$store.getters.getBoardList; // no getBoardList()
+            return this.$store.getters.getBoardList;
         },
     },
     methods: {
-        // list
-        // store actions 에 구현
-        // 가능한 한 가지 방법
-        getBoardList() {
-            this.$store.dispatch("boardList"); // 비동기 처리 시에는 dispatch
+        // util
+        makeDateStr: util.makeDateStr,
+        setType(){
+            this.$store.state.board.type = document.querySelector('#searchType').value;
         },
-
-        // pagination (기존은 모두 props로 처리했지만 이제는 store에서 getters에서 처리)
+        getBoardList() {
+            this.$store.dispatch("boardList");
+        },
+        initPage(){
+            this.$store.state.board.currentPageIndex = 1;
+            this.$store.state.board.offset = 0;
+        },
         movePage(pageIndex) {
-            console.log("BoardMainVue : movePage : pageIndex : " + pageIndex);
-
-            // store commit 으로 변경
-            // this.offset = (pageIndex - 1) * this.listRowCount;
-            // this.currentPageIndex = pageIndex;
             this.$store.commit("SET_BOARD_MOVE_PAGE", pageIndex);
-
             this.getBoardList();
         },
-
         sidebarToggle(){
             document.getElementById('sidebar').classList.toggle('active');
         },
         sidebarHide(){
             document.getElementById('sidebar').classList.remove('active');
         },
-        doLogout() { // 기존 값 다 초기화 작업 하고 login 페이지
+        doLogout() {
             this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userProfileImageUrl: "" });
             this.$router.push("/login");
         },
-        // util
-        makeDateStr: util.makeDateStr,
 
         // detail
         async boardDetail(boardId) {
@@ -138,27 +128,27 @@ export default {
                 console.log(data);
 
                 if (data.result == "login") {
-                this.doLogout(); // this.$router.push("/login"); 에서 변경
+                    this.doLogout();
                 } else {
-                let { dto } = data;
-                this.$store.commit("SET_BOARD_DETAIL", dto);
-
-                this.$router.push("/board/detail");
+                    let { dto } = data;
+                    this.$store.commit("SET_BOARD_DETAIL", dto);
+                    this.$router.push("/board/detail");
                 }
             } catch (error) {
                 console.log("BoardMainVue: error : ");
                 console.log(error);
             }
-            
         },
     },
     
     mounted() {
         
     },
+
     created() {
         this.getBoardList();
     },
+
     filters: {
         makeDateStr: function (date, separator) {
             return date.year + separator + (date.month < 10 ? "0" + date.month : date.month) + separator + (date.day < 10 ? "0" + date.day : date.day);

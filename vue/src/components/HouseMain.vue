@@ -220,7 +220,7 @@ export default {
         this.getSidoList();
         if(this.sido != "0"){
             this.getGugunList();
-            if(this.gugun != "0") this.getDongList();
+            this.getDongList();
         }
         this.getHouseList();
     },

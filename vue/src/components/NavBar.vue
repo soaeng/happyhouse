@@ -15,14 +15,14 @@
                     <ul class="menu">
 
                         <li class="sidebar-item">
-                            <router-link to="/board" class='sidebar-link'>
+                            <router-link to="/board" class='sidebar-link' @click.native="initSearch">
                                 <i class="bi bi-megaphone-fill"></i>
                                 <span>공지사항</span>
                             </router-link>
                         </li>
 
                         <li class="sidebar-item">
-                            <router-link to="/house" class='sidebar-link'>
+                            <router-link to="/house" class='sidebar-link' @click.native="initArea">
                                 <i class="bi bi-search"></i>
                                 <span>아파트 검색</span>
                             </router-link>
@@ -124,10 +124,16 @@ export default {
             t.classList.add(removeClass);
         },
         initArea(){
-            console.log("dddddddddddd");
             this.$store.state.address.sido = "0";
             this.$store.state.address.gugun = "0";
             this.$store.state.address.dong = "0";
+            this.$store.state.house.keyword = "";
+            this.$store.dispatch("houseList");
+        },
+        initSearch(){
+            this.$store.state.board.keyword = "";
+            this.$store.state.board.type = "";
+            this.$store.dispatch("boardList");
         }
     },
 };
