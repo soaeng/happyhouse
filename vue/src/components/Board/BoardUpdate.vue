@@ -29,16 +29,16 @@
                             <input @change="changeFile" type="file" class="form-control" id="inputFileUploadUpdate" multiple>
                         </div><!-- end of .input-group -->
                         <div id="imgFileUploadUpdateThumbnail" class="thumbnail-wrapper d-flex flex-column mt-3">
-                            <div v-for="(file, index) in FILE" :key="index" class="card" >
+                            <div v-for="(file, index) in FILE" :key="index" >
                                 <div class="card-content d-flex align-items-baseline">
                                     <img v-if="file.fileTypeList[index] == 'image'" :src="file.fileList[index]" style="margin-right: .5rem;"/>
                                     <i v-else class="bi bi-file-earmark-text-fill"></i>
                                     <p class="card-text">{{file.fileNameList[index] }}</p>
-                                    <a href=""><i class="bi bi-x-circle-fill text-secondary"></i></a>
+                                    <!-- <a><i class="bi bi-x-circle-fill text-secondary"></i></a> -->
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div><!-- end of #imgFileUploadUpdateWrapper -->
                     <div class="text-end">
                         <button @click="boardUpdate" class="btn btn-primary">수정</button>
                         <router-link to="/board/detail" class="btn btn-secondary" style="margin-left: 10px;">취소</router-link>
@@ -99,7 +99,7 @@ export default {
             this.CKEditor.setData(this.$store.state.board.content);
             this.attachFile = false;
             this.fileList = [];
-            // document.querySelector("#inputFileUploadUpdate").value = "";
+            document.querySelector("#inputFileUploadUpdate").value = "";
         },
         changeFile(fileEvent) {
             console.log(">>>>>>>>>>>>>>>>> changeFile")

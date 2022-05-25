@@ -12,11 +12,17 @@
                             <label class="input-group-text" for="inputFileUploadInsert"><i class="bi bi-upload"></i></label>
                             <input @change="changeFile" type="file" class="form-control" id="inputFileUploadInsert" multiple>
                         </div>
-                        <div class="thumbnail-wrapper d-flex mb-4 mt-4">
-                            <div>
-                                <img v-for="(file, index) in fileList" v-bind:src="file" v-bind:key="index">
+                        <div class="thumbnail-wrapper d-flex flex-column mb-4 mt-4">
+                            <div v-for="(file, index) in FILE" :key="index">
+                                <div class="card-content d-flex align-items-baseline">
+                                    <img v-if="file.fileTypeList[index] == 'image'" :src="file.fileList[index]" style="margin-right: .5rem;"/>
+                                    <i v-else class="bi bi-file-earmark-text-fill"></i>
+                                    <p class="card-text">{{file.fileNameList[index] }}</p>
+                                    <!-- <a href=""><i class="bi bi-x-circle-fill text-secondary"></i></a> -->
+                                </div>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="text-end">
                         <button @click="boardInsert" class="btn btn-primary">등록</button>
@@ -46,16 +52,24 @@ export default {
         title: '',
         CKEditor: '',
         attachFile: false,
-        fileList: []
+        fileList: [],
+        fileTypeList: [],
+        fileNameList:[],
+        FILE: [],
         };
     },
     methods: {
         changeFile(fileEvent) {
-            this.fileList = [];
+            console.log(">>>>>>>>>>>>>>>>> changeFile")
             const fileArray = Array.from(fileEvent.target.files);
-            fileArray.forEach( file => {
-                this.fileList.push(URL.createObjectURL(file));
+            this.fileList = [];
+            fileArray.forEach((file) => {
+                this.fileList.push(URL.createObjectURL(file)); // push : array 에 항목 추가
+                this.fileTypeList.push(file.type.split('/')[0]);
+                this.fileNameList.push(file.name);
+                this.FILE.push({fileList: this.fileList, fileTypeList: this.fileTypeList, fileNameList: this.fileNameList});
             });
+            console.log(this.FILE);
         },
         doLogout() { 
             this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userProfileImageUrl: "" });
@@ -122,4 +136,8 @@ export default {
     margin-right: 5px;
     max-width: 100%;
 }
+
+.bi.bi-file-earmark-text-fill::before{margin-top: .35rem;}
+.bi.bi-file-earmark-text-fill{margin-right: .5rem;}
+.bi.bi-x-circle-fill::before{margin-top: .4rem; margin-left: .5rem;}
 </style>
