@@ -30,9 +30,8 @@
                         <button type="button" @click="login" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p class="text-gray-600">Don't have an account? <router-link to="userRegister"
-                                class="font-bold">Sign
-                                up</router-link>.</p>
+                        <p class="text-gray-600">Don't have an account?
+                            <router-link to="userRegister" class="font-bold">Sign up</router-link>.</p>
                         <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
                     </div>
                 </div>
@@ -69,8 +68,7 @@ export default {
             console.log(data);
 
             this.$store.commit( // mutation은 commit으로 호출해라
-            'SET_LOGIN',
-            { isLogin: true, userName: data.userName, userEmail: this.$store.state.login.userEmail, userProfileImageUrl: data.userProfileImageUrl} // payload 부분
+                'SET_LOGIN', { isLogin: true, userName: data.userName, userEmail: this.$store.state.login.userEmail, userProfileImageUrl: data.userProfileImageUrl} // payload 부분
             );
             sessionStorage.setItem('isLogin', this.$store.state.login.isLogin);
             sessionStorage.setItem('userName', this.$store.state.login.userName);
@@ -84,9 +82,9 @@ export default {
             console.log("LoginVue: error : ");
             console.log(error);
             if( error.response.status == '404'){
-            this.$alertify.error('이메일 또는 비밀번호를 확인하세요.');
+                this.$alertify.error('이메일 또는 비밀번호를 확인하세요.');
             }else{
-            this.$alertify.error('Opps!! 서버에 문제가 발생했습니다.');
+                this.$alertify.error('Opps!! 서버에 문제가 발생했습니다.');
             }
         }
         }
@@ -122,4 +120,5 @@ body{background-color:#fff}
     #auth #auth-left{padding:5rem}
 }
 
+.bi.bi-shield-lock::before, .bi.bi-person::before{margin-bottom: .4rem;}
 </style>
