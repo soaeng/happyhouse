@@ -28,19 +28,6 @@ import lombok.extern.log4j.Log4j2;
 		BoardDao dao;
 		String uploadFolder = "upload";
 	
-		/* for production code */
-		//uploadPath = getServletContext().getRealPath("/");
-		// C:\Users\sodud\Desktop\SSAFY\ssafy_spring\HappyHouse\src\main\resources
-		// C:\Users\sodud\Desktop\SSAFY\vue\vue_cli\happyhouse-final\springboot
-		/* for eclipse development code */
-//		String uploadPath = "C:" + File.separator + "Users" +File.separator + "sodud" +File.separator + "Desktop" +File.separator + "SSAFY"
-//				+ File.separator + "vue" + File.separator + "vue_cli"  
-//				+ File.separator + "happyhouse-final" + File.separator + "springboot"  
-//				+ File.separator + "src" 
-//				+ File.separator + "main"
-//				+ File.separator + "resources"
-//				+ File.separator + "static";
-		
 		String uploadPath = "C:" + File.separator + "Users" +File.separator + "sodud" +File.separator + "Desktop" +File.separator + "SSAFY"
 				+ File.separator + "vue" + File.separator + "vue_cli"  
 				+ File.separator + "happyhouse-final" + File.separator + "vue"  
@@ -97,7 +84,6 @@ import lombok.extern.log4j.Log4j2;
 				boardFileDto.setFileUrl(boardFileUrl);
 				
 				dao.boardFileInsert(boardFileDto);
-				// log.info("게시글 파일 DB 등록");
 			}
 
 			boardResultDto.setResult(SUCCESS);
@@ -136,9 +122,7 @@ import lombok.extern.log4j.Log4j2;
 			}
 			
 			List<BoardFileDto> fileList = dao.boardDetailFileList(boardDto.getBoardId());
-			// log.info("----- 게시글 파일 목록 -----");
-			// fileList.forEach(file -> log.info(file));
-			// log.info(fileList);
+			
 			boardDto.setFileList(fileList);
 			boardResultDto.setDto(boardDto);
 			boardResultDto.setResult(SUCCESS);
@@ -169,7 +153,6 @@ import lombok.extern.log4j.Log4j2;
 			if (!uploadDir.exists()) uploadDir.mkdir();
 			
 			if(fileList.size() > 0) {
-				// 물리 파일 삭제, 첨부파일 여러개 고려
 		    	List<String> fileUrlList = dao.boardFileUrlDeleteList(dto.getBoardId());
 		    	// log.info("----- 게시판에 저장된 삭제될 첨부파일 주소 -----");
 		    	// fileUrlList.forEach(url -> log.info(url));
@@ -198,8 +181,6 @@ import lombok.extern.log4j.Log4j2;
 					String savingFileName = uuid + "." + extension;
 				
 					File destFile = new File(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
-					
-					// System.out.println(uploadPath + File.separator + uploadFolder + File.separator + savingFileName);
 					part.transferTo(destFile);
 			    
 				    // Table Insert

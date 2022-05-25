@@ -2,27 +2,34 @@ package com.ssafy.happyhouse.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tomcat.util.json.JSONParser;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.ssafy.happyhouse.dto.HouseDto;
+import com.ssafy.happyhouse.dto.PopulationDto;
+import com.ssafy.happyhouse.dto.PopulationListDto;
 import com.ssafy.happyhouse.dto.SurroundingDto;
 import com.ssafy.happyhouse.service.SurroundingService;
 
@@ -87,47 +94,74 @@ public class SurroundingController {
 		return new ResponseEntity<List<SurroundingDto>>(list, HttpStatus.OK);
 	}
 	
-	@PostMapping("/stats/resd")
-	public String load_save(@RequestParam("date") String date, @RequestParam("adstrd") String adstrd, Model model) {
-		StringBuilder result = null;
-		try {
-			
-			String requestDate = date;
-			String requestAdstrd = adstrd;
-			
-			URL url = new URL("http://localhost:8080/" + API_KEY+ "/xml/SPOP_LOCAL_RESD_DONG/1/5/" + date + "/00/" + adstrd);
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+	@GetMapping("/stats/resd")
+	public ResponseEntity<PopulationDto> getPopulation(@RequestParam("date") String date, @RequestParam("adstrd") String adstrd) {
+		log.info("===== 인구 정보 controller =====");
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("date", date);
+		map.put("adstrd", adstrd);		
+		
+		PopulationDto populationDto = service.getPopulation(map);
+		log.info("populationDto: " + populationDto);
+		
+		return new ResponseEntity<PopulationDto>(populationDto, HttpStatus.OK);
+	}
+	
 
-			result = new StringBuilder();
-			String line = null;
+	@GetMapping("/stats/resd2")
+	public PopulationDto load_save2(@RequestParam("date") String date, @RequestParam("adstrd") String adstrd, Model model) {
+		StringBuilder sb = null;
+		
+		try {
+			StringBuilder urlBuilder = new StringBuilder("http://openapi.seoul.go.kr:8088"); /*URL*/
+			urlBuilder.append("/" +  URLEncoder.encode("716c556655736f6437377278657053","UTF-8") ); /*인증키 (sample사용시에는 호출시 제한됩니다.)*/
+			urlBuilder.append("/" +  URLEncoder.encode("json","UTF-8") ); /*요청파일타입 (xml,xmlf,xls,json) */
+			urlBuilder.append("/" + URLEncoder.encode("SPOP_LOCAL_RESD_DONG","UTF-8")); /*서비스명 (대소문자 구분 필수입니다.)*/
+			urlBuilder.append("/" + URLEncoder.encode("1","UTF-8")); /*요청시작위치 (sample인증키 사용시 5이내 숫자)*/
+			urlBuilder.append("/" + URLEncoder.encode("5","UTF-8")); /*요청종료위치(sample인증키 사용시 5이상 숫자 선택 안 됨)*/
+			// 상위 5개는 필수적으로 순서바꾸지 않고 호출해야 합니다.
 			
-			while( (line = br.readLine()) != null) result.append(line);
+			// 서비스별 추가 요청 인자이며 자세한 내용은 각 서비스별 '요청인자'부분에 자세히 나와 있습니다.
+			urlBuilder.append("/" + URLEncoder.encode("20220507","UTF-8")); /* 서비스별 추가 요청인자들*/
+
+			URL url = new URL(urlBuilder.toString());
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Content-type", "application/json");
+			System.out.println("Response code: " + conn.getResponseCode()); /* 연결 자체에 대한 확인이 필요하므로 추가합니다.*/
+			BufferedReader rd;
+
+			// 서비스코드가 정상이면 200~300사이의 숫자가 나옵니다.
+			if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			} else {
+				rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+			}
 			
-			br.close();
-			System.out.println(result.toString());
+			sb = new StringBuilder();
+			String line;
 			
-//			Gson gson = new Gson();
-//			
-//			JsonObject jsonObject = (JsonObject) jsonParser.parse();
-//			JsonObject resd = (JsonObject) jsonObject.get("resd");
-//			
-//			Double totalLocal = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
-//			Double totalMale = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
-//			Double totalFemale = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
-//			
-//			JsonObject subResult = (JsonObject) resd.get("RESULT");
-//			JsonArray infoArr = (JsonArray) resd.get("row");
-//			
-//			int len = infoArr.size();
-//			for(int i=0; i<len; i++	) {
-//				JsonObject tmp = (JsonObject) infoArr.get(i);
-//				// TODO: substationInfo...
-//			}
+			
+			while ((line = rd.readLine()) != null) {
+				sb.append(line);				
+			}
+			
+			rd.close();
+			conn.disconnect();
+			
+			System.out.println(sb.toString());
+			
+			
+			Gson gson = new Gson();
+			PopulationListDto list = gson.fromJson(sb.toString(), PopulationListDto.class);
+			return null;
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return result.toString(); 
+		
+		return null; 
 	}
+
 }
