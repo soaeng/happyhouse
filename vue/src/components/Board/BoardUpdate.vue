@@ -16,8 +16,8 @@
                                 </span>
                             </li>
                         </ul>
+                        <hr>
                     </div>
-                    <hr>
                     <div class="form-check mt-3 mb-3">
                         <input v-model="attachFile" class="form-check-input" type="checkbox" value="" id="chkFileUploadUpdate" />
                         <label class="form-check-label" for="chkFileUploadUpdate">파일 변경</label>
@@ -28,8 +28,15 @@
                             <label class="input-group-text" for="inputFileUploadInsert"><i class="bi bi-upload"></i></label>
                             <input @change="changeFile" type="file" class="form-control" id="inputFileUploadUpdate" multiple>
                         </div><!-- end of .input-group -->
-                        <div id="imgFileUploadUpdateThumbnail" class="thumbnail-wrapper">
-                            <img v-for="(file, index) in fileList" v-bind:src="file" v-bind:key="index" />
+                        <div id="imgFileUploadUpdateThumbnail" class="thumbnail-wrapper d-flex flex-column mt-3">
+                            <div v-for="(file, index) in FILE" :key="index" class="card" >
+                                <div class="card-content d-flex align-items-baseline">
+                                    <img v-if="file.fileTypeList[index] == 'image'" :src="file.fileList[index]" style="margin-right: .5rem;"/>
+                                    <i v-else class="bi bi-file-earmark-text-fill"></i>
+                                    <p class="card-text">{{file.fileNameList[index] }}</p>
+                                    <a href=""><i class="bi bi-x-circle-fill text-secondary"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="text-end">
@@ -57,9 +64,12 @@ export default {
 
     data() {
         return {
-        CKEditor: "",
-        attachFile: false,
-        fileList: [],
+            CKEditor: "",
+            attachFile: false,
+            fileList: [],
+            fileTypeList: [],
+            fileNameList:[],
+            FILE: [],
         };
     },
     computed: {
@@ -92,14 +102,16 @@ export default {
             // document.querySelector("#inputFileUploadUpdate").value = "";
         },
         changeFile(fileEvent) {
-            this.fileList = []; // thumbnail 초기화
-
+            console.log(">>>>>>>>>>>>>>>>> changeFile")
             const fileArray = Array.from(fileEvent.target.files);
+            this.fileList = [];
             fileArray.forEach((file) => {
                 this.fileList.push(URL.createObjectURL(file)); // push : array 에 항목 추가
+                this.fileTypeList.push(file.type.split('/')[0]);
+                this.fileNameList.push(file.name);
+                this.FILE.push({fileList: this.fileList, fileTypeList: this.fileTypeList, fileNameList: this.fileNameList});
             });
-            console.log(">>>>>>>>>>>>>>>>> changeFile")
-            console.log(fileArray);
+            console.log(this.FILE);
         },
         // 굳이 actions 에 있을 필요 없다. backend async 작업이지만, 그 결과로 store 를 변경하는 내용이 없다.
         async boardUpdate() {
@@ -165,4 +177,7 @@ export default {
 }
 
 .bi.bi-file-earmark-text::before{margin-top: .2rem; margin-right: .5rem;}
+.bi.bi-file-earmark-text-fill::before{margin-top: .35rem;}
+.bi.bi-file-earmark-text-fill{margin-right: .5rem;}
+.bi.bi-x-circle-fill::before{margin-top: .4rem; margin-left: .5rem;}
 </style>

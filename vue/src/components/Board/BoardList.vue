@@ -166,4 +166,5 @@ export default {
 tr th{ padding: 1.2rem .5rem;}
 tr td{ padding: .8rem .5rem;}
 tbody tr td.text-start{overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.bi.bi-file-earmark-text-fill::before{margin-top: .35rem;}
 </style>

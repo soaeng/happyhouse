@@ -15,7 +15,7 @@
             </div>
         </div>
         <section class="section">
-            <div class="col-md-6 col-12">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">내 정보</h4>
