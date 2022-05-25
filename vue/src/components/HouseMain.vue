@@ -210,6 +210,12 @@ export default {
     },
 
     watch: {
+        sido: function () {
+            if (this.sido != "0") this.getGugunList();
+        },
+        gugun: function () {
+            if (this.gugun != "0") this.getDongList();
+        },
         dong: function () {
             this.getHouseList();
             this.initPage();
