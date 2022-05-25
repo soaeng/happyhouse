@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ssafy.happyhouse.dto.HouseDto;
@@ -88,36 +89,45 @@ public class SurroundingController {
 	
 	@PostMapping("/stats/resd")
 	public String load_save(@RequestParam("date") String date, @RequestParam("adstrd") String adstrd, Model model) {
-		String result = null;
+		StringBuilder result = null;
 		try {
+			
 			String requestDate = date;
 			String requestAdstrd = adstrd;
 			
-			URL url = new URL("http://localhost:8080/" + API_KEY+ "/xml/SPOP_LOCAL_RESD_DONG/1/5/" + date + "/00/ " + adstrd);
+			URL url = new URL("http://localhost:8080/" + API_KEY+ "/xml/SPOP_LOCAL_RESD_DONG/1/5/" + date + "/00/" + adstrd);
 			
 			BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-			result = br.readLine();
+
+			result = new StringBuilder();
+			String line = null;
 			
-			JSONParser jsonParser = new JSONParser(result);
-			JsonObject jsonObject = (JsonObject) jsonParser.parse();
-			JsonObject resd = (JsonObject) jsonObject.get("resd");
+			while( (line = br.readLine()) != null) result.append(line);
 			
-			Double totalLocal = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
-			Double totalMale = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
-			Double totalFemale = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
+			br.close();
+			System.out.println(result.toString());
 			
-			JsonObject subResult = (JsonObject) resd.get("RESULT");
-			JsonArray infoArr = (JsonArray) resd.get("row");
-			
-			int len = infoArr.size();
-			for(int i=0; i<len; i++	) {
-				JsonObject tmp = (JsonObject) infoArr.get(i);
-				// TODO: substationInfo...
-			}
+//			Gson gson = new Gson();
+//			
+//			JsonObject jsonObject = (JsonObject) jsonParser.parse();
+//			JsonObject resd = (JsonObject) jsonObject.get("resd");
+//			
+//			Double totalLocal = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
+//			Double totalMale = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
+//			Double totalFemale = Double.parseDouble(resd.get("TOT_LVPOP_CO").toString());
+//			
+//			JsonObject subResult = (JsonObject) resd.get("RESULT");
+//			JsonArray infoArr = (JsonArray) resd.get("row");
+//			
+//			int len = infoArr.size();
+//			for(int i=0; i<len; i++	) {
+//				JsonObject tmp = (JsonObject) infoArr.get(i);
+//				// TODO: substationInfo...
+//			}
 			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return result; 
+		return result.toString(); 
 	}
 }

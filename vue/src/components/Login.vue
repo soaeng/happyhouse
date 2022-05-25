@@ -70,9 +70,13 @@ export default {
 
             this.$store.commit( // mutation은 commit으로 호출해라
             'SET_LOGIN',
-            { isLogin: true, userName: data.userName, userProfileImageUrl: data.userProfileImageUrl} // payload 부분
+            { isLogin: true, userName: data.userName, userEmail: this.$store.state.login.userEmail, userProfileImageUrl: data.userProfileImageUrl} // payload 부분
             );
-            
+            sessionStorage.setItem('isLogin', this.$store.state.login.isLogin);
+            sessionStorage.setItem('userName', this.$store.state.login.userName);
+            sessionStorage.setItem('userEmail', this.$store.state.login.userEmail);
+            sessionStorage.setItem('userProfileImageUrl', this.$store.state.login.userProfileImageUrl);            
+
             // Main 으로 이동
             this.$router.push("/house");
 

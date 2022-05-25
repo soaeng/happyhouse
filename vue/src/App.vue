@@ -14,7 +14,21 @@ export default {
     NavBar
   },
   methods:{
+  },
+  created() {
+    if(sessionStorage.getItem('isLogin') == 'true'){
+      this.$store.commit(
+        'SET_LOGIN',
+        { isLogin: sessionStorage.getItem('isLogin'), userName: sessionStorage.getItem('userName'), userEmail: sessionStorage.getItem('userEmail'), userProfileImageUrl: sessionStorage.getItem('userProfileImageUrl')} // payload 부분
+      );
+
+      this.$router.push(sessionStorage.getItem('lastUrl'))
+    }
+  },
+  updated() {
+    sessionStorage.setItem('lastUrl', this.$router.currentRoute.fullPath);
   }
+
 }
 </script>
 

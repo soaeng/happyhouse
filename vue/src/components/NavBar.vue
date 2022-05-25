@@ -58,10 +58,10 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <router-link to="/login" class='sidebar-link'>
+                            <a href="#" @click.prevent='doLogout' class='sidebar-link'>
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>로그아웃</span>
-                            </router-link>
+                            </a>
                         </li>
 
 
@@ -134,7 +134,12 @@ export default {
             this.$store.state.board.keyword = "";
             this.$store.state.board.type = "";
             this.$store.dispatch("boardList");
-        }
+        },
+        doLogout() { 
+            sessionStorage.clear();
+            this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userEmail: "", userPassword: "", userProfileImageUrl: "" });
+            this.$router.push("/login");
+        },
     },
 };
 </script>

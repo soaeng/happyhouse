@@ -58,7 +58,6 @@ public class UserServiceImpl implements UserService{
 	@Transactional
 	public UserResultDto userDelete(String userId) {
 		UserResultDto userResultDto = new UserResultDto();
-		// System.out.println("delete " + userId);
 		int ret = userDao.userDelete(userId);
 		if( ret == 1 ) {
 			userResultDto.setResult(SUCCESS);

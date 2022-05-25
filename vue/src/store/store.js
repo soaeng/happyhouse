@@ -14,7 +14,7 @@ export default new Vuex.Store({
     ///////////////////////////////////////////////////////////////////////// state - LOGIN
     login: {
         // NavBar
-      isLogin: true,
+      isLogin: false,
 
       userName: "",
       userProfileImageUrl: "",
@@ -115,6 +115,8 @@ export default new Vuex.Store({
     SET_LOGIN(state, payload) { // state는 위에 있는 애, payload는 parameter(객체면 보통 payload)
       state.login.isLogin = payload.isLogin;
       state.login.userName = payload.userName;
+      state.login.userEmail = payload.userEmail;
+      state.login.userPassword = payload.userPassword;
       state.login.userProfileImageUrl = payload.userProfileImageUrl;
     },
 

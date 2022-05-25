@@ -10,7 +10,8 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>개인 정보 조회</h3>
+                    <h3><i class="bi bi-person-fill"></i>개인 정보 조회</h3>
+                    <p class="text-subtitle text-muted"></p>
                 </div>
             </div>
         </div>
@@ -18,39 +19,36 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">내 정보</h4>
+                        <h4 class="card-title mb-0">내 정보</h4>
                     </div>
+                    <hr class="mt-0 mb-0">
                     <div class="card-content">
                         <div class="card-body">
                             <form class="form form-horizontal">
                                 <div class="form-body">
                                     <div class="row">
+                                        <div class="img mb-4">
+                                            <div class="mt-3 mb-3 rounded-circle bg-secondary position-relative" style="width: 200px; height: 200px; margin: 0 auto;">
+                                                <img :src="userProfileImageUrl" alt="" class="w-100 h-100 rounded-circle" >
+                                                <div class="btn-box position-absolute bg-light-primary rounded-circle" style="bottom:0; right: 0;">
+                                                    <button class="btn text-primary"><i class="bi bi-camera-fill"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-4">
                                             <label>Email</label>
                                         </div>
                                         <div class="col-md-8 form-group">
-                                            <input type="email" id="user-email" class="form-control"
-                                                name="user-email" placeholder="" v-model="userEmail" readonly>
+                                            <input type="email" id="user-email" class="form-control" name="user-email" v-model="userEmail" readonly>
                                         </div>
                                         <div class="col-md-4">
                                             <label>Name</label>
                                         </div>
                                         <div class="col-md-8 form-group">
-                                            <input type="name" id="user-nmae" class="form-control"
-                                                name="user-name" placeholder="" v-model="userName" readonly>
-                                            
-                                            <!-- <input type="name" id="user-nmae" class="form-control"
-                                                name="user-name" placeholder="" :class="{ 'is-valid': isUserNameFocusAndValid, 'is-invalid': isUserNameFocusAndInvalid }" v-model="userName" @input="validateUserName" @focus="isUserNameFocus = true" >
-                                            <div class="valid-feedback">Valid.</div>
-                                            <div class="invalid-feedback">올바른 이름을 입력해 주세요.</div> -->
+                                            <input type="name" id="user-nmae" class="form-control" name="user-name" v-model="userName" readonly>
                                         </div>
-                                        <!-- <div class="col-md-4">
-                                            <label>Current Password</label>
-                                        </div>
-                                        <div class="col-md-8 form-group">
-                                            <input type="password" id="user-password" class="form-control"
-                                                name="user-password" placeholder="" v-model="userPassword">
-                                        </div> -->
                                         <div class="col-md-4">
                                             <label>New Password</label>
                                         </div>
@@ -69,18 +67,16 @@
                                             <div class="valid-feedback">Valid.</div>
                                             <div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>
                                         </div>
+                                    </div> <!-- end of .row -->
                                         
-                                        <div class="col-sm-12 d-flex justify-content-end">
-                                            <button @click="update" type="button"
-                                                class="btn btn-primary me-1 mb-1">변경하기</button>
-                                            
-                                        </div>
+                                    <div class="col-sm-12 d-flex justify-content-end mt-3">
+                                        <button @click="update" type="button" class="btn btn-primary me-1 mb-1">변경하기</button>
                                     </div>
-                                </div>
+                                </div> <!-- end of .form-body -->
                             </form>
                         </div>
-                    </div>
-                </div>
+                    </div><!-- end of .card-content -->
+                </div><!-- end of .card -->
             </div>
         </section>
     </main>
@@ -101,6 +97,7 @@ export default {
         return {
             userEmail: this.$store.state.login.userEmail,
             userName: this.$store.state.login.userName,
+            userProfileImageUrl: this.$store.state.login.userProfileImageUrl,
             userPassword: "",
             newPassword: "",
             newPassword2: "",
@@ -195,4 +192,5 @@ export default {
 </script>
 
 <style scoped>
+.bi.bi-camera-fill::before{margin-top: .3rem;}
 </style>
