@@ -113,8 +113,6 @@ export default {
             console.log(document.querySelector("chkFileUploadUpdate"));
             
             let attachFiles = document.querySelector("#inputFileUploadUpdate").files;
-let reader = new FileReader();
-					reader.readAsDataURL(file);
 
                 if (attachFiles.length > 0) {
                     const fileArray = Array.from(attachFiles);

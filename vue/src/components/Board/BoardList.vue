@@ -12,7 +12,7 @@
                         <select @change="setType" id="searchType" class="form-select w-auto" style="margin-right: .5rem;">
                             <option value="title" selected>제목</option>
                             <option value="content">내용</option>
-                            <option value="writer">작성자</option>
+                            <option value="all">전체&nbsp;&nbsp;</option>
                         </select>
                         <input v-model="$store.state.board.keyword" @keydown.enter="getBoardList" type="text" class="form-control" placeholder="검색어를 입력하세요"  style="margin-right: .5rem;"/>
                         <button @click="getBoardList" class="btn btn-outline-dark" type="button">검색</button>
@@ -97,9 +97,11 @@ export default {
         // util
         makeDateStr: util.makeDateStr,
         setType(){
+            console.log(document.querySelector('#searchType').value);
             this.$store.state.board.type = document.querySelector('#searchType').value;
         },
         getBoardList() {
+            console.log(this.$store.state.board.type)
             this.$store.dispatch("boardList");
         },
         initPage(){

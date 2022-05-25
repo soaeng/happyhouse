@@ -116,11 +116,17 @@
 		  
 		  <trim prefix="AND ">
 		  	<choose>
-		  		<when test="type = 'title'">
-		  			b.TITLE LIKE CONCAT('%', #{keyword} ,'%')
+		  		<when test="type == 'title'">
+		  			b.TITLE LIKE CONCAT('%', #{keyword} ,'%') 
 		  		</when>
-		  		<when test="type = 'content'">
-		  			b.CONTENT LIKE CONCAT('%', #{keyword} ,'%')
+		  		<when test="type == 'content'">
+		  			b.CONTENT LIKE CONCAT('%', #{keyword} ,'%') 
+		  		</when>
+		  		<when test="type == 'all'">
+		  			( 
+		  			  b.TITLE LIKE CONCAT('%', #{keyword} ,'%') 
+		  			  OR b.CONTENT LIKE CONCAT('%', #{keyword} ,'%')
+		  			 ) 
 		  		</when>
 		  	</choose>
 		  </trim>

@@ -28,7 +28,7 @@ export default new Vuex.Store({
       list: [],
       limit: 10,
       offset: 0,
-      type: "",
+      type: "title",
       keyword: "",
 
       // pagination
@@ -249,6 +249,9 @@ export default new Vuex.Store({
           type: this.state.board.type,
           keyword: this.state.board.keyword,
       };
+
+      console.log(">>>>>>>>>> boardList:")
+      console.log(params);
 
       try {
           let { data } = await http.get("/boards", { params }); // params: params shorthand property, let response 도 제거

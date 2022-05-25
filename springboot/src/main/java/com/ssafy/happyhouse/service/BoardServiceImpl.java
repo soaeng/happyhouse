@@ -300,17 +300,17 @@ import lombok.extern.log4j.Log4j2;
 	public BoardResultDto boardListKeyword(BoardParamDto boardParamDto) {
 		log.info("===== 게시글 검색 목록 service =====");
 		BoardResultDto boardResultDto = new BoardResultDto();
-		
+		log.info(boardParamDto);
 		try {
 			List<BoardDto> list = dao.boardListKeyword(boardParamDto);
 			
-			// log.info("----- 게시글 검색 -----");
+			log.info("----- 게시글 검색 -----");
 			list.forEach(board -> log.info(board));
 			int len = list.size();
 			for(int i=0; i<len; i++) {
 				List<BoardFileDto> fileList = dao.boardDetailFileList(list.get(i).getBoardId());
 				list.get(i).setFileList(fileList);
-				log.info(list.get(i));
+				// log.info(list.get(i));
 			}
 	    	
 			int count = dao.boardListKeywordTotalCount(boardParamDto);
