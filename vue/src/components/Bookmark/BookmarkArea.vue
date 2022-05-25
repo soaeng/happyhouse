@@ -89,9 +89,24 @@
             </div><!-- end of .card -->
         </section>
 
-        <section>
+        <section class="section">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Bar Chart</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="bar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <article>
             <div class="card">
-                <div class="card-head bg-dark d-flex justify-content-between" style="padding: 1rem;">
+                <div class="card-head rounded-top bg-dark d-flex justify-content-between" style="padding: 1rem;">
                     <h3 class="card-title text-white mb-0">지역별 주요 뉴스</h3>
                     <i @click="showToggle" id="openNews" class="bi bi-caret-down-fill d-none text-white" style="margin-right: 5px;"></i>
                     <i @click="showToggle" id="closeNews" class="bi bi-caret-up-fill text-white" style="margin-right: 5px;"></i>
@@ -119,13 +134,14 @@
                     </ul>
                 </div><!-- end of .card-body -->
             </div>
-        </section>
+        </article>
     </main>
 </div>
 </template>
 
 <script>
 import http from "@/common/axios.js";
+import Chart from 'chart.js/auto';
 export default {
     name: 'BookmarkArea',
     
@@ -185,10 +201,12 @@ export default {
 
     created() {
         this.getSidoList();
+        
     },
 
     mounted() {
         this.getBookmarkAreaList();
+        this.testChartJs();
     },
 
     watch: {
@@ -201,6 +219,138 @@ export default {
     },
 
     methods: {
+        testChartJs(){
+            
+
+var chartColors = {
+    red: 'rgb(255, 99, 132)',
+    orange: 'rgb(255, 159, 64)',
+    yellow: 'rgb(255, 205, 86)',
+    green: 'rgb(75, 192, 192)',
+    info: '#41B1F9',
+    blue: '#3245D1',
+    purple: 'rgb(153, 102, 255)',
+    grey: '#EBEFF6'
+};
+
+var config1 = {
+    type: "line",
+    data: {
+        labels: ["January", "February", "March", "April", "May", "June", "July"],
+        datasets: [
+            {
+                label: "Balance",
+                backgroundColor: "#fff",
+                borderColor: "#fff",
+                data: [20, 40, 20, 70, 10, 50, 20],
+                fill: false,
+                pointBorderWidth: 100,
+                pointBorderColor: "transparent",
+                pointRadius: 3,
+                pointBackgroundColor: "transparent",
+                pointHoverBackgroundColor: "rgba(63,82,227,1)",
+            },
+        ],
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: -10,
+                top: 10,
+            },
+        },
+        legend: {
+            display: false,
+        },
+        title: {
+            display: false,
+        },
+        tooltips: {
+            mode: "index",
+            intersect: false,
+        },
+        hover: {
+            mode: "nearest",
+            intersect: true,
+        },
+        scales: {
+            xAxes: [
+                {
+                    gridLines: {
+                        drawBorder: false,
+                        display: false,
+                    },
+                    ticks: {
+                        display: false,
+                    },
+                },
+            ],
+            yAxes: [
+                {
+                    gridLines: {
+                        display: false,
+                        drawBorder: false,
+                    },
+                    ticks: {
+                        display: false,
+                    },
+                },
+            ],
+        },
+    },
+};
+var ctxBar = document.getElementById("bar").getContext("2d");
+var myBar = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        datasets: [{
+            label: 'Students',
+            backgroundColor: [chartColors.grey, chartColors.grey, chartColors.grey, chartColors.grey, chartColors.info, chartColors.blue, chartColors.grey],
+            data: [
+                5,
+                10,
+                30,
+                40,
+                35,
+                55,
+                15,
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        barRoundness: 1,
+        title: {
+            display: true,
+            text: "Students in 2020"
+        },
+        legend: {
+            display: false
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                    suggestedMax: 40 + 20,
+                    padding: 10,
+                },
+                gridLines: {
+                    drawBorder: false,
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    display: false,
+                    drawBorder: false
+                }
+            }]
+        }
+    }
+});
+        },
         sidebarToggle(){
             document.getElementById('sidebar').classList.toggle('active');
         },

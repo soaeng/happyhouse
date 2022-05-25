@@ -20,6 +20,7 @@ public interface SurroundingService {
 	
 	// 인구 정보 불러오기
 	public PopulationDto getPopulation(Map<String, String> param);
+	public String getPopulationJson(Map<String, String> param);
 	
 	default Population dto2Entity(PopulationDto dto) {
 		Population entity = Population.builder()

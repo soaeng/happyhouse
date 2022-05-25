@@ -12,3 +12,6 @@ window.addEventListener('resize', (event) => {
         document.getElementById('sidebar').classList.add('active');
     }
 });
+
+
+
