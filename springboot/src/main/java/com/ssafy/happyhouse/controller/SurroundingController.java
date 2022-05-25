@@ -95,14 +95,11 @@ public class SurroundingController {
 	}
 	
 	@GetMapping("/stats/resd")
-	public ResponseEntity<PopulationDto> getPopulation(@RequestParam("date") String date, @RequestParam("adstrd") String adstrd) {
+	public ResponseEntity<PopulationDto> getPopulation(@RequestParam("dongCode") String dongCode) {
 		log.info("===== 인구 정보 controller =====");
 		
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("date", date);
-		map.put("adstrd", adstrd);		
-		
-		PopulationDto populationDto = service.getPopulation(map);
+		String adstrd = service.getAdstrdCode(dongCode);
+		PopulationDto populationDto = service.getPopulation(adstrd);
 		log.info("populationDto: " + populationDto);
 		
 		return new ResponseEntity<PopulationDto>(populationDto, HttpStatus.OK);
@@ -110,14 +107,13 @@ public class SurroundingController {
 	
 
 	@GetMapping("/stats/resd2")
-	public ResponseEntity<String> getPopulationJson(@RequestParam("date") String date, @RequestParam("adstrd") String adstrd, Model model) {
+	public ResponseEntity<String> getPopulationJson(@RequestParam("dongCode") String dongCode) {
 		log.info("===== 인구 정보 controller =====");
 		
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("date", date);
-		map.put("adstrd", adstrd);		
+
+		String adstrd = service.getAdstrdCode(dongCode);
 		
-		String result = service.getPopulationJson(map);
+		String result = service.getPopulationJson(adstrd);
 		log.info("population: " + result);
 		
 		return new ResponseEntity<String>(result, HttpStatus.OK);

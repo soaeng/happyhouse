@@ -96,12 +96,12 @@ public class SurroundingServiceImpl implements SurroundingService{
 	@Override
 	@Transactional
 	// 인구 정보 불러오기
-	public PopulationDto getPopulation(Map<String, String> param) {
-		log.info("===================== 인구 정보 service =============================");
+	public PopulationDto getPopulation(String adstrd) {
+		log.info("===================== 인구 정보 service: " + adstrd + "=============================");
 		PopulationDto populationDto = null;
 		
-		if(repo.existsById(param.get("adstrd"))) {
-			populationDto = entity2Dto(repo.getOne(param.get("adstrd")));
+		if(repo.existsById(adstrd)) {
+			populationDto = entity2Dto(repo.getOne(adstrd));
 		}
 		else {
 			
@@ -115,9 +115,9 @@ public class SurroundingServiceImpl implements SurroundingService{
 				// 상위 5개는 필수적으로 순서바꾸지 않고 호출해야 합니다.
 				
 				// 서비스별 추가 요청 인자이며 자세한 내용은 각 서비스별 '요청인자'부분에 자세히 나와 있습니다.
-				urlBuilder.append("/" + URLEncoder.encode(param.get("date"),"UTF-8")); /* 서비스별 추가 요청인자들*/
+				urlBuilder.append("/" + URLEncoder.encode("20220520","UTF-8")); /* 서비스별 추가 요청인자들*/
 				urlBuilder.append("/" + URLEncoder.encode("00","UTF-8")); /* 서비스별 추가 요청인자들*/
-				urlBuilder.append("/" + URLEncoder.encode(param.get("adstrd"),"UTF-8")); /* 서비스별 추가 요청인자들*/
+				urlBuilder.append("/" + URLEncoder.encode(adstrd,"UTF-8")); /* 서비스별 추가 요청인자들*/
 				
 				URL url = new URL(urlBuilder.toString());
 				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -176,51 +176,51 @@ public class SurroundingServiceImpl implements SurroundingService{
 						
 						populationDto.setAdstrdCode(getTagValue("ADSTRD_CODE_SE", eElement));
 						populationDto.setTotalLocal(Double.parseDouble(getTagValue("TOT_LVPOP_CO", eElement)));
-						populationDto.setMaleTo19(
+						populationDto.setMaleTo19( Math.round(
 							Double.parseDouble(getTagValue("MALE_F0T9_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F10T14_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F15T19_LVPOP_CO", eElement))
-						);
-						populationDto.setMaleTo39(
+						)*1/1);
+						populationDto.setMaleTo39( Math.round(
 							Double.parseDouble(getTagValue("MALE_F20T24_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F25T29_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F30T34_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F35T39_LVPOP_CO", eElement))
-						);
-						populationDto.setMaleTo59(
+						)*1/1);
+						populationDto.setMaleTo59( Math.round(
 							Double.parseDouble(getTagValue("MALE_F40T44_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F45T49_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F50T54_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F55T59_LVPOP_CO", eElement))
-						);
-						populationDto.setMaleTo74(
+						)*1/1);
+						populationDto.setMaleTo74( Math.round(
 							Double.parseDouble(getTagValue("MALE_F60T64_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F65T69_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("MALE_F70T74_LVPOP_CO", eElement))
-						);
+						)*1/1);
 						
-						populationDto.setFemaleTo19(
+						populationDto.setFemaleTo19( Math.round(
 								Double.parseDouble(getTagValue("FEMALE_F0T9_LVPOP_CO", eElement))
 								+ Double.parseDouble(getTagValue("FEMALE_F10T14_LVPOP_CO", eElement))
 								+ Double.parseDouble(getTagValue("FEMALE_F15T19_LVPOP_CO", eElement))
-						);
-						populationDto.setFemaleTo39(
+						)*1/1);
+						populationDto.setFemaleTo39( Math.round(
 							Double.parseDouble(getTagValue("FEMALE_F20T24_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F25T29_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F30T34_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F35T39_LVPOP_CO", eElement))
-						);
-						populationDto.setFemaleTo59(
+						)*1/1);
+						populationDto.setFemaleTo59( Math.round(
 							Double.parseDouble(getTagValue("FEMALE_F40T44_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F45T49_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F50T54_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F55T59_LVPOP_CO", eElement))
-						);
-						populationDto.setFemaleTo74(
+						)*1/1);
+						populationDto.setFemaleTo74( Math.round(
 							Double.parseDouble(getTagValue("FEMALE_F60T64_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F65T69_LVPOP_CO", eElement))
 							+ Double.parseDouble(getTagValue("FEMALE_F70T74_LVPOP_CO", eElement))
-						);
+						)*1/1);
 						
 						populationDto.setTotalMale(populationDto.getMaleTo19() + populationDto.getMaleTo39() + populationDto.getMaleTo59() + populationDto.getMaleTo74());
 						populationDto.setTotalFemale(populationDto.getFemaleTo19() + populationDto.getFemaleTo39() + populationDto.getFemaleTo59() + populationDto.getFemaleTo74());
@@ -243,7 +243,7 @@ public class SurroundingServiceImpl implements SurroundingService{
 	@Override
 	@Transactional
 	// 인구 정보 불러오기
-	public String getPopulationJson(Map<String, String> param) {
+	public String getPopulationJson(String adstrd) {
 		log.info("===================== 인구 정보 json service =============================");
 		StringBuilder sb = null;
 		
@@ -257,9 +257,9 @@ public class SurroundingServiceImpl implements SurroundingService{
 			// 상위 5개는 필수적으로 순서바꾸지 않고 호출해야 합니다.
 			
 			// 서비스별 추가 요청 인자이며 자세한 내용은 각 서비스별 '요청인자'부분에 자세히 나와 있습니다.
-			urlBuilder.append("/" + URLEncoder.encode(param.get("date"),"UTF-8")); /* 서비스별 추가 요청인자들*/
+			urlBuilder.append("/" + URLEncoder.encode("20220526","UTF-8")); /* 서비스별 추가 요청인자들*/
 			urlBuilder.append("/" + URLEncoder.encode("00","UTF-8")); /* 서비스별 추가 요청인자들*/
-			urlBuilder.append("/" + URLEncoder.encode(param.get("adstrd"),"UTF-8")); /* 서비스별 추가 요청인자들*/
+			urlBuilder.append("/" + URLEncoder.encode(adstrd,"UTF-8")); /* 서비스별 추가 요청인자들*/
 			
 			URL url = new URL(urlBuilder.toString());
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -303,6 +303,12 @@ public class SurroundingServiceImpl implements SurroundingService{
 			return null;
 		}
 		return nValue.getNodeValue();
+	}
+
+	// 법정동코드로 행정동코드 조회
+	@Override
+	public String getAdstrdCode(String dongCode) {
+		return dao.getAdstrdCode(dongCode);
 	}
 
 }

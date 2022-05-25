@@ -94,10 +94,27 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Bar Chart</h4>
+                            <h4 class="card-title">지역별 생활 인구 수</h4>
                         </div>
                         <div class="card-body">
-                            <canvas id="bar"></canvas>
+                            <canvas id="bar" ></canvas>
+                            <!-- <div class="" v-else><p class="text-center">지역 선택 시 조회가 가능합니다.</p></div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">성별/나이 생활 인구 비율</h4>
+                        </div>
+                        <div class="card-body d-flex">
+                            <div class="col-md-6">
+                                <canvas id="doughnut1" ></canvas>
+                            </div>
+                            <div class="col-md-6">
+                                <canvas id="doughnut2" ></canvas>
+                            </div>
+                            <!-- <div class="" v-else><p class="text-center">지역 선택 시 조회가 가능합니다.</p></div> -->
                         </div>
                     </div>
                 </div>
@@ -130,7 +147,7 @@
                         </li>
                     </ul><!-- end of .list-group -->
                     <ul class="list-group" v-if="areaNewsList.length == 0">
-                        <p class="text-center pt-5 pb-5 mb-0">지역 선택 후 조회가 가능합니다.</p>
+                        <p class="text-center pt-5 pb-5 mb-0">지역 선택 시 조회가 가능합니다.</p>
                     </ul>
                 </div><!-- end of .card-body -->
             </div>
@@ -147,6 +164,9 @@ export default {
     
     data() {
         return {
+            totalChart: null,
+            maleChart: null,
+            femaleChart: null,
         };
     },
 
@@ -201,12 +221,11 @@ export default {
 
     created() {
         this.getSidoList();
-        
     },
 
     mounted() {
         this.getBookmarkAreaList();
-        this.testChartJs();
+        this.populationChart();
     },
 
     watch: {
@@ -219,137 +238,103 @@ export default {
     },
 
     methods: {
-        testChartJs(){
+        populationChart(){
             
+            var chartColors = {
+                red: 'rgb(255, 99, 132)',
+                orange: 'rgb(255, 159, 64)',
+                yellow: 'rgb(255, 205, 86)',
+                green: 'rgb(75, 192, 192)',
+                info: '#41B1F9',
+                blue: '#3245D1',
+                purple: 'rgb(153, 102, 255)',
+                grey: '#EBEFF6'
+            };
 
-var chartColors = {
-    red: 'rgb(255, 99, 132)',
-    orange: 'rgb(255, 159, 64)',
-    yellow: 'rgb(255, 205, 86)',
-    green: 'rgb(75, 192, 192)',
-    info: '#41B1F9',
-    blue: '#3245D1',
-    purple: 'rgb(153, 102, 255)',
-    grey: '#EBEFF6'
-};
+            var ctxBar = document.getElementById("bar").getContext("2d");
+            this.totalChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ["총 생활 인구 수", "총 남자 인구 수", "총 여자 인구 수"],
+                    datasets: [{
+                        label: '총 생활 인구 수',
+                        backgroundColor: [chartColors.red, chartColors.blue, chartColors.orange],
+                        data: [
+                            this.$store.state.population.totalLocal,
+                            this.$store.state.population.totalMale,
+                            this.$store.state.population.totalFemale
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    barRoundness: 1,
+                    title: {
+                        display: true,
+                        text: "Students in 2020"
+                    },
+                    legend: {
+                        display: true,
+                    },
+                }
+            });
 
-var config1 = {
-    type: "line",
-    data: {
-        labels: ["January", "February", "March", "April", "May", "June", "July"],
-        datasets: [
-            {
-                label: "Balance",
-                backgroundColor: "#fff",
-                borderColor: "#fff",
-                data: [20, 40, 20, 70, 10, 50, 20],
-                fill: false,
-                pointBorderWidth: 100,
-                pointBorderColor: "transparent",
-                pointRadius: 3,
-                pointBackgroundColor: "transparent",
-                pointHoverBackgroundColor: "rgba(63,82,227,1)",
-            },
-        ],
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: {
-            padding: {
-                left: -10,
-                top: 10,
-            },
-        },
-        legend: {
-            display: false,
-        },
-        title: {
-            display: false,
-        },
-        tooltips: {
-            mode: "index",
-            intersect: false,
-        },
-        hover: {
-            mode: "nearest",
-            intersect: true,
-        },
-        scales: {
-            xAxes: [
-                {
-                    gridLines: {
-                        drawBorder: false,
-                        display: false,
-                    },
-                    ticks: {
-                        display: false,
-                    },
+            var ctxDoughnut = document.getElementById("doughnut1").getContext("2d");
+            this.maleChart = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    // labels: ["0~19세", "20~39세", "40~59세", "60~74세"],
+                    datasets: [{
+                        backgroundColor: [chartColors.yellow, chartColors.green, chartColors.info, chartColors.grey],
+                        data: [
+                            this.$store.state.population.maleTo19,
+                            this.$store.state.population.maleTo39,
+                            this.$store.state.population.maleTo59,
+                            this.$store.state.population.maleTo74
+                        ]
+                    }]
                 },
-            ],
-            yAxes: [
-                {
-                    gridLines: {
-                        display: false,
-                        drawBorder: false,
+                options: {
+                    responsive: true,
+                    barRoundness: 1,
+                    title: {
+                        display: true,
+                        text: "Students in 2020"
                     },
-                    ticks: {
-                        display: false,
+                    legend: {
+                        display: true,
                     },
-                },
-            ],
-        },
-    },
-};
-var ctxBar = document.getElementById("bar").getContext("2d");
-var myBar = new Chart(ctxBar, {
-    type: 'bar',
-    data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-        datasets: [{
-            label: 'Students',
-            backgroundColor: [chartColors.grey, chartColors.grey, chartColors.grey, chartColors.grey, chartColors.info, chartColors.blue, chartColors.grey],
-            data: [
-                5,
-                10,
-                30,
-                40,
-                35,
-                55,
-                15,
-            ]
-        }]
-    },
-    options: {
-        responsive: true,
-        barRoundness: 1,
-        title: {
-            display: true,
-            text: "Students in 2020"
-        },
-        legend: {
-            display: false
-        },
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true,
-                    suggestedMax: 40 + 20,
-                    padding: 10,
-                },
-                gridLines: {
-                    drawBorder: false,
                 }
-            }],
-            xAxes: [{
-                gridLines: {
-                    display: false,
-                    drawBorder: false
+            });
+            
+            var ctxDoughnut = document.getElementById("doughnut2").getContext("2d");
+            this.femaleChart = new Chart(ctxDoughnut, {
+                type: 'doughnut',
+                data: {
+                    // labels: ["0~19세", "20~39세", "40~59세", "60~74세"],
+                    datasets: [{
+                        backgroundColor: [chartColors.orange, chartColors.purple, chartColors.blue, chartColors.red],
+                        data: [
+                            this.$store.state.population.maleTo19,
+                            this.$store.state.population.maleTo39,
+                            this.$store.state.population.maleTo59,
+                            this.$store.state.population.maleTo74
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    barRoundness: 1,
+                    legend: {
+                        display: true,
+                    },
                 }
-            }]
-        }
-    }
-});
+            });
+        },
+        destroyChart(){
+            this.totalChart.destroy();
+            this.maleChart.destroy();
+            this.femaleChart.destroy();
         },
         sidebarToggle(){
             document.getElementById('sidebar').classList.toggle('active');
@@ -375,12 +360,14 @@ var myBar = new Chart(ctxBar, {
             this.$store.dispatch("bookmarkAreaList");
         },
         getAreaNews(e){
-            console.log(e.target.dataset.city);
+            console.log(e.target);
             this.$store.commit("SET_NEWS_CITY", e.target.dataset.city);
             this.$store.commit("SET_NEWS_DVSN", e.target.dataset.gugun);
 
             this.$store.dispatch("areaNewsList");
             document.getElementById('news-box').classList.remove('d-none');
+
+            this.getPopulationInfo(e);
         },
         go2HouseMain(e){
             this.sido = e.target.dataset.city;
@@ -441,10 +428,33 @@ var myBar = new Chart(ctxBar, {
                     this.doLogout();
                 }else{
                     this.getBookmarkAreaList();
+                    this.destroyChart();
                 }
 
             } catch(error){
                 console.log("removeBookmarkArea: error ");
+                console.log(error);
+            }
+        },
+
+        async getPopulationInfo(e){
+            let dongCode = e.target.dataset.code;
+            try{
+                console.log(dongCode);
+
+                let data = await http.get('/stats/resd?dongCode=' + dongCode);
+                
+                if( data.result == 'login' ){
+                    this.doLogout();
+                }else{
+                    console.log(data.data);
+                    this.$store.commit("SET_POPULATION_INFO", data.data);
+                    this.destroyChart();
+                    this.populationChart();
+                }
+
+            } catch(error){
+                console.log("getPopulationInfo: error ");
                 console.log(error);
             }
         },

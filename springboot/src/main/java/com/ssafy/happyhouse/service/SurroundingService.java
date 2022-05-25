@@ -19,8 +19,11 @@ public interface SurroundingService {
 	public List<SurroundingDto> busStopList(Map<String, String> param);
 	
 	// 인구 정보 불러오기
-	public PopulationDto getPopulation(Map<String, String> param);
-	public String getPopulationJson(Map<String, String> param);
+	public PopulationDto getPopulation(String adstrd);
+	public String getPopulationJson(String adstrd);
+
+	// 법정동코드로 행정동코드 조회
+	public String getAdstrdCode(String dongCode);
 	
 	default Population dto2Entity(PopulationDto dto) {
 		Population entity = Population.builder()

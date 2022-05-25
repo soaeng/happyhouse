@@ -35,4 +35,9 @@
 			ORDER BY distance;
 		]]>
 	</select>
+	
+	<select id="getAdstrdCode" parameterType="String" resultType="String">
+		select adstrd_code from adstrd_code where dong_code = #{dongCode} limit 1;
+	</select>
+	
 </mapper>

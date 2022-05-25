@@ -20,4 +20,6 @@ public interface SurroundingDao {
 	// 버스 정류장 리스트 불러오기
 	public List<SurroundingDto> busStopList(Map<String, String> param);
 	
+	// 법정동코드로 행정동코드 조회
+	public String getAdstrdCode(String dongCode);
 }

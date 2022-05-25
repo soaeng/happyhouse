@@ -13,4 +13,7 @@ public class AreaCodeDto {
 	private String cityCode;	// 시도코드
 	private String cityName;	// 시도명
 	
+	private String adstrdCode;
+	private String adstrdName;
+	
 }

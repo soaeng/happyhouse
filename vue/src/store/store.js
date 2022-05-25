@@ -100,6 +100,21 @@ export default new Vuex.Store({
       bookmarkHouseList: [],
       bookmarkAreaList: [],
     },
+
+    population: {
+      adstrdCode: '',
+      totalLocal: 0,
+      totalMale: 0,
+      maleTo19: 0,
+      maleTo39: 0,
+      maleTo59: 0,
+      maleTo74: 0,
+      totalFemale: 0,
+      femaleTo19: 0,
+      femaleTo39: 0,
+      femaleTo59: 0,
+      femaleTo74: 0,
+    },
     
 
     ///////////////////////////////////////////////////////////////////////// state - NEWS
@@ -226,6 +241,21 @@ export default new Vuex.Store({
     },
     SET_BOOKMARK_DEAL_LIST(state, list) {
       state.house.bookmarkDealList = list;
+    },
+
+    SET_POPULATION_INFO(state, payload) {
+      state.population.totalLocal = payload.totalLocal;
+      state.population.totalMale = payload.totalMale;
+      state.population.maleTo19 = payload.maleTo19;
+      state.population.maleTo39 = payload.maleTo39;
+      state.population.maleTo59 = payload.maleTo59;
+      state.population.maleTo74 = payload.maleTo74;
+      state.population.totalFemale = payload.totalFemale;
+      state.population.femaleTo19 = payload.femaleTo19;
+      state.population.femaleTo39 = payload.femaleTo39;
+      state.population.femaleTo59 = payload.femaleTo59;
+      state.population.femaleTo74 = payload.femaleTo74;
+      
     },
 
     ///////////////////////////////////////////////////////////////////////// mutations - NEWS
