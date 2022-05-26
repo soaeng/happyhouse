@@ -152,11 +152,10 @@
 	 
 	 <!-- 댓글 조회 -->
 	 <select id="replyDetail" parameterType="int" resultType="com.ssafy.happyhouse.dto.ReplyDto">
-	 	SELECT r.REPLY_ID, r.BOARD_ID, r.USER_SEQ, u.USER_NAME, u.USER_PROFILE_IMAGE_URL,
-			   r.TEXT, r.REG_DT
-		  FROM reply r, USERS u
-		 WHERE r.REPLY_ID = #{replyId}
-		   AND r.USER_SEQ = u.USER_SEQ
+	 	SELECT r.*, u.user_name, u.user_profile_image_url 
+		FROM reply r 
+		JOIN users u ON r.user_seq = u.user_seq
+	 	WHERE r.REPLY_ID = #{replyId}
 	 </select>
 	 
 	 <!-- 댓글 수정 -->
@@ -178,7 +177,11 @@
 	
 	<!-- 댓글 목록 -->
 	<select id="replyList" parameterType="int" resultType="com.ssafy.happyhouse.dto.ReplyDto">
-		SELECT reply_id, board_id, text, user_seq, reg_dt FROM reply WHERE board_id = #{boardId} ORDER BY reply_id ASC;
+		SELECT r.*, u.user_name, u.user_profile_image_url 
+		FROM reply r 
+		JOIN users u ON r.user_seq = u.user_seq
+		WHERE board_id = #{boardId} 
+		ORDER BY reply_id ASC;
 	</select>
 </mapper>
 

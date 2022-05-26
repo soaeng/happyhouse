@@ -91,6 +91,6 @@ public interface CommunityDao {
 	public int replyListDelete(int boardId);
 	
 	// 댓글 목록
-	public List<ReplyDto> replyList(CommunityParamDto communityParamDto);
+	public List<ReplyDto> replyList(int boardId);
 	
 }

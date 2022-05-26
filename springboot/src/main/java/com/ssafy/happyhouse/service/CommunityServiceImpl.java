@@ -13,11 +13,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.ssafy.happyhouse.dao.CommunityDao;
+import com.ssafy.happyhouse.dao.UserDao;
 import com.ssafy.happyhouse.dto.CommunityDto;
 import com.ssafy.happyhouse.dto.CommunityFileDto;
 import com.ssafy.happyhouse.dto.CommunityParamDto;
 import com.ssafy.happyhouse.dto.CommunityResultDto;
 import com.ssafy.happyhouse.dto.ReplyDto;
+import com.ssafy.happyhouse.dto.UserDto;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -27,6 +29,10 @@ import lombok.extern.log4j.Log4j2;
 	
 		@Autowired
 		CommunityDao dao;
+		
+		@Autowired
+		UserDao userDao;
+		
 		String uploadFolder = "upload" + File.separator + "community";
 	
 		String uploadPath = "C:" + File.separator + "Users" +File.separator + "sodud" +File.separator + "Desktop" +File.separator + "SSAFY"
@@ -39,18 +45,18 @@ import lombok.extern.log4j.Log4j2;
 	private static final int FAIL = -1;
 	
 	 
-	// 게시글 등록
+	// 커뮤니티 등록
 	@Override
 	@Transactional
 	public CommunityResultDto communityInsert(CommunityDto dto, MultipartHttpServletRequest request) {
 		
-		// log.info("===== 게시글 등록 service =====");
+		// log.info("===== 커뮤니티 등록 service =====");
 		
 		CommunityResultDto communityResultDto = new CommunityResultDto();
 		
 		try {
 			dao.communityInsert(dto); // useGeneratedKeys="true" keyProperty="boardId"
-			// log.info("게시글 DB 등록");
+			// log.info("커뮤니티 DB 등록");
 			List<MultipartFile> fileList = request.getFiles("file");
 				
 			File uploadDir = new File(uploadPath + File.separator + uploadFolder);
@@ -97,33 +103,32 @@ import lombok.extern.log4j.Log4j2;
 	}
 
 	
-	// 게시글 조회
+	// 커뮤니티 조회
 	@Override
 	public CommunityResultDto communityDetail(CommunityParamDto communityParamDto) {
-		// log.info("===== 게시글 조회 service - 확인 완료 =====");
+		// log.info("===== 커뮤니티 조회 service - 확인 완료 =====");
 		CommunityResultDto communityResultDto = new CommunityResultDto();
 		
 		try {
 			
 			CommunityDto communityDto = dao.communityDetail(communityParamDto);
-			log.info("게시글 상세 조회: " + communityDto);
+			log.info("커뮤니티 상세 조회: " + communityDto);
 			
 			if( communityDto.getUserSeq() == communityParamDto.getUserSeq() ) {
 				communityDto.setSameUser(true);
 			}else {
 				communityDto.setSameUser(false);
 			}
-			log.info("게시글 상세 조회: " + communityDto);
-			
+			log.info("커뮤니티 상세 조회: " + communityDto);
 			int userReadCnt = dao.communityUserReadCount(communityParamDto);
-			// log.info("게시글 조회수 조회: " + userReadCnt);
+			// log.info("커뮤니티 조회수 조회: " + userReadCnt);
 			if( userReadCnt == 0 && !communityDto.isSameUser()) {
 				dao.communityUserReadInsert(communityParamDto.getBoardId(), communityParamDto.getUserSeq());
 				dao.communityReadCountUpdate(communityParamDto.getBoardId());
 			}
 			
 			List<CommunityFileDto> fileList = dao.communityDetailFileList(communityDto.getBoardId());
-			List<ReplyDto> replyList = dao.replyList(communityParamDto);
+			List<ReplyDto> replyList = dao.replyList(communityParamDto.getBoardId());
 			
 			int len = replyList.size();
 			for(int i=0; i<len; i++	) {
@@ -146,17 +151,17 @@ import lombok.extern.log4j.Log4j2;
 	}
 
 	
-	// 게시글 수정
+	// 커뮤니티 수정
 	@Override
 	@Transactional
 	public CommunityResultDto communityUpdate(CommunityDto dto, MultipartHttpServletRequest request){
-		// log.info("===== 게시글 수정 service =====");
+		// log.info("===== 커뮤니티 수정 service =====");
 		CommunityResultDto communityResultDto = new CommunityResultDto();
 
 		
 		try {
 			dao.communityUpdate(dto);
-			// log.info("게시글 DB 수정");
+			// log.info("커뮤니티 DB 수정");
 			List<MultipartFile> fileList = request.getFiles("file");
 			
 			File uploadDir = new File(uploadPath + File.separator + uploadFolder);
@@ -216,11 +221,11 @@ import lombok.extern.log4j.Log4j2;
 	}
 	
 	
-	// 게시글 삭제
+	// 커뮤니티 삭제
 	@Override
 	@Transactional
 	public CommunityResultDto communityDelete(int boardId) {
-		// log.info("===== 게시글 삭제 service =====");
+		// log.info("===== 커뮤니티 삭제 service =====");
 		CommunityResultDto communityResultDto = new CommunityResultDto();
 		
 		try {
@@ -237,12 +242,12 @@ import lombok.extern.log4j.Log4j2;
 			}
 			
 			dao.communityFileDelete(boardId);
-			// log.info("게시글 파일 DB 삭제");
+			// log.info("커뮤니티 파일 DB 삭제");
 			dao.communityReadCountDelete(boardId);
-			// log.info("게시글 조휘수 삭제");
+			// log.info("커뮤니티 조휘수 삭제");
 			dao.replyListDelete(boardId);
 			dao.communityDelete(boardId);
-			// log.info("게시글 DB 삭제");
+			// log.info("커뮤니티 DB 삭제");
 			
 			communityResultDto.setResult(SUCCESS);
 			
@@ -255,24 +260,26 @@ import lombok.extern.log4j.Log4j2;
 	}
 	
 	
-	// 게시글 목록
+	// 커뮤니티 목록
 	@Override
 	public CommunityResultDto communityList(CommunityParamDto communityParamDto) {
-		log.info("===== 게시글 목록 service =====");
+		log.info("===== 커뮤니티 목록 service =====");
 		CommunityResultDto communityResultDto = new CommunityResultDto();
 		try {
 			log.info("communityParamDto: " + communityParamDto);
 			List<CommunityDto> list = dao.communityList(communityParamDto);
-			log.info("----- 게시글 -----");
+			log.info("----- 커뮤니티 -----");
 			int len = list.size();
 			for(int i=0; i<len; i++) {
 				List<CommunityFileDto> fileList = dao.communityDetailFileList(list.get(i).getBoardId());
+				List<ReplyDto> replyList = dao.replyList(list.get(i).getBoardId());				
 				list.get(i).setFileList(fileList);
+				list.get(i).setReplyList(replyList);
 				log.info(list.get(i));
 			}
-	    	
+				    	
 			int count = dao.communityListTotalCount();
-			log.info("게시글 총 수: " + count);
+			log.info("커뮤니티 총 수: " + count);
 			
 			communityResultDto.setList(list);
 			communityResultDto.setCount(count);
@@ -287,16 +294,16 @@ import lombok.extern.log4j.Log4j2;
 	}
 
 	
-	// 게시글 검색 결과
+	// 커뮤니티 검색 결과
 	@Override
 	public CommunityResultDto communityListKeyword(CommunityParamDto communityParamDto) {
-		log.info("===== 게시글 검색 목록 service =====");
+		log.info("===== 커뮤니티 검색 목록 service =====");
 		CommunityResultDto communityResultDto = new CommunityResultDto();
 		log.info(communityParamDto);
 		try {
 			List<CommunityDto> list = dao.communityListKeyword(communityParamDto);
 			
-			log.info("----- 게시글 검색 -----");
+			log.info("----- 커뮤니티 검색 -----");
 			list.forEach(board -> log.info(board));
 			int len = list.size();
 			for(int i=0; i<len; i++) {
@@ -306,7 +313,7 @@ import lombok.extern.log4j.Log4j2;
 			}
 	    	
 			int count = dao.communityListKeywordTotalCount(communityParamDto);
-			// log.info("검색된 게시글 총 수: " + count);
+			// log.info("검색된 커뮤니티 총 수: " + count);
 			
 			communityResultDto.setList(list);
 			communityResultDto.setCount(count);
@@ -342,6 +349,8 @@ import lombok.extern.log4j.Log4j2;
 
 	@Override
 	public int replyDelete(int replyId) {
+		log.info("================ 댓글 삭제 service =============");
+		log.info(replyId);
 		return dao.replyDelete(replyId);
 	}
 

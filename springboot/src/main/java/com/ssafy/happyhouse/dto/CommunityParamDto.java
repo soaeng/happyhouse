@@ -13,5 +13,6 @@ public class CommunityParamDto {
 	private int boardId;		// 게시글 번호
 	private int replyId;		// 댓글 번호
 	private int userSeq;		// 작성자
+	private String userProfileImageUrl;
 	
 }

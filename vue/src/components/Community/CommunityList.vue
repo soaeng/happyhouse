@@ -44,7 +44,7 @@
                         <tbody>
                             <tr style="cursor: pointer" v-for="(community, index) in communityList" @click="communityDetail(community.boardId)" v-bind:key="index">
                                 <td>{{ community.boardId }}</td>
-                                <td class="text-start">{{ community.title }}</td>
+                                <td class="text-start">{{ community.title }}<span class="text-primary fw-bold" style="margin-left: 5px;" v-if="community.replyList.length > 0">[{{community.replyList.length}}]</span></td>
                                 <td><i class="bi bi-file-earmark-text-fill" v-if="community.fileList.length > 0"></i></td>
                                 <td>{{ community.userName }}</td>
                                 <td>{{ community.regDt.date | makeDateStr(".") }}</td>
@@ -58,10 +58,7 @@
                     <router-link to="/comm/edit" class="btn btn-primary float-end" >글쓰기</router-link>
                 </div><!-- end of .card-body -->
             </div><!-- end of .card-content -->
-
-            <div class="btn-box mb-5">
-            </div>
-
+            
             <pagination class="mb-4" v-if="communityList.length > 0" v-on:call-parent="movePage" :targetObj="target"></pagination>
 
         </div>

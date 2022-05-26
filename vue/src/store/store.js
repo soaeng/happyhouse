@@ -130,7 +130,8 @@ export default new Vuex.Store({
       bookmarkHouseList: [],
       bookmarkAreaList: [],
     },
-
+    
+    ///////////////////////////////////////////////////////////////////////// state - POPULATION
     population: {
       adstrdCode: '',
       totalLocal: 0,
@@ -154,10 +155,11 @@ export default new Vuex.Store({
       dvsn: '', // 구군번호
     },
   },
-   // state 상태를 변경하는 유일한 방법
+
+  
   mutations: {
     ///////////////////////////////////////////////////////////////////////// mutations - LOGIN
-    SET_LOGIN(state, payload) { // state는 위에 있는 애, payload는 parameter(객체면 보통 payload)
+    SET_LOGIN(state, payload) { 
       state.login.isLogin = payload.isLogin;
       state.login.userName = payload.userName;
       state.login.userEmail = payload.userEmail;
@@ -425,12 +427,12 @@ export default new Vuex.Store({
           keyword: this.state.house.keyword,
       };
       try {
-          let { data } = await http.get("/house/deal", { params }); // params: params shorthand property, let response 도 제거
+          let { data } = await http.get("/house/deal", { params }); 
           console.log("houseList params: ")
           console.log(params)
           console.log(data);
           
-          context.commit("SET_HOUSE_LIST", data.list); // commit으로 요청하면 mutations에서 처리
+          context.commit("SET_HOUSE_LIST", data.list);
           context.commit("SET_HOUSE_TOTAL_LIST_ITEM_COUNT", data.count);
         
       } catch (error) {

@@ -15,13 +15,13 @@ import BookmarkDeal from "@/components/Bookmark/BookmarkDeal.vue";
 
 import BoardMain from "@/components/Board/BoardMain.vue";
 import BoardList from "@/components/Board/BoardList.vue";
-import BoardEditer from "@/components/Board/BoardEditer.vue";
+import BoardEditor from "@/components/Board/BoardEditor.vue";
 import BoardDetail from "@/components/Board/BoardDetail.vue";
 import BoardUpdate from "@/components/Board/BoardUpdate.vue";
 
 import CommunityMain from "@/components/Community/CommunityMain.vue";
 import CommunityList from "@/components/Community/CommunityList.vue";
-import CommunityEditer from "@/components/Community/CommunityEditer.vue";
+import CommunityEditor from "@/components/Community/CommunityEditor.vue";
 import CommunityDetail from "@/components/Community/CommunityDetail.vue";
 import CommunityUpdate  from "@/components/Community/CommunityUpdate.vue";
 
@@ -123,7 +123,7 @@ export default new VueRouter({
       component: BoardMain,
       children: [
         { path: '', component: BoardList },
-        { path: 'edit', component: BoardEditer },
+        { path: 'edit', component: BoardEditor },
         { path: 'detail', component: BoardDetail },
         { path: 'update', component: BoardUpdate },
       ],
@@ -144,7 +144,7 @@ export default new VueRouter({
       component: CommunityMain,
       children: [
         { path: '', component: CommunityList },
-        { path: 'edit', component: CommunityEditer },
+        { path: 'edit', component: CommunityEditor },
         { path: 'detail', component: CommunityDetail },
         { path: 'update', component: CommunityUpdate },
       ],

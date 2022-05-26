@@ -61,9 +61,9 @@ public class CommunityDaoTests {
 	
 	@Test
 	void testReplyListTest() {
-//		log.info(">>>>>>>>>>>>>>>>>>>> 댓글 목록 조회 test");
-//		int boardId = 1;
-//		List<ReplyDto> list = dao.replyList(boardId);
-//		list.forEach(reply -> log.info(reply));
+		log.info(">>>>>>>>>>>>>>>>>>>> 댓글 목록 조회 test");
+		int boardId = 1;
+		List<ReplyDto> list = dao.replyList(boardId);
+		list.forEach(reply -> log.info(reply));
 	}
 }

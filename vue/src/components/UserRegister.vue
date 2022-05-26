@@ -42,7 +42,7 @@
                             </div>
                             <div class="d-flex">
                                 <div class="form-control-icon">
-                                    <i class="bi bi-shield-lock"></i>
+                                    <i class="bi bi-check2-circle"></i>
                                 </div>
                                 <div class="form-group w-100">
                                     <input type="password" class="form-control form-control-xl" placeholder="Confirm Password" :class="{ 'is-valid': isUserPassword2FocusAndValid, 'is-invalid': isUserPassword2FocusAndInvalid }" v-model="userPassword2" @input="validatePassword2" @focus="isUserPassword2Focus = true" >
@@ -220,6 +220,6 @@ body{background-color:#fff}
     margin-top: .5rem;
     margin-right: .5rem;
 }
-.form-control-icon{width: 10%;}
+.form-control-icon{width: 46px;}
 .form-control-icon .bi::before{margin-top: 1rem; padding-left: .3rem; font-size: 1.4rem;}
 </style>

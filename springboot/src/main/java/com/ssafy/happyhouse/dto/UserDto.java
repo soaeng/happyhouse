@@ -14,7 +14,6 @@ public class UserDto {
 	private String userProfileImageUrl;
 	private Date userRegisterDate;
 	
-
 	public void setUserProfileImageUrl(String userProfileImageUrl) {
 		if( userProfileImageUrl == null || "null".equals(userProfileImageUrl) || "".equals(userProfileImageUrl)) {
 			this.userProfileImageUrl = "/assets/images/faces/1.jpg";

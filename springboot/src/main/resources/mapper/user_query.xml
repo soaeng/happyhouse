@@ -28,5 +28,5 @@
 	<delete id="userDelete" parameterType="String">
 		delete from users where WHERE USER_EMAIL = #{userEmail}
 	</delete>
-
+	
 </mapper>

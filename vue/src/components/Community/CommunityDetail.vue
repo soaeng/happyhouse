@@ -1,5 +1,6 @@
 <template>
-    <section class="section">
+<div>
+    <section class="section mb-5">
         <div class="card">
             <div class="card-header">
                 <h5 class="text-center mb-4">{{ $store.state.community.title }}</h5>
@@ -39,22 +40,51 @@
                 </div><!-- end of .card-body -->
             </div><!-- end of .card-content-->
         </div><!-- end of .card -->
-        <div class="card d-none">
-            <div class="card-content">
-                <div class="card-body">
-                    <div v-if="$store.state.community.replyList.length > 0">
-                        <ul v-for="(reply, index) in $store.state.community.replyList" :key="index" style="padding-left: 0">
-                            <li class="list-unstyled" style="padding: 1rem; background-color: #F5F5F5;">
-                                <p>{{reply.userSeq}}</p>
-                                <p class="mb-0">{{reply.text}}</p>
-                                <p>{{reply.regDt.date | makeDateStr(".") }} {{reply.regDt.time | makeTimeStr(":")}}</p>
-                            </li>
-                        </ul>
+    </section>
+    <section class="section">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header pb-3">
+                        <h4 class="mb-0"><i class="bi bi-chat-text-fill"></i>Comments</h4>
+                    </div>
+                    <div class="form-group mb-4" style="padding: 0 2.3rem;">
+                        <div class="d-flex">
+                            <textarea v-model="text" class="form-control" rows="3" style="resize: none;"></textarea>
+                            <button @click="insertReply" class="btn btn-dark" style="width: 80px; margin-left: 10px;">등록</button>
+                        </div>
+                    </div>
+                    <hr class="mt-0 mb-5">
+                    <div class="card-body" v-if="$store.state.community.replyList.length > 0">
+                        <div v-for="(reply, index) in $store.state.community.replyList" :key="index" style="padding: 0 1rem;">
+                            <div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <p class="mb-1 fw-bold d-flex align-content-center"><img :src="reply.userProfileImageUrl" width="26px" class="rounded-circle" style="margin-right: 8px;"><span style="padding-top: 2px;">{{reply.userName}}</span></p>
+                                    <p class="text-muted mb-0 text-sm" style="margin-top: .5rem;">{{reply.regDt.date | makeDateStr("-")}}&nbsp;&nbsp;{{reply.regDt.time | makeTimeStr(":")}}</p>
+                                </div>
+                                <div class="replyText" :data-replyId="reply.replyId">
+                                    <p class="bg-light-secondary rounded-3 mb-2" style=" font-size: 15px; padding: 1rem;">{{reply.text }}</p>
+                                    <p v-if="reply.sameUser" class="d-flex justify-content-end" style="font-size: 14px;">
+                                        <a style="cursor:pointer" @click="textareaToggle" :data-replyId = "reply.replyId">수정</a>
+                                        <span class="divBar"></span>
+                                        <a @click="changeToDeleteReply" :data-replyId = "reply.replyId" style="cursor:pointer"><span></span>삭제</a>
+                                    </p>
+                                </div>
+                                <div class="replyUpdate form-group mb-3 d-none" :data-replyId="reply.replyId">
+                                    <div class="d-flex">
+                                        <textarea :data-replyId="reply.replyId" class="form-control replyUpdateText" rows="3" style="resize: none; font-size: 15px;" :value="reply.text"></textarea>
+                                        <button @click="updateReply" :data-replyId="reply.replyId"  class="btn btn-primary" style="width: 80px; margin-left: 10px;">수정</button>
+                                    </div>
+                                </div>
+                                <hr class="mt-4 mb-4">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+</div>
 </template>
 
 <script>
@@ -72,7 +102,11 @@ export default {
 
     data() {
         return {
-            
+            text: "",
+            textUpdate: "",
+            disable: true,
+            modify: true,
+            replyId: 0,
         };
     },
     computed: {
@@ -90,7 +124,7 @@ export default {
         changeToDelete() {
             var $this = this; // alertify.confirm-function()에서 this 는 alertify 객체
             this.$alertify.confirmWithTitle(
-                "공지사항 삭제",
+                "게시글 삭제",
                 "이 글을 삭제하시겠습니까?",
                 function () {
                     // community.communityId 사용 X
@@ -101,7 +135,31 @@ export default {
                 }
             );
         },
-
+        changeToDeleteReply(e) {
+            var $this = this; // alertify.confirm-function()에서 this 는 alertify 객체
+            this.$alertify.confirmWithTitle(
+                "댓글 삭제",
+                "이 댓글을 삭제하시겠습니까?",
+                function () {
+                    // community.communityId 사용 X
+                    $this.removeReply(e); // $this 사용
+                },
+                function () {
+                    console.log("cancel");
+                }
+            );
+        },
+        sidebarToggle(){
+            document.getElementById('sidebar').classList.toggle('active');
+        },
+        sidebarHide(){
+            document.getElementById('sidebar').classList.remove('active');
+        },
+        textareaToggle(e){
+            this.reply=e.target.dataset.replyid;
+            document.querySelector(`.replyUpdate[data-replyid="` + this.reply + `"]`).classList.toggle('d-none');
+            document.querySelector(`.replyText[data-replyid="` + this.reply + `"]`).classList.toggle('d-none');
+        },
         async communityDelete() {
             // parameter 사용 X
             try {
@@ -120,13 +178,92 @@ export default {
             }
 
         },
+        async insertReply(){
+            let formData = new FormData();
+            formData.append("text", this.text);
+            formData.append("boardId", this.$store.state.community.boardId);
 
-        sidebarToggle(){
-            document.getElementById('sidebar').classList.toggle('active');
+            try{
+                let {data} = await http.post('/reply', formData);
+                if( data.result == 'login' ){
+                    this.doLogout();
+                }else{
+                    console.log(">>>>>> replyInsert");
+                    console.log(data);
+                    this.$alertify.success('댓글이 등록되었습니다.');
+                    this.communityDetail();
+                }
+            } catch(error){
+                console.log("replyInsert: error ");
+                console.error(error);
+            }
         },
-        sidebarHide(){
-            document.getElementById('sidebar').classList.remove('active');
-        }
+
+        async updateReply(e){
+            let formData = new FormData();
+            let text = document.querySelector(`.replyUpdateText[data-replyid="` + this.reply + `"]`).value;
+            
+            formData.append("text", text);
+            formData.append("replyId",  e.target.dataset.replyid);
+
+            try{
+                let {data} = await http.put('/reply', formData);
+                if( data.result == 'login' ){
+                    this.doLogout();
+                }else{
+                    console.log(">>>>>> replyUpdate");
+                    console.log(data);
+                    this.$alertify.success('댓글이 수정되었습니다.');
+                    this.textareaToggle(e);
+                    this.communityDetail();
+                }
+            } catch(error){
+                console.log("replyInsert: error ");
+                console.error(error);
+            }
+        },
+        
+        async removeReply(e){
+            let replyId = e.target.dataset.replyid;
+            
+            try{
+                console.log(replyId);
+
+                let {data} = await http.delete('/reply?replyId=' + replyId);
+                
+                if( data.result == 'login' ){
+                    this.doLogout();
+                }else{
+                    console.log(">>>>>> replyRemove");
+                    console.log(data);
+                    this.$alertify.success('댓글이 삭제되었습니다.');
+                    this.communityDetail();
+                }
+
+            } catch(error){
+                console.log("removeReply: error ");
+                console.log(error);
+            }
+        },
+
+        // detail
+        async communityDetail() {
+            try {
+                let { data } = await http.get("/community/" +  this.$store.state.community.boardId);
+                console.log(data);
+
+                if (data.result == "login") {
+                    this.doLogout();
+                } else {
+                    let { dto } = data;
+                    this.$store.commit("SET_COMMUNITY_DETAIL", dto);
+                    this.text="";
+                }
+            } catch (error) {
+                console.log("CommunityMainVue: error : ");
+                console.log(error);
+            }
+        },
     },
     filters: {
         makeDateStr: function (date, separator) {
@@ -146,5 +283,6 @@ export default {
 .community-info p span{font-weight: 400; margin-left: 10px;}
 .community-info p::before{content:""; display: inline-block; width: 1px; height: .8rem; background-color: #CCC; margin: 0 .9rem;}
 .community-info p:first-child::before{display: none;}
-.bi.bi-download::before{margin-top: .3rem; margin-right: .8rem;}
+.bi.bi-download::before, .bi.bi-chat-text-fill::before{margin-top: .3rem; margin-right: .8rem;}
+.divBar{margin: .2rem .6rem 0; display: inline-block; width: 1px; height: .9rem; background-color: #CCC;}
 </style>

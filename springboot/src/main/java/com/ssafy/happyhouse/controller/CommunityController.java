@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -25,8 +26,7 @@ import lombok.extern.log4j.Log4j2;
 
 @RestController
 @CrossOrigin(
-	    // localhost:5500 과 127.0.0.1 구분
-	    origins = "http://localhost:5500", // allowCredentials = "true" 일 경우, orogins="*" 는 X
+	    origins = "http://localhost:5500", 
 	    allowCredentials = "true", 
 	    allowedHeaders = "*", 
 	    methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT,RequestMethod.HEAD,RequestMethod.OPTIONS}
@@ -39,10 +39,10 @@ public class CommunityController {
 		
 	private static final int SUCCESS = 1;
 	
-	// 게시글 목록
+	// 커뮤니티 목록
 	@GetMapping("/community")
 	private ResponseEntity<CommunityResultDto> communityList(CommunityParamDto communityParamDto){
-		// log.info("===== 게시글 목록 controller - 확인 끝 =====");
+		log.info("===== 커뮤니티 목록 controller =====");
 		CommunityResultDto communityResultDto;
 
 		if( communityParamDto.getKeyword().isEmpty() ) {
@@ -58,10 +58,10 @@ public class CommunityController {
 		}
 	}
 
-	// 게시글 상세 조회
+	// 커뮤니티 상세 조회
 	@GetMapping("/community/{boardId}")
 	private ResponseEntity<CommunityResultDto> communityDetail(@PathVariable int boardId, HttpSession session){
-		// log.info("===== 게시글 상세 조회 controller - 확인 끝 =====");
+		log.info("===== 커뮤니티 상세 조회 controller =====");
 		CommunityParamDto communityParamDto = new CommunityParamDto();
 		communityParamDto.setBoardId(boardId);
 		communityParamDto.setUserSeq( ((UserDto) session.getAttribute("userDto")).getUserSeq());
@@ -75,17 +75,14 @@ public class CommunityController {
 		}		 
 	}
 	
-	// 게시글 등록
+	// 커뮤니티 등록
 	@PostMapping("/community")
 	private ResponseEntity<CommunityResultDto> communityInsert(CommunityDto communityDto,  MultipartHttpServletRequest request) {
 		
-		// log.info("===== 게시글 등록 controller - 확인 =====");
+		log.info("===== 커뮤니티 등록 controller =====");
 		
-		// LoginFilter 먼저 적용 필요!!
 		HttpSession session = request.getSession();
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		
-		// log.info(userDto);
 		
 		communityDto.setUserSeq(userDto.getUserSeq());
 				
@@ -98,10 +95,10 @@ public class CommunityController {
 		}		 
 	}
 	
-	// 게시글 수정
+	// 커뮤니티 수정
 	@PostMapping("/community/{boardId}") 
 	private ResponseEntity<CommunityResultDto> communityUpdate( CommunityDto communityDto, MultipartHttpServletRequest request){
-		log.info("===== 게시글 수정 controller - 확인 =====");
+		log.info("===== 커뮤니티 수정 controller - 확인 =====");
 		HttpSession session = request.getSession();
 		UserDto userDto = (UserDto) session.getAttribute("userDto");
 		
@@ -116,10 +113,10 @@ public class CommunityController {
 		}
 	}
 	
-	// 게시글 삭제
+	// 커뮤니티 삭제
 	@DeleteMapping("/community/{boardId}") 
 	private ResponseEntity<CommunityResultDto> communityDelete(@PathVariable int boardId){
-		log.info("===== 게시글 삭제 controller - 확인 =====");
+		log.info("===== 커뮤니티 삭제 controller - 확인 =====");
 		CommunityResultDto communityResultDto = service.communityDelete(boardId);
 		
 		if( communityResultDto.getResult() == SUCCESS ) {
@@ -148,59 +145,50 @@ public class CommunityController {
 //		}		 
 //	}
 	
-//	// 게시글 등록
-//	@PostMapping("/community")
-//	private ResponseEntity<CommunityResultDto> communityInsert(CommunityDto communityDto,  MultipartHttpServletRequest request) {
-//		
-//		// log.info("===== 게시글 등록 controller - 확인 =====");
-//		
-//		// LoginFilter 먼저 적용 필요!!
-//		HttpSession session = request.getSession();
-//		UserDto userDto = (UserDto) session.getAttribute("userDto");
-//		
-//		// log.info(userDto);
-//		
-//		communityDto.setUserSeq(userDto.getUserSeq());
-//				
-//		CommunityResultDto communityResultDto = service.communityInsert(communityDto, request);
-//		
-//		if( communityResultDto.getResult() == SUCCESS ) {
-//			return new ResponseEntity<CommunityResultDto>(communityResultDto, HttpStatus.OK);
-//		}else {
-//			return new ResponseEntity<CommunityResultDto>(communityResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}		 
-//	}
-//	
-//	// 게시글 수정
-//	@PostMapping("/community/{boardId}") 
-//	private ResponseEntity<CommunityResultDto> communityUpdate( CommunityDto communityDto, MultipartHttpServletRequest request){
-//		log.info("===== 게시글 수정 controller - 확인 =====");
-//		HttpSession session = request.getSession();
-//		UserDto userDto = (UserDto) session.getAttribute("userDto");
-//		
-//		communityDto.setUserSeq(userDto.getUserSeq());
-//		
-//		CommunityResultDto communityResultDto = service.communityUpdate(communityDto, request);
-//		
-//		if( communityResultDto.getResult() == SUCCESS ) {
-//			return new ResponseEntity<CommunityResultDto>(communityResultDto, HttpStatus.OK);
-//		}else {
-//			return new ResponseEntity<CommunityResultDto>(communityResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
-//	// 게시글 삭제
-//	@DeleteMapping("/community/{boardId}") 
-//	private ResponseEntity<CommunityResultDto> communityDelete(@PathVariable int boardId){
-//		log.info("===== 게시글 삭제 controller - 확인 =====");
-//		CommunityResultDto communityResultDto = service.communityDelete(boardId);
-//		
-//		if( communityResultDto.getResult() == SUCCESS ) {
-//			return new ResponseEntity<CommunityResultDto>(communityResultDto, HttpStatus.OK);
-//		}else {
-//			return new ResponseEntity<CommunityResultDto>(communityResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}		 
-//	}
+	// 댓글 등록
+	@PostMapping("/reply")
+	private ResponseEntity<Integer> insertReply(ReplyDto replyDto, HttpSession session) {
+		log.info("===== 댓글 등록 controller");
+		int result = -1;
+		
+		replyDto.setUserSeq( ((UserDto) session.getAttribute("userDto")).getUserSeq());
+		result = service.replyInsert(replyDto);
+		log.info(replyDto);
+		if( result == SUCCESS ) {
+			return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Integer>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	 
+	}
+	
+	// 댓글 수정
+	@PutMapping("/reply")
+	private ResponseEntity<Integer> updateReply(ReplyDto replyDto, HttpSession session) {
+		log.info("===== 댓글  수정 controller");
+		int result = -1;
+		
+		result = service.replyUpdate(replyDto);
+		log.info(replyDto);
+		if( result == SUCCESS ) {
+			return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Integer>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}	 
+	}
+
+	// 댓글 삭제
+	@DeleteMapping("/reply") 
+	private ResponseEntity<Integer> replyDelete(ReplyDto replyDto){
+		log.info("===== 커뮤니티 삭제 controller - 확인 =====");
+		int result = -1;
+		log.info(replyDto);
+		result = service.replyDelete(replyDto.getReplyId());
+		if( result == SUCCESS ) {
+			return new ResponseEntity<Integer>(result, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<Integer>(result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}			 
+	}
 //	
 //	
 //	

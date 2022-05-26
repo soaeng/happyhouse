@@ -27,7 +27,6 @@ public class ReplyDto {
 	private LocalDateTime regDt;
 
 	private boolean sameUser;
-	
 	public void setUserProfileImageUrl(String userProfileImageUrl) {
 		
 		if( userProfileImageUrl == null || "null".equals(userProfileImageUrl) || "".equals(userProfileImageUrl)) {
