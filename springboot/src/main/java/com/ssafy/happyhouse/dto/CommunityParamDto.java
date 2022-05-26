@@ -11,6 +11,7 @@ public class CommunityParamDto {
 	private String keyword;		// 검색 키워드
 	
 	private int boardId;		// 게시글 번호
+	private int replyId;		// 댓글 번호
 	private int userSeq;		// 작성자
 	
 }

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.ssafy.happyhouse.dto.CommunityDto;
 import com.ssafy.happyhouse.dto.CommunityFileDto;
 import com.ssafy.happyhouse.dto.CommunityParamDto;
+import com.ssafy.happyhouse.dto.ReplyDto;
 
 @Mapper
 public interface CommunityDao {
@@ -71,5 +72,25 @@ public interface CommunityDao {
 
 	// 검색한 게시글 총 수
 	public int communityListKeywordTotalCount(CommunityParamDto communityParamDto);
+	
+	
+	/* 댓글 처리 */
+	// 댓글 등록
+	public int replyInsert(ReplyDto dto);
+	
+	// 특정 댓글 조회
+	public ReplyDto replyDetail(CommunityParamDto communityParamDto);
+	
+	// 댓글 수정
+	public int replyUpdate(ReplyDto dto);
+	
+	// 댓글 삭제
+	public int replyDelete(int replyId);
+	
+	// 댓글 목록 삭제
+	public int replyListDelete(int boardId);
+	
+	// 댓글 목록
+	public List<ReplyDto> replyList(CommunityParamDto communityParamDto);
 	
 }

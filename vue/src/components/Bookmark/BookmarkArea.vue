@@ -103,15 +103,17 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">성별/나이 생활 인구 수</h4>
+                        <div class="card-header pb-0">
+                            <h4 class="card-title mb-2">성별/나이 생활 인구 구분</h4>
                         </div>
                         <div class="card-body d-flex">
                             <div class="col-md-6">
                                 <canvas id="doughnut1" ></canvas>
+                                <p class="text-center mt-2 mb-0" style="font-size: 12px;">남</p>
                             </div>
                             <div class="col-md-6">
                                 <canvas id="doughnut2" ></canvas>
+                                <p class="text-center mt-2 mb-0" style="font-size: 12px;">여</p>
                             </div>
                             <!-- <div class="" v-else><p class="text-center">지역 선택 시 조회가 가능합니다.</p></div> -->
                         </div>
@@ -123,7 +125,7 @@
         <article>
             <div class="card">
                 <div class="card-head rounded-top bg-dark d-flex justify-content-between" style="padding: 1rem;">
-                    <h3 class="card-title text-white mb-0">지역별 주요 뉴스</h3>
+                    <h3 class="card-title text-white mb-0">관심 지역 주요 뉴스</h3>
                     <i @click="showToggle" id="openNews" class="bi bi-caret-down-fill d-none text-white" style="margin-right: 5px;"></i>
                     <i @click="showToggle" id="closeNews" class="bi bi-caret-up-fill text-white" style="margin-right: 5px;"></i>
                 </div>

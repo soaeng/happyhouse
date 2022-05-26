@@ -140,7 +140,46 @@
 		  FROM community
 		 WHERE TITLE LIKE CONCAT('%', #{keyword} ,'%')
 	 </select>
+	 
+	 
+	 
+ 	 <!-- # 댓글 처리 -->
+ 	 <!-- 댓글 등록 -->
+	 <insert id="replyInsert" parameterType="com.ssafy.happyhouse.dto.ReplyDto" useGeneratedKeys="true" keyProperty="boardId">
+	 	INSERT INTO reply ( board_id, text, user_seq, REG_DT)
+		VALUES ( #{boardId}, #{text}, #{userSeq}, now() )
+	 </insert>
+	 
+	 <!-- 댓글 조회 -->
+	 <select id="replyDetail" parameterType="int" resultType="com.ssafy.happyhouse.dto.ReplyDto">
+	 	SELECT r.REPLY_ID, r.BOARD_ID, r.USER_SEQ, u.USER_NAME, u.USER_PROFILE_IMAGE_URL,
+			   r.TEXT, r.REG_DT
+		  FROM reply r, USERS u
+		 WHERE r.REPLY_ID = #{replyId}
+		   AND r.USER_SEQ = u.USER_SEQ
+	 </select>
+	 
+	 <!-- 댓글 수정 -->
+	 <update id="replyUpdate" parameterType="com.ssafy.happyhouse.dto.ReplyDto">
+		UPDATE reply
+		   SET text = #{text}
+		 WHERE reply_id = #{replyId}
+	</update>
+	 
+	 <!-- 댓글 삭제 -->
+	 <delete id="replyDelete" parameterType="int">
+		DELETE FROM reply WHERE reply_id = #{replyId}
+	</delete>
 	
+	<!-- 댓글 목록 삭제 -->
+	<delete id="replyListDelete" parameterType="int">
+		DELETE FROM reply WHERE board_id = #{boardId}
+	</delete>
+	
+	<!-- 댓글 목록 -->
+	<select id="replyList" parameterType="int" resultType="com.ssafy.happyhouse.dto.ReplyDto">
+		SELECT reply_id, board_id, text, user_seq, reg_dt FROM reply WHERE board_id = #{boardId} ORDER BY reply_id ASC;
+	</select>
 </mapper>
 
 

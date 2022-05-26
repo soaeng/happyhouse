@@ -17,6 +17,7 @@ import com.ssafy.happyhouse.dto.CommunityDto;
 import com.ssafy.happyhouse.dto.CommunityFileDto;
 import com.ssafy.happyhouse.dto.CommunityParamDto;
 import com.ssafy.happyhouse.dto.CommunityResultDto;
+import com.ssafy.happyhouse.dto.ReplyDto;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -122,8 +123,9 @@ import lombok.extern.log4j.Log4j2;
 			}
 			
 			List<CommunityFileDto> fileList = dao.communityDetailFileList(communityDto.getBoardId());
-			
+			List<ReplyDto> replyList = dao.replyList(communityParamDto);
 			communityDto.setFileList(fileList);
+			communityDto.setReplyList(replyList);
 			communityResultDto.setDto(communityDto);
 			communityResultDto.setResult(SUCCESS);
 			
@@ -230,6 +232,7 @@ import lombok.extern.log4j.Log4j2;
 			// log.info("게시글 파일 DB 삭제");
 			dao.communityReadCountDelete(boardId);
 			// log.info("게시글 조휘수 삭제");
+			dao.replyListDelete(boardId);
 			dao.communityDelete(boardId);
 			// log.info("게시글 DB 삭제");
 			
@@ -308,6 +311,30 @@ import lombok.extern.log4j.Log4j2;
 		}
 		
 		return communityResultDto;
+	}
+
+
+	@Override
+	public int replyInsert(ReplyDto dto) {
+		return dao.replyInsert(dto);
+	}
+
+
+	@Override
+	public ReplyDto replyDetail(CommunityParamDto communityParamDto) {
+		return dao.replyDetail(communityParamDto);
+	}
+
+
+	@Override
+	public int replyUpdate(ReplyDto dto) {
+		return dao.replyUpdate(dto);
+	}
+
+
+	@Override
+	public int replyDelete(int replyId) {
+		return dao.replyDelete(replyId);
 	}
 
 }

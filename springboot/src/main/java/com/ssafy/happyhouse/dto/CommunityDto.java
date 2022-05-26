@@ -30,7 +30,7 @@ public class CommunityDto {
 	private boolean sameUser;
 	
 	private List<CommunityFileDto> fileList;
-
+	private List<ReplyDto> replyList;
 
 	public void setUserProfileImageUrl(String userProfileImageUrl) {
 		

@@ -16,22 +16,18 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BoardDto {
+public class ReplyDto {
 	
+	private int replyId;
 	private int boardId;
 	private int userSeq;
 	private String userName;
 	private String userProfileImageUrl;
-	private String title;
-	private String content;
+	private String text;
 	private LocalDateTime regDt;
-	private int readCount;
 
 	private boolean sameUser;
 	
-	private List<BoardFileDto> fileList;
-	
-
 	public void setUserProfileImageUrl(String userProfileImageUrl) {
 		
 		if( userProfileImageUrl == null || "null".equals(userProfileImageUrl) || "".equals(userProfileImageUrl)) {
