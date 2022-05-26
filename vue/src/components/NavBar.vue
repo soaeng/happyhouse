@@ -51,6 +51,13 @@
                         </li>
                         
                         <li class="sidebar-item">
+                            <router-link to="/comm" class='sidebar-link'>
+                                <i class="bi bi-people-fill"></i>
+                                <span>커뮤니티</span>
+                            </router-link>
+                        </li>
+
+                        <li class="sidebar-item">
                             <router-link to="/userInfo" class='sidebar-link'>
                                 <i class="bi bi-person-fill"></i>
                                 <span>개인 정보 수정</span>

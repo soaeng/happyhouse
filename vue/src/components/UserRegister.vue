@@ -4,51 +4,57 @@
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
                     <div class="auth-logo">
-                        <a href="index.html"><img src="../../public/assets/images/logo/logo.png" alt="Logo"></a>
+                        <h1><a href="#" class="fw-bold"><i class="bi bi-house-fill"></i>HAPPY HOUSE</a></h1>
                     </div>
-                    <h1 class="auth-title">Sign Up</h1>
-                    <p class="auth-subtitle mb-5">Input your data to register to our website.</p>
+                    <h1 class="auth-title">회원가입</h1>
 
                     <form action="index.html">
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="email" class="form-control form-control-xl" placeholder="Email" :class="{ 'is-valid': isUserEmailFocusAndValid, 'is-invalid': isUserEmailFocusAndInValid }" v-model="userEmail" @input="validateEmail" @focus="isUserEmailFocus = true" >
-                            <div class="form-control-icon">
-                                <i class="bi bi-envelope"></i>
+                        <div class="mb-3">
+                            <div class="d-flex">
+                                <div class="form-control-icon"><i class="bi bi-envelope"></i></div>
+                                <div class="form-group w-100">
+                                    <input type="email" class="form-control form-control-xl" placeholder="Email" :class="{ 'is-valid': isUserEmailFocusAndValid, 'is-invalid': isUserEmailFocusAndInValid }" v-model="userEmail" @input="validateEmail" @focus="isUserEmailFocus = true" >
+                                    <div class="valid-feedback">Valid.</div>
+                                    <div class="invalid-feedback">올바른 Email 을 입력해 주세요.</div>
+                                </div>
                             </div>
-                            <div class="valid-feedback">Valid.</div>
-                            <div class="invalid-feedback">올바른 Email 을 입력해 주세요.</div>
-                        </div>
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="name" class="form-control form-control-xl" placeholder="Username" :class="{ 'is-valid': isUserNameFocusAndValid, 'is-invalid': isUserNameFocusAndInvalid }" v-model="userName" @input="validateUserName" @focus="isUserNameFocus = true" >
-                            <div class="form-control-icon">
-                                <i class="bi bi-person"></i>
+                            <div class="d-flex">
+                                <div class="form-control-icon">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                                <div class="form-group w-100">
+                                    <div>
+                                        <input type="text" class="form-control form-control-xl" placeholder="Username" :class="{ 'is-valid': isUserNameFocusAndValid, 'is-invalid': isUserNameFocusAndInvalid }" v-model="userName" @input="validateUserName" @focus="isUserNameFocus = true" >
+                                        <div class="valid-feedback">Valid.</div>
+                                        <div class="invalid-feedback">올바른 이름을 입력해 주세요.</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="valid-feedback">Valid.</div>
-                            <div class="invalid-feedback">올바른 이름을 입력해 주세요.</div>
-                        </div>
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Password" :class="{ 'is-valid': isUserPasswordFocusAndValid, 'is-invalid': isUserPasswordFocusAndInvalid }" v-model="userPassword" @input="validatePassword" @focus="isUserPasswordFocus = true" >
-                            <div class="form-control-icon">
-                                <i class="bi bi-shield-lock"></i>
+                            <div class="d-flex">
+                                <div class="form-control-icon">
+                                    <i class="bi bi-shield-lock"></i>
+                                </div>
+                                <div class="form-group w-100">
+                                    <input type="password" class="form-control form-control-xl" placeholder="Password" :class="{ 'is-valid': isUserPasswordFocusAndValid, 'is-invalid': isUserPasswordFocusAndInvalid }" v-model="userPassword" @input="validatePassword" @focus="isUserPasswordFocus = true" >
+                                    <div class="valid-feedback">Valid.</div>
+                                    <div class="invalid-feedback">1개 이상의 특수문자, 대소문자 및 숫자를 포함하고 8자리 이상이여야 합니다.</div>
+                                </div>
                             </div>
-                            <div class="valid-feedback">Valid.</div>
-                            <div class="invalid-feedback">1개 이상의 특수문자, 대소문자 및 숫자를 포함하고 8자리 이상이여야 합니다.</div>
-                        </div>
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" class="form-control form-control-xl" placeholder="Confirm Password" :class="{ 'is-valid': isUserPassword2FocusAndValid, 'is-invalid': isUserPassword2FocusAndInvalid }" v-model="userPassword2" @input="validatePassword2" @focus="isUserPassword2Focus = true" >
-                            <div class="form-control-icon">
-                                <i class="bi bi-shield-lock"></i>
+                            <div class="d-flex">
+                                <div class="form-control-icon">
+                                    <i class="bi bi-shield-lock"></i>
+                                </div>
+                                <div class="form-group w-100">
+                                    <input type="password" class="form-control form-control-xl" placeholder="Confirm Password" :class="{ 'is-valid': isUserPassword2FocusAndValid, 'is-invalid': isUserPassword2FocusAndInvalid }" v-model="userPassword2" @input="validatePassword2" @focus="isUserPassword2Focus = true" >
+                                    <div class="valid-feedback">Valid.</div>
+                                    <div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>
+                                </div>
                             </div>
-                            <div class="valid-feedback">Valid.</div>
-                            <div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>
                         </div>
-                        <button @click="register" type="button" class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Sign Up</button>
+                        <button type="button" @click="register" class="btn btn-primary btn-block btn-lg shadow-lg mb-2" style="font-size: 14px; height: 42px;">회원가입</button>
                     </form>
-                    <div class="text-center mt-5 text-lg fs-4">
-                        <p class='text-gray-600'>Already have an account? 
-                            <router-link to="login"
-                                class="font-bold">Log
-                                in</router-link>.</p>
+                    <div class="d-flex justify-content-center">
+                        <router-link to="login" class="text-secondary" style="font-size: 13px;">로그인</router-link>
                     </div>
                 </div>
             </div>
@@ -178,21 +184,7 @@ export default {
         },
     },
     async created() {
-        let params = {
-            groupCode: this.groupCode,
-        };
-
-        try {
-            let { data } = await http.get("/codes", { params }); // params : params shorthand property, Not JSON request
-            console.log("RegisterVue: data : ");
-            console.log(data);
-
-            this.codeList = data;
-        } catch (error) {
-            console.log("RegisterVue: error : ");
-            console.log(error);
-            this.$alertify.error("서버에 문제가 발생했습니다.");
-        }
+        
     },
 };
 </script>
@@ -205,24 +197,29 @@ body{background-color:#fff}
     height:100%;
     background:url(../../public/assets/images/bg/4853433.jpg),
     linear-gradient(90deg,#2d499d,#3f5491)
-    }
+}
 #auth #auth-left{
-    padding:5rem 8rem
-    }
+    padding:4rem 2.5rem 4rem 3.5rem;
+}
 #auth #auth-left .auth-title{
-    font-size:4rem;margin-bottom:1rem
+    font-size:1.3rem; margin-bottom:1.2rem;
     }
 #auth #auth-left .auth-subtitle{
-    font-size:1.7rem;line-height:2.5rem;color:#a8aebb
+    font-size:1.7rem;line-height:2.5rem;color:#a8aebb;
     }
 #auth #auth-left .auth-logo{
-        margin-bottom:7rem
+        margin-bottom:7rem;
     }
-#auth #auth-left .auth-logo img{
-        height:2rem
-}
+.form-group input[type="text"],.form-group input[type="email"], .form-group input[type="password"]{font-size: 1rem;}
 @media screen and (max-width:767px){
     #auth #auth-left{padding:5rem}
+    .auth-logo h1 a{font-size: 2.34rem;}
 }
 
+.bi.bi-house-fill::before{
+    margin-top: .5rem;
+    margin-right: .5rem;
+}
+.form-control-icon{width: 10%;}
+.form-control-icon .bi::before{margin-top: 1rem; padding-left: .3rem; font-size: 1.4rem;}
 </style>

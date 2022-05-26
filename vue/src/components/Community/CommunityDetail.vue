@@ -39,7 +39,7 @@
                 </div><!-- end of .card-body -->
             </div><!-- end of .card-content-->
         </div><!-- end of .card -->
-        <div class="card">
+        <div class="card d-none">
             <div class="card-content">
                 <div class="card-body">
                     <div v-if="$store.state.community.replyList.length > 0">

@@ -27,9 +27,9 @@
                         </button>
                     </form>
                     <div class="d-flex justify-content-center">
-                        <router-link to="userRegister" style="font-size: 13px;" >회원가입</router-link>
+                        <router-link to="userRegister" class="text-secondary" style="font-size: 13px;" >회원가입</router-link>
                         <span class="divBar"></span>
-                        <a href="auth-forgot-password.html" style="font-size: 13px;">비밀번호 찾기</a>
+                        <a href="auth-forgot-password.html" class="text-secondary" style="font-size: 13px;">비밀번호 찾기</a>
                     </div>
                 </div>
             </div>
@@ -87,9 +87,9 @@ export default {
 
                 }catch(error){
                     if( error.response.status == '404'){
-                    this.$alertify.error('이메일 또는 비밀번호를 확인하세요.');
+                        this.$alertify.error('이메일 또는 비밀번호를 확인하세요.');
                     }else{
-                    this.$alertify.error('Opps!! 서버에 문제가 발생했습니다.');
+                        this.$alertify.error('서버에 문제가 발생했습니다.');
                     }
                 }
             } else{ // kakao Login
@@ -180,7 +180,7 @@ body{background-color:#fff}
     padding:4rem 2.5rem 4rem 3.5rem;
 }
 #auth #auth-left .auth-title{
-    font-size:1.5rem; margin-bottom:1.2rem;
+    font-size:1.3rem; margin-bottom:1.2rem;
     }
 #auth #auth-left .auth-subtitle{
     font-size:1.7rem;line-height:2.5rem;color:#a8aebb;
@@ -188,7 +188,7 @@ body{background-color:#fff}
 #auth #auth-left .auth-logo{
         margin-bottom:7rem;
     }
-    
+.form-group input[type="text"], .form-group input[type="password"]{font-size: 1rem;}
 @media screen and (max-width:767px){
     #auth #auth-left{padding:5rem}
     .auth-logo h1 a{font-size: 2.34rem;}
