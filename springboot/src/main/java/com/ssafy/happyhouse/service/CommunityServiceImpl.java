@@ -124,6 +124,14 @@ import lombok.extern.log4j.Log4j2;
 			
 			List<CommunityFileDto> fileList = dao.communityDetailFileList(communityDto.getBoardId());
 			List<ReplyDto> replyList = dao.replyList(communityParamDto);
+			
+			int len = replyList.size();
+			for(int i=0; i<len; i++	) {
+			//	replyList.get(i).setUserName(userName);
+				if(replyList.get(i).getUserSeq() == communityParamDto.getUserSeq())
+					replyList.get(i).setSameUser(true);
+				else replyList.get(i).setSameUser(false);
+			}
 			communityDto.setFileList(fileList);
 			communityDto.setReplyList(replyList);
 			communityResultDto.setDto(communityDto);

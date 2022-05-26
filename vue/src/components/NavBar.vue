@@ -4,7 +4,7 @@
                 <div class="sidebar-header">
                     <div class="d-flex justify-content-between">
                         <div class="logo">
-                            <a href="#"><img src="assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                            <a href="#" class="fw-bold" style="font-size: 28px"> <i class="bi bi-house-fill"></i>HAPPY HOUSE</a>
                         </div>
                         <div class="toggler">
                             <a href="#" class="sidebar-hide d-xl-none d-block" @click="sidebarHide"><i class="bi bi-x bi-middle"></i></a>
@@ -15,7 +15,7 @@
                     <ul class="menu">
 
                         <li class="sidebar-item">
-                            <router-link to="/board" class='sidebar-link' @click.native="initBoardSearch">
+                            <router-link to="/board" class='sidebar-link' @click.native="initSearch">
                                 <i class="bi bi-megaphone-fill"></i>
                                 <span>공지사항</span>
                             </router-link>
@@ -50,13 +50,6 @@
                             </router-link>
                         </li>
                         
-                        <li class="sidebar-item">
-                            <router-link to="/comm" class='sidebar-link' @click.native="initCommSearch">
-                                <i class="bi bi-people-fill"></i>
-                                <span>커뮤니티</span>
-                            </router-link>
-                        </li>
-
                         <li class="sidebar-item">
                             <router-link to="/userInfo" class='sidebar-link'>
                                 <i class="bi bi-person-fill"></i>
@@ -137,15 +130,10 @@ export default {
             this.$store.state.house.keyword = "";
             this.$store.dispatch("houseList");
         },
-        initBoardSearch(){
+        initSearch(){
             this.$store.state.board.keyword = "";
             this.$store.state.board.type = "";
             this.$store.dispatch("boardList");
-        },
-        initCommSearch(){
-            this.$store.state.community.keyword = "";
-            this.$store.state.community.type = "";
-            this.$store.dispatch("communityList");
         },
         doLogout() { 
             sessionStorage.clear();
@@ -157,4 +145,8 @@ export default {
 </script>
 
 <style scoped>
+.bi.bi-house-fill::before{
+    margin-top: .3rem;
+    margin-right: .5rem;
+}
 </style>

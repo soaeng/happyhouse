@@ -39,14 +39,31 @@
                 </div><!-- end of .card-body -->
             </div><!-- end of .card-content-->
         </div><!-- end of .card -->
+        <div class="card">
+            <div class="card-content">
+                <div class="card-body">
+                    <div v-if="$store.state.community.replyList.length > 0">
+                        <ul v-for="(reply, index) in $store.state.community.replyList" :key="index" style="padding-left: 0">
+                            <li class="list-unstyled" style="padding: 1rem; background-color: #F5F5F5;">
+                                <p>{{reply.userSeq}}</p>
+                                <p class="mb-0">{{reply.text}}</p>
+                                <p>{{reply.regDt.date | makeDateStr(".") }} {{reply.regDt.time | makeTimeStr(":")}}</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 
 <script>
 import Vue from "vue";
 import VueAlertify from "vue-alertify";
+
 Vue.use(VueAlertify);
 
+import util from "@/common/util.js";
 import http from "@/common/axios.js";
 
 export default {
@@ -67,6 +84,8 @@ export default {
     },
 
     methods: {
+        makeDateStr: util.makeDateStr,
+        makeTimeStr: util.makeTimeStr,
         // delete
         changeToDelete() {
             var $this = this; // alertify.confirm-function()에서 this 는 alertify 객체
@@ -108,6 +127,14 @@ export default {
         sidebarHide(){
             document.getElementById('sidebar').classList.remove('active');
         }
+    },
+    filters: {
+        makeDateStr: function (date, separator) {
+            return date.year + separator + (date.month < 10 ? "0" + date.month : date.month) + separator + (date.day < 10 ? "0" + date.day : date.day);
+        },
+        makeTimeStr: function (time, separator) {
+            return (time.hour < 10 ? "0" + time.hour : time.hour) + separator + (time.minute < 10 ? "0" + time.minute : time.minute) + separator + (time.second < 10 ? "0" + time.second : time.second);
+        },
     },
 };
 </script>

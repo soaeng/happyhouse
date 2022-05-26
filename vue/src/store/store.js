@@ -77,6 +77,7 @@ export default new Vuex.Store({
       regTime: "",
       readCount: 0,
       fileList: [],
+      replyList: [],
       sameUser: false,
     },
 
@@ -213,6 +214,7 @@ export default new Vuex.Store({
       state.community.regTime = util.makeTimeStr(payload.regDt.time.hour, payload.regDt.time.minute, payload.regDt.time.second, ":");
       state.community.readCount = payload.readCount;
       state.community.fileList = payload.fileList;
+      state.community.replyList = payload.replyList;
       state.community.sameUser = payload.sameUser;
     },
     SET_COMMUNITY_TITLE(state, title) {
