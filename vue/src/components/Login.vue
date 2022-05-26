@@ -38,7 +38,7 @@
             </div>
             <div class="col-lg-7 d-none d-lg-block">
                 <div id="auth-right">
-                    <img src="../../public/assets/images/loginView.jpg" alt="" style="position: relative; top: 0; left: 0; width: 100%; height: 100%;">
+                    <img src="../../public/assets/images/loginView.jpg" alt="" style="position: relative; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
         </div>

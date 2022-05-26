@@ -2,7 +2,7 @@
 <!-- a tag href="#" 제외!!
 route url 이 board 에서 / 로 변경되는 문제 발생 -->
   <nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center mb-5">
       <li v-if="prev" class="page-item">
         <a class="page-link" href="#" aria-label="Previous" @click="paginationChanged(startPageIndex - 1)">
           <span aria-hidden="true">«</span>
@@ -37,26 +37,32 @@ export default {
   computed: {
     pageCount: function(){
       if(this.target == "house") return this.$store.getters.getHousePageCount;
+      else if(this.target == "community") return this.$store.getters.getCommunityPageCount;
       else return this.$store.getters.getPageCount;
     },
     startPageIndex: function(){
       if(this.target == "house") return this.$store.getters.getHouseStartPageIndex;
+      else if(this.target == "community") return this.$store.getters.getCommunityStartPageIndex;
       else return this.$store.getters.getStartPageIndex;
     },
     endPageIndex: function(){
       if(this.target == "house") return this.$store.getters.getHouseEndPageIndex;
+      else if(this.target == "community") return this.$store.getters.getCommunityEndPageIndex;
       else return this.$store.getters.getEndPageIndex;
     },
     prev: function(){
       if(this.target == "house") return this.$store.getters.getHousePrev;
+      else if(this.target == "community") return this.$store.getters.getCommunityPrev;
       else return this.$store.getters.getPrev;
     },
     next: function(){
       if(this.target == "house") return this.$store.getters.getHouseNext;
+      else if(this.target == "community") return this.$store.getters.getCommunityNext;
       else return this.$store.getters.getNext;
     },
     currentPageIndex: function(){
       if(this.target == "house") return this.$store.state.house.currentPageIndex;
+      else if(this.target == "community") return this.$store.state.community.currentPageIndex;
       else return this.$store.state.board.currentPageIndex;
     },
   },

@@ -6,7 +6,7 @@
             </div>
             <div class="card-content">
                 <div class="card-body pt-0">
-                    <div id="editor"></div>
+                    <div id="communityEditor"></div>
                     <div class="mt-4">
                         <div class="input-group">
                             <label class="input-group-text" for="inputFileUploadInsert"><i class="bi bi-upload"></i></label>
@@ -14,7 +14,7 @@
                         </div>
                         <div class="thumbnail-wrapper d-flex flex-column mb-4 mt-4">
                             <div v-for="(file, index) in FILE" :key="index">
-                                <div class="card-content d-flex align-items-baseline mb-2">
+                                <div class="card-content d-flex align-items-baseline">
                                     <img v-if="file.fileTypeList[index] == 'image'" :src="file.fileList[index]" style="margin-right: .5rem;"/>
                                     <i v-else class="bi bi-file-earmark-text-fill"></i>
                                     <p class="card-text">{{file.fileNameList[index] }}</p>
@@ -25,8 +25,8 @@
                         
                     </div>
                     <div class="text-end">
-                        <button @click="boardInsert" class="btn btn-primary">등록</button>
-                        <router-link to="/board" class="btn btn-secondary" style="margin-left: 10px;">취소</router-link>
+                        <button @click="communityInsert" class="btn btn-primary">등록</button>
+                        <router-link to="/comm" class="btn btn-secondary" style="margin-left: 10px;">취소</router-link>
                     </div>
                 </div><!-- end of .card-body -->
             </div><!-- end of .card-content -->
@@ -45,17 +45,17 @@ Vue.use(CKEditor).use(VueAlertify);
 import http from "@/common/axios.js";
 
 export default {
-    name: 'BoardEditor',
+    name: 'CommunityEditor',
 
     data() {
         return {
-        title: '',
-        CKEditor: '',
-        attachFile: false,
-        fileList: [],
-        fileTypeList: [],
-        fileNameList:[],
-        FILE: [],
+            title: '',
+            CKEditor: '',
+            attachFile: false,
+            fileList: [],
+            fileTypeList: [],
+            fileNameList:[],
+            FILE: [],
         };
     },
     methods: {
@@ -75,7 +75,7 @@ export default {
             this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userProfileImageUrl: "" });
             this.$router.push("/login");
         },
-        async boardInsert(){
+        async communityInsert(){
             let formData = new FormData();
             formData.append("title", this.title);
             formData.append("content", this.CKEditor.getData());
@@ -95,24 +95,24 @@ export default {
             }
 
             try{
-                let {data} = await http.post('/boards', formData, options);
+                let {data} = await http.post('/community', formData, options);
                 if( data.result == 'login' ){
                     this.doLogout();
                 }else{
-                    console.log(">>>>>> boardInsert");
+                    console.log(">>>>>> communityInsert");
                     console.log(data);
                     this.$alertify.success('글이 등록되었습니다.');
-                    this.$router.push("/board");
+                    this.$router.push("/comm");
                 }
             } catch(error){
-                console.log("InsertModalVue: error ");
+                console.log("Community Insert: error ");
                 console.error(error);
             }
         },
     },
     async mounted() {
         try{
-            this.CKEditor = await ClassicEditor.create( document.querySelector("#editor"));
+            this.CKEditor = await ClassicEditor.create( document.querySelector("#communityEditor"));
         }catch(error){
             console.error(error);
         }

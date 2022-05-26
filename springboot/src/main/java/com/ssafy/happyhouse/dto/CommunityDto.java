@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BoardDto {
+public class CommunityDto {
 	
 	private int boardId;
 	private int userSeq;
@@ -29,7 +29,7 @@ public class BoardDto {
 
 	private boolean sameUser;
 	
-	private List<BoardFileDto> fileList;
+	private List<CommunityFileDto> fileList;
 
 
 	public void setUserProfileImageUrl(String userProfileImageUrl) {

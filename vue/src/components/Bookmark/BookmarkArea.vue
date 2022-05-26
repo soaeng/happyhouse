@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div> <!-- end of .page-title -->
-        <section class="section mb-10">
+        <section class="section">
             <div class="card">
                 <div class="card-header">
                     <fieldset class="form-group d-flex align-items-center justify-content-center mb-0">
@@ -98,7 +98,6 @@
                         </div>
                         <div class="card-body">
                             <canvas id="bar" ></canvas>
-                            <!-- <div class="" v-else><p class="text-center">지역 선택 시 조회가 가능합니다.</p></div> -->
                         </div>
                     </div>
                 </div>
@@ -260,9 +259,9 @@ export default {
                         label: '총 생활 인구 수',
                         backgroundColor: [chartColors.red, chartColors.blue, chartColors.orange],
                         data: [
-                            this.$store.state.population.totalLocal,
-                            this.$store.state.population.totalMale,
-                            this.$store.state.population.totalFemale
+                            Math.round(this.$store.state.population.totalLocal) * 1 / 1,
+                            Math.round(this.$store.state.population.totalMale) * 1 / 1,
+                            Math.round(this.$store.state.population.totalFemale) * 1 / 1,
                         ]
                     }]
                 },
@@ -287,13 +286,14 @@ export default {
                     datasets: [{
                         backgroundColor: [chartColors.yellow, chartColors.green, chartColors.info, chartColors.grey],
                         data: [
-                            this.$store.state.population.maleTo19,
-                            this.$store.state.population.maleTo39,
-                            this.$store.state.population.maleTo59,
-                            this.$store.state.population.maleTo74
+                            Math.round(this.$store.state.population.maleTo19) * 1 / 1,
+                            Math.round(this.$store.state.population.maleTo39) * 1 / 1,
+                            Math.round(this.$store.state.population.maleTo59) * 1 / 1,
+                            Math.round(this.$store.state.population.maleTo74) * 1 / 1,
                         ]
                     }]
                 },
+                
                 options: {
                     responsive: true,
                     barRoundness: 1,
@@ -303,6 +303,26 @@ export default {
                     },
                     legend: {
                         display: true,
+                    },
+                    plugins:{
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                let datasets = ctx.chart.data.datasets[0].data;
+                                if(value != 0){
+                                    let sum = 0;
+                                    dataArr = ctx.chart.data.datasets[0].data;
+                                    dataArr.map(data => {
+                                        sum += parseInt(data);
+                                    });
+                                    let percentage = Math.round((value * 100 / sum )) + "%";
+                                    return percentage;
+                                } else{
+                                    let percentage = "";
+                                    return percentage;
+                                }
+                            },
+                            color: '#fff',
+                        }
                     },
                 }
             });
@@ -315,10 +335,10 @@ export default {
                     datasets: [{
                         backgroundColor: [chartColors.orange, chartColors.purple, chartColors.blue, chartColors.red],
                         data: [
-                            this.$store.state.population.maleTo19,
-                            this.$store.state.population.maleTo39,
-                            this.$store.state.population.maleTo59,
-                            this.$store.state.population.maleTo74
+                            Math.round(this.$store.state.population.maleTo19) * 1 / 1,
+                            Math.round(this.$store.state.population.maleTo39) * 1 / 1,
+                            Math.round(this.$store.state.population.maleTo59) * 1 / 1,
+                            Math.round(this.$store.state.population.maleTo74) * 1 / 1,
                         ]
                     }]
                 },

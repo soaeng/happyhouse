@@ -51,6 +51,35 @@ export default new Vuex.Store({
       sameUser: false,
     },
 
+    ///////////////////////////////////////////////////////////////////////// state - COMMUNITY
+    community: {
+      // list
+      list: [],
+      limit: 10,
+      offset: 0,
+      type: "title",
+      keyword: "",
+
+      // pagination
+      listRowCount: 10,
+      pageLinkCount: 10,
+      currentPageIndex: 1,
+
+      totalListItemCount: 0,
+
+      // detail, update, delete
+
+      boardId: 0,
+      title: "",
+      content: "",
+      userName: "",
+      regDate: "",
+      regTime: "",
+      readCount: 0,
+      fileList: [],
+      sameUser: false,
+    },
+
     ///////////////////////////////////////////////////////////////////////// state - ADDRESS
     address: {
       sidoList: [],
@@ -162,6 +191,34 @@ export default new Vuex.Store({
     SET_BOARD_TITLE(state, title) {
       state.board.title = title;
     },
+
+
+    ///////////////////////////////////////////////////////////////////////// mutations - COMMUNITY
+    SET_COMMUNITY_LIST(state, list) {
+      state.community.list = list;
+    },
+    SET_COMMUNITY_TOTAL_LIST_ITEM_COUNT(state, count) {
+      state.community.totalListItemCount = count;
+    },
+    SET_COMMUNITY_MOVE_PAGE(state, pageIndex) {
+      state.community.offset = (pageIndex - 1) * state.community.listRowCount;
+      state.community.currentPageIndex = pageIndex;
+    },
+    SET_COMMUNITY_DETAIL(state, payload) {
+      state.community.boardId = payload.boardId;
+      state.community.title = payload.title;
+      state.community.content = payload.content;
+      state.community.userName = payload.userName;
+      state.community.regDate = util.makeDateStr(payload.regDt.date.year, payload.regDt.date.month, payload.regDt.date.day, ".");
+      state.community.regTime = util.makeTimeStr(payload.regDt.time.hour, payload.regDt.time.minute, payload.regDt.time.second, ":");
+      state.community.readCount = payload.readCount;
+      state.community.fileList = payload.fileList;
+      state.community.sameUser = payload.sameUser;
+    },
+    SET_COMMUNITY_TITLE(state, title) {
+      state.community.title = title;
+    },
+
 
 
     ///////////////////////////////////////////////////////////////////////// mutations - ADDRESS
@@ -286,13 +343,13 @@ export default new Vuex.Store({
       console.log(params);
 
       try {
-          let { data } = await http.get("/boards", { params }); // params: params shorthand property, let response 도 제거
+          let { data } = await http.get("/boards", { params });
           console.log("BoardMainVue: data : ");
           console.log(data);
           if (data.result == "login") {
             router.push("/login");
           } else {
-            context.commit("SET_BOARD_LIST", data.list); // commit으로 요청하면 mutations에서 처리
+            context.commit("SET_BOARD_LIST", data.list);
             context.commit("SET_BOARD_TOTAL_LIST_ITEM_COUNT", data.count);
           }
       } catch (error) {
@@ -301,6 +358,33 @@ export default new Vuex.Store({
 
     },
 
+    ///////////////////////////////////////////////////////////////////////// actions - COMMUNITY
+    async communityList(context) {
+      let params = { // vuex에서 가져옴
+          limit: this.state.community.limit,
+          offset: this.state.community.offset,
+          type: this.state.community.type,
+          keyword: this.state.community.keyword,
+      };
+
+      console.log(">>>>>>>>>> communityList:")
+      console.log(params);
+
+      try {
+          let { data } = await http.get("/community", { params });
+          console.log("CommunityMainVue: data : ");
+          console.log(data);
+          if (data.result == "login") {
+            router.push("/login");
+          } else {
+            context.commit("SET_COMMUNITY_LIST", data.list);
+            context.commit("SET_COMMUNITY_TOTAL_LIST_ITEM_COUNT", data.count);
+          }
+      } catch (error) {
+          console.error(error);
+      }
+
+    },
 
     ///////////////////////////////////////////////////////////////////////// actions - ADDRESS
     async getSidoList(context) {
@@ -377,19 +461,6 @@ export default new Vuex.Store({
       }
     },
 
-    // async bookmarkHouseList(context) {
-    //   let params = { 
-    //     userSeq: this.state.login.userSeq,
-    //   };
-    //   try {
-    //     let { data } = await http.get("/bookmark/house");
-    //       console.log("bookmarkHouseList data: ")
-    //       context.commit("SET_BOOKMARK_HOUSE_LIST", data);
-    //   } catch (error) {
-    //       console.error(error);
-    //   }
-    // },
-    
     async bookmarkDealList(context) {
       try {
         let { data } = await http.get("/bookmark/deal");
@@ -508,6 +579,50 @@ export default new Vuex.Store({
     },
     getNext: function (state, getters) {
       if (Math.floor(getters.getPageCount / state.board.pageLinkCount) * state.board.pageLinkCount < state.board.currentPageIndex) {
+          return false;
+      } else {
+          return true;
+      }
+    },
+
+
+    ///////////////////////////////////////////////////////////////////////// getters - COMMUNITY
+    getCommunityList: function (state) {
+      return state.community.list; // 게시글 목록
+    },
+
+    // pagination
+    getCommunityPageCount: function (state) {
+      return Math.ceil(state.community.totalListItemCount / state.community.listRowCount);
+    },
+    getCommunityStartPageIndex: function (state) {
+      if (state.community.currentPageIndex % state.community.pageLinkCount == 0) {
+          //10, 20...맨마지막
+          return (state.community.currentPageIndex / state.community.pageLinkCount - 1) * state.community.pageLinkCount + 1;
+      } else {
+          return Math.floor(state.community.currentPageIndex / state.community.pageLinkCount) * state.community.pageLinkCount + 1;
+      }
+    },
+    getCommunityEndPageIndex: function (state, getters) {
+      let ret = 0;
+      if (state.community.currentPageIndex % state.community.pageLinkCount == 0) {
+          //10, 20...맨마지막
+          ret = (state.community.currentPageIndex / state.community.pageLinkCount - 1) * state.community.pageLinkCount + state.community.pageLinkCount;
+      } else {
+          ret = Math.floor(state.community.currentPageIndex / state.community.pageLinkCount) * state.community.pageLinkCount + state.community.pageLinkCount;
+      }
+      // 위 오류나는 코드를 아래와 같이 비교해서 처리
+      return ret > getters.getPageCount ? getters.getPageCount : ret;
+    },
+    getCommunityPrev: function (state) {
+      if (state.community.currentPageIndex <= state.community.pageLinkCount) {
+          return false;
+      } else {
+          return true;
+      }
+    },
+    getCommunityNext: function (state, getters) {
+      if (Math.floor(getters.getPageCount / state.community.pageLinkCount) * state.community.pageLinkCount < state.community.currentPageIndex) {
           return false;
       } else {
           return true;

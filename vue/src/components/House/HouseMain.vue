@@ -101,8 +101,8 @@
 
 <script>
 
-import Pagination from "./Pagination.vue";
-import houseDealModal from "./modals/HouseDealModal.vue";
+import Pagination from "../Pagination.vue";
+import houseDealModal from "./HouseDealModal.vue";
 
 import { Modal } from "bootstrap";
 export default {

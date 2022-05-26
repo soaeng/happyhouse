@@ -73,7 +73,7 @@
 <script>
 
 import http from "@/common/axios.js";
-import houseDealModal from "../modals/HouseDealModal.vue";
+import houseDealModal from "../House/HouseDealModal.vue";
 import { Modal } from "bootstrap";
 
 export default {

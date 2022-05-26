@@ -7,20 +7,26 @@ import Login from "@/components/Login.vue";
 import UserRegister from "@/components/UserRegister.vue";
 import UserInfo from "@/components/UserInfo.vue";
 
-import HouseMain from "@/components/HouseMain.vue";
+import HouseMain from "@/components/House/HouseMain.vue";
 
 import Bookmark from "@/components/Bookmark/Bookmark.vue";
 import BookmarkArea from "@/components/Bookmark/BookmarkArea.vue";
 import BookmarkHouse from "@/components/Bookmark/BookmarkHouse.vue";
 import BookmarkDeal from "@/components/Bookmark/BookmarkDeal.vue";
 
-import BoardMain from "@/components/BoardMain.vue";
+import BoardMain from "@/components/Board/BoardMain.vue";
 import BoardList from "@/components/Board/BoardList.vue";
 import BoardEditer from "@/components/Board/BoardEditer.vue";
 import BoardDetail from "@/components/Board/BoardDetail.vue";
-import BoardUpdate  from "@/components/Board/BoardUpdate.vue";
+import BoardUpdate from "@/components/Board/BoardUpdate.vue";
 
-import News from "@/components/News";
+import CommunityMain from "@/components/Community/CommunityMain.vue";
+import CommunityList from "@/components/Community/CommunityList.vue";
+import CommunityEditer from "@/components/Community/CommunityEditer.vue";
+import CommunityDetail from "@/components/Community/CommunityDetail.vue";
+import CommunityUpdate  from "@/components/Community/CommunityUpdate.vue";
+
+import News from "@/components/House/News";
 import store from "@/store/store.js";
 
 export default new VueRouter({
@@ -131,6 +137,29 @@ export default new VueRouter({
         }
       },
     },
+
+    
+    //////////////////////////////////////////////////////////// COMMUNITY
+    {
+      name: 'CommunityMain',
+      path: '/comm',
+      component: CommunityMain,
+      children: [
+        { path: '', component: CommunityList },
+        { path: 'edit', component: CommunityEditer },
+        { path: 'detail', component: CommunityDetail },
+        { path: 'update', component: CommunityUpdate },
+      ],
+      beforeEnter: (to, from, next) => {
+        if (store.state.login.isLogin) {
+          next();
+        } else {
+          return next("/login");
+        }
+      },
+    },
+
+
   ]
 })
 

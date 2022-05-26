@@ -15,7 +15,7 @@
                     <ul class="menu">
 
                         <li class="sidebar-item">
-                            <router-link to="/board" class='sidebar-link' @click.native="initSearch">
+                            <router-link to="/board" class='sidebar-link' @click.native="initBoardSearch">
                                 <i class="bi bi-megaphone-fill"></i>
                                 <span>공지사항</span>
                             </router-link>
@@ -50,6 +50,13 @@
                             </router-link>
                         </li>
                         
+                        <li class="sidebar-item">
+                            <router-link to="/comm" class='sidebar-link' @click.native="initCommSearch">
+                                <i class="bi bi-people-fill"></i>
+                                <span>커뮤니티</span>
+                            </router-link>
+                        </li>
+
                         <li class="sidebar-item">
                             <router-link to="/userInfo" class='sidebar-link'>
                                 <i class="bi bi-person-fill"></i>
@@ -130,10 +137,15 @@ export default {
             this.$store.state.house.keyword = "";
             this.$store.dispatch("houseList");
         },
-        initSearch(){
+        initBoardSearch(){
             this.$store.state.board.keyword = "";
             this.$store.state.board.type = "";
             this.$store.dispatch("boardList");
+        },
+        initCommSearch(){
+            this.$store.state.community.keyword = "";
+            this.$store.state.community.type = "";
+            this.$store.dispatch("communityList");
         },
         doLogout() { 
             sessionStorage.clear();

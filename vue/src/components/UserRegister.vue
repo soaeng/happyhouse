@@ -18,7 +18,6 @@
                             <div class="valid-feedback">Valid.</div>
                             <div class="invalid-feedback">올바른 Email 을 입력해 주세요.</div>
                         </div>
-                           
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input type="name" class="form-control form-control-xl" placeholder="Username" :class="{ 'is-valid': isUserNameFocusAndValid, 'is-invalid': isUserNameFocusAndInvalid }" v-model="userName" @input="validateUserName" @focus="isUserNameFocus = true" >
                             <div class="form-control-icon">
@@ -55,7 +54,7 @@
             </div>
             <div class="col-lg-7 d-none d-lg-block">
                 <div id="auth-right">
-                    <img src="../../public/assets/images/registerView.jpg" alt="" style="position: relative; top: 0; left: 0; width: 100%; height: 100%;">
+                    <img src="../../public/assets/images/registerView.jpg" alt="" style="position: relative; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
         </div>
