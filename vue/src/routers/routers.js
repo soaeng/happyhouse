@@ -11,7 +11,6 @@ import HouseMain from "@/components/House/HouseMain.vue";
 
 import Bookmark from "@/components/Bookmark/Bookmark.vue";
 import BookmarkArea from "@/components/Bookmark/BookmarkArea.vue";
-import BookmarkHouse from "@/components/Bookmark/BookmarkHouse.vue";
 import BookmarkDeal from "@/components/Bookmark/BookmarkDeal.vue";
 
 import BoardMain from "@/components/Board/BoardMain.vue";
@@ -101,7 +100,6 @@ export default new VueRouter({
       children: [
         { path: '', component: BookmarkArea },
         { path: 'area', component: BookmarkArea },
-        { path: 'house', component: BookmarkHouse },
         { path: 'deal', component: BookmarkDeal },
       ],
       beforeEnter: (to, from, next) => {

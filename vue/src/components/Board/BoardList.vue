@@ -149,6 +149,7 @@ export default {
 
     created() {
         this.getBoardList();
+        this.setType();
     },
 
     filters: {

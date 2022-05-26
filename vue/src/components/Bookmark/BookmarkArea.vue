@@ -104,7 +104,7 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">성별/나이 생활 인구 비율</h4>
+                            <h4 class="card-title">성별/나이 생활 인구 수</h4>
                         </div>
                         <div class="card-body d-flex">
                             <div class="col-md-6">
@@ -256,13 +256,17 @@ export default {
                 data: {
                     labels: ["총 생활 인구 수", "총 남자 인구 수", "총 여자 인구 수"],
                     datasets: [{
-                        label: '총 생활 인구 수',
+                        label: '인구 수',
                         backgroundColor: [chartColors.red, chartColors.blue, chartColors.orange],
                         data: [
                             Math.round(this.$store.state.population.totalLocal) * 1 / 1,
                             Math.round(this.$store.state.population.totalMale) * 1 / 1,
                             Math.round(this.$store.state.population.totalFemale) * 1 / 1,
-                        ]
+                        ],
+                        datalabels: {
+                            align: 'end',
+                            anchor: 'start'
+                        },
                     }]
                 },
                 options: {
@@ -273,7 +277,11 @@ export default {
                         text: "Students in 2020"
                     },
                     legend: {
-                        display: true,
+                        display: false,
+                    },
+                    showValue:{
+                        fontStyle: 'Helvetica',
+                        fontSize: 16
                     },
                 }
             });
@@ -282,7 +290,7 @@ export default {
             this.maleChart = new Chart(ctxDoughnut, {
                 type: 'doughnut',
                 data: {
-                    // labels: ["0~19세", "20~39세", "40~59세", "60~74세"],
+                    labels: ["0~19세", "20~39세", "40~59세", "60~74세"],
                     datasets: [{
                         backgroundColor: [chartColors.yellow, chartColors.green, chartColors.info, chartColors.grey],
                         data: [
@@ -290,8 +298,13 @@ export default {
                             Math.round(this.$store.state.population.maleTo39) * 1 / 1,
                             Math.round(this.$store.state.population.maleTo59) * 1 / 1,
                             Math.round(this.$store.state.population.maleTo74) * 1 / 1,
-                        ]
-                    }]
+                        ],
+                        
+                        datalabels:{
+                            color: '#555',
+                            font:{size:16}
+                        }
+                    }],
                 },
                 
                 options: {
@@ -307,7 +320,7 @@ export default {
                     plugins:{
                         datalabels: {
                             formatter: (value, ctx) => {
-                                let datasets = ctx.chart.data.datasets[0].data;
+                                var idx = ctx.dataIndex;
                                 if(value != 0){
                                     let sum = 0;
                                     dataArr = ctx.chart.data.datasets[0].data;
@@ -321,7 +334,17 @@ export default {
                                     return percentage;
                                 }
                             },
-                            color: '#fff',
+                        },
+                        color: 'blue',
+                        labels: {
+                            title: {
+                                font: {
+                                weight: 'bold'
+                                }
+                            },
+                            value: {
+                                color: 'green'
+                            }
                         }
                     },
                 }
@@ -331,7 +354,7 @@ export default {
             this.femaleChart = new Chart(ctxDoughnut, {
                 type: 'doughnut',
                 data: {
-                    // labels: ["0~19세", "20~39세", "40~59세", "60~74세"],
+                    labels: ["0~19세", "20~39세", "40~59세", "60~74세"],
                     datasets: [{
                         backgroundColor: [chartColors.orange, chartColors.purple, chartColors.blue, chartColors.red],
                         data: [
@@ -352,9 +375,9 @@ export default {
             });
         },
         destroyChart(){
-            this.totalChart.destroy();
-            this.maleChart.destroy();
-            this.femaleChart.destroy();
+            if(this.totalChart != null) this.totalChart.destroy();
+            if(this.maleChart != null) this.maleChart.destroy();
+            if(this.femaleChart != null) this.femaleChart.destroy();
         },
         sidebarToggle(){
             document.getElementById('sidebar').classList.toggle('active');
