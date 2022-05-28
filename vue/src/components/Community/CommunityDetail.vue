@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="btn-box text-end" v-show="$store.state.community.sameUser">
-                        <router-link to="/community/update" class="btn btn-primary">글 수정하기</router-link>
+                        <router-link to="/comm/update" class="btn btn-primary">글 수정하기</router-link>
                         <button @click="changeToDelete" class="btn btn-secondary" style="margin-left: 10px;">글 삭제하기</button>
                     </div>
                 </div><!-- end of .card-body -->
@@ -55,28 +55,28 @@
                         </div>
                     </div>
                     <hr class="mt-0 mb-5">
-                    <div class="card-body" v-if="$store.state.community.replyList.length > 0">
-                        <div v-for="(reply, index) in $store.state.community.replyList" :key="index" style="padding: 0 1rem;">
-                            <div>
+                    <div class="card-body">
+                        <div v-if="$store.state.community.replyList.length > 0">
+                            <div v-for="(reply, index) in $store.state.community.replyList" :key="index" style="padding: 0 1rem;">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <p class="mb-1 fw-bold d-flex align-content-center"><img :src="reply.userProfileImageUrl" width="26px" class="rounded-circle" style="margin-right: 8px;"><span style="padding-top: 2px;">{{reply.userName}}</span></p>
-                                    <p class="text-muted mb-0 text-sm" style="margin-top: .5rem;">{{reply.regDt.date | makeDateStr("-")}}&nbsp;&nbsp;{{reply.regDt.time | makeTimeStr(":")}}</p>
-                                </div>
-                                <div class="replyText" :data-replyId="reply.replyId">
-                                    <p class="bg-light-secondary rounded-3 mb-2" style=" font-size: 15px; padding: 1rem;">{{reply.text }}</p>
-                                    <p v-if="reply.sameUser" class="d-flex justify-content-end" style="font-size: 14px;">
-                                        <a style="cursor:pointer" @click="textareaToggle" :data-replyId = "reply.replyId">수정</a>
-                                        <span class="divBar"></span>
-                                        <a @click="changeToDeleteReply" :data-replyId = "reply.replyId" style="cursor:pointer"><span></span>삭제</a>
-                                    </p>
-                                </div>
-                                <div class="replyUpdate form-group mb-3 d-none" :data-replyId="reply.replyId">
-                                    <div class="d-flex">
-                                        <textarea :data-replyId="reply.replyId" class="form-control replyUpdateText" rows="3" style="resize: none; font-size: 15px;" :value="reply.text"></textarea>
-                                        <button @click="updateReply" :data-replyId="reply.replyId"  class="btn btn-primary" style="width: 80px; margin-left: 10px;">수정</button>
+                                        <p class="mb-1 fw-bold d-flex align-content-center"><img :src="reply.userProfileImageUrl" width="26px" class="rounded-circle" style="margin-right: 8px;"><span style="padding-top: 2px;">{{reply.userName}}</span></p>
+                                        <p class="text-muted mb-0 text-sm" style="margin-top: .5rem;">{{reply.regDt.date | makeDateStr("-")}}&nbsp;&nbsp;{{reply.regDt.time | makeTimeStr(":")}}</p>
                                     </div>
-                                </div>
-                                <hr class="mt-4 mb-4">
+                                    <div class="replyText" :data-replyId="reply.replyId">
+                                        <p class="bg-light-secondary rounded-3 mb-2" style=" font-size: 15px; padding: 1rem;">{{reply.text }}</p>
+                                        <p v-if="reply.sameUser" class="d-flex justify-content-end" style="font-size: 14px;">
+                                            <a style="cursor:pointer" @click="textareaToggle" :data-replyId = "reply.replyId">수정</a>
+                                            <span class="divBar"></span>
+                                            <a @click="changeToDeleteReply" :data-replyId = "reply.replyId" style="cursor:pointer"><span></span>삭제</a>
+                                        </p>
+                                    </div>
+                                    <div class="replyUpdate form-group mb-3 d-none" :data-replyId="reply.replyId">
+                                        <div class="d-flex">
+                                            <textarea :data-replyId="reply.replyId" class="form-control replyUpdateText" rows="3" style="resize: none; font-size: 15px;" :value="reply.text"></textarea>
+                                            <button @click="updateReply" :data-replyId="reply.replyId"  class="btn btn-primary" style="width: 80px; margin-left: 10px;">수정</button>
+                                        </div>
+                                    </div>
+                                    <hr class="mt-4 mb-4">
                             </div>
                         </div>
                     </div>
