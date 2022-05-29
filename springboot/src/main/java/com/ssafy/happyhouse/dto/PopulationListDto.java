@@ -10,5 +10,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PopulationListDto {
-	ArrayList<Population> list = new ArrayList<>();
+    ArrayList<Population> list = new ArrayList<>();
 }

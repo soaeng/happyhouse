@@ -14,16 +14,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CrawlingServiceImpl {
 
-	private final JsoupComponent jsoupComponent;
-	
-	public List<NewsDto> getNewsList() {
-		AreaCodeDto dto = null;
-		return jsoupComponent.getNewsList(dto);
-	}
-	
-	
-	public List<NewsDto> getNewsList(AreaCodeDto dto) {
-		return jsoupComponent.getNewsList(dto);
-	}
-	
+    private final JsoupComponent jsoupComponent;
+
+    public List<NewsDto> getNewsList() {
+        AreaCodeDto dto = null;
+        return jsoupComponent.getNewsList(dto);
+    }
+
+
+    public List<NewsDto> getNewsList(AreaCodeDto dto) {
+        return jsoupComponent.getNewsList(dto);
+    }
+
 }

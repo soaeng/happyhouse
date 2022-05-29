@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-public class HappyHouseFinalApplication {
+public class HappyHouseApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HappyHouseFinalApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HappyHouseApplication.class, args);
+    }
 
 }

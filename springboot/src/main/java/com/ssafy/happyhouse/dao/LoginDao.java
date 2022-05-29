@@ -6,5 +6,5 @@ import com.ssafy.happyhouse.dto.UserDto;
 
 @Mapper
 public interface LoginDao {
-	public UserDto login(String userEmail);
+    public UserDto login(String userEmail);
 }

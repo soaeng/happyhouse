@@ -25,108 +25,108 @@ import lombok.extern.log4j.Log4j2;
 
 @RestController
 @CrossOrigin(
-	    // localhost:5500 과 127.0.0.1 구분
-	    origins = "http://localhost:5500", // allowCredentials = "true" 일 경우, orogins="*" 는 X
-	    allowCredentials = "true", 
-	    allowedHeaders = "*", 
-	    methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT,RequestMethod.HEAD,RequestMethod.OPTIONS}
-	)
+        // localhost:5500 과 127.0.0.1 구분
+        origins = "http://localhost:5500", // allowCredentials = "true" 일 경우, orogins="*" 는 X
+        allowCredentials = "true",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.HEAD, RequestMethod.OPTIONS}
+)
 @Log4j2
 public class BoardController {
 
-	@Autowired
-	BoardService service;
-	
-	private static final int SUCCESS = 1;
-	
-	// 게시글 목록
-	@GetMapping("/boards")
-	private ResponseEntity<BoardResultDto> boardList(BoardParamDto boardParamDto){
-		// log.info("===== 게시글 목록 controller - 확인 끝 =====");
-		BoardResultDto boardResultDto;
+    @Autowired
+    BoardService service;
 
-		if( boardParamDto.getKeyword().isEmpty() ) {
-			boardResultDto = service.boardList(boardParamDto);
-		}else {
-			boardResultDto = service.boardListKeyword(boardParamDto);
-		}
-		
-		if( boardResultDto.getResult() == SUCCESS ) {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+    private static final int SUCCESS = 1;
 
-	// 게시글 상세 조회
-	@GetMapping("/boards/{boardId}")
-	private ResponseEntity<BoardResultDto> boardDetail(@PathVariable int boardId, HttpSession session){
-		// log.info("===== 게시글 상세 조회 controller - 확인 끝 =====");
-		BoardParamDto boardParamDto = new BoardParamDto();
-		boardParamDto.setBoardId(boardId);
-		boardParamDto.setUserSeq( ((UserDto) session.getAttribute("userDto")).getUserSeq());
-		
-		BoardResultDto boardResultDto = service.boardDetail(boardParamDto);
+    // 게시글 목록
+    @GetMapping("/boards")
+    private ResponseEntity<BoardResultDto> boardList(BoardParamDto boardParamDto) {
+        // log.info("===== 게시글 목록 controller - 확인 끝 =====");
+        BoardResultDto boardResultDto;
 
-		if( boardResultDto.getResult() == SUCCESS ) {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-		}		 
-	}
-	
-	// 게시글 등록
-	@PostMapping("/boards")
-	private ResponseEntity<BoardResultDto> boardInsert(BoardDto boardDto,  MultipartHttpServletRequest request) {
-		
-		// log.info("===== 게시글 등록 controller - 확인 =====");
-		
-		// LoginFilter 먼저 적용 필요!!
-		HttpSession session = request.getSession();
-		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		
-		// log.info(userDto);
-		
-		boardDto.setUserSeq(userDto.getUserSeq());
-				
-		BoardResultDto boardResultDto = service.boardInsert(boardDto, request);
-		
-		if( boardResultDto.getResult() == SUCCESS ) {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-		}		 
-	}
-	
-	// 게시글 수정
-	@PostMapping("/boards/{boardId}") 
-	private ResponseEntity<BoardResultDto> boardUpdate( BoardDto boardDto, MultipartHttpServletRequest request){
-		log.info("===== 게시글 수정 controller - 확인 =====");
-		HttpSession session = request.getSession();
-		UserDto userDto = (UserDto) session.getAttribute("userDto");
-		
-		boardDto.setUserSeq(userDto.getUserSeq());
-		
-		BoardResultDto boardResultDto = service.boardUpdate(boardDto, request);
-		
-		if( boardResultDto.getResult() == SUCCESS ) {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-	
-	// 게시글 삭제
-	@DeleteMapping("/boards/{boardId}") 
-	private ResponseEntity<BoardResultDto> boardDelete(@PathVariable int boardId){
-		log.info("===== 게시글 삭제 controller - 확인 =====");
-		BoardResultDto boardResultDto = service.boardDelete(boardId);
-		
-		if( boardResultDto.getResult() == SUCCESS ) {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
-		}		 
-	}
-	
+        if (boardParamDto.getKeyword().isEmpty()) {
+            boardResultDto = service.boardList(boardParamDto);
+        } else {
+            boardResultDto = service.boardListKeyword(boardParamDto);
+        }
+
+        if (boardResultDto.getResult() == SUCCESS) {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 게시글 상세 조회
+    @GetMapping("/boards/{boardId}")
+    private ResponseEntity<BoardResultDto> boardDetail(@PathVariable int boardId, HttpSession session) {
+        // log.info("===== 게시글 상세 조회 controller - 확인 끝 =====");
+        BoardParamDto boardParamDto = new BoardParamDto();
+        boardParamDto.setBoardId(boardId);
+        boardParamDto.setUserSeq(((UserDto) session.getAttribute("userDto")).getUserSeq());
+
+        BoardResultDto boardResultDto = service.boardDetail(boardParamDto);
+
+        if (boardResultDto.getResult() == SUCCESS) {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 게시글 등록
+    @PostMapping("/boards")
+    private ResponseEntity<BoardResultDto> boardInsert(BoardDto boardDto, MultipartHttpServletRequest request) {
+
+        // log.info("===== 게시글 등록 controller - 확인 =====");
+
+        // LoginFilter 먼저 적용 필요!!
+        HttpSession session = request.getSession();
+        UserDto userDto = (UserDto) session.getAttribute("userDto");
+
+        // log.info(userDto);
+
+        boardDto.setUserSeq(userDto.getUserSeq());
+
+        BoardResultDto boardResultDto = service.boardInsert(boardDto, request);
+
+        if (boardResultDto.getResult() == SUCCESS) {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 게시글 수정
+    @PostMapping("/boards/{boardId}")
+    private ResponseEntity<BoardResultDto> boardUpdate(BoardDto boardDto, MultipartHttpServletRequest request) {
+        log.info("===== 게시글 수정 controller - 확인 =====");
+        HttpSession session = request.getSession();
+        UserDto userDto = (UserDto) session.getAttribute("userDto");
+
+        boardDto.setUserSeq(userDto.getUserSeq());
+
+        BoardResultDto boardResultDto = service.boardUpdate(boardDto, request);
+
+        if (boardResultDto.getResult() == SUCCESS) {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 게시글 삭제
+    @DeleteMapping("/boards/{boardId}")
+    private ResponseEntity<BoardResultDto> boardDelete(@PathVariable int boardId) {
+        log.info("===== 게시글 삭제 controller - 확인 =====");
+        BoardResultDto boardResultDto = service.boardDelete(boardId);
+
+        if (boardResultDto.getResult() == SUCCESS) {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<BoardResultDto>(boardResultDto, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

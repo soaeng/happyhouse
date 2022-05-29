@@ -13,7 +13,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="population")
+@Table(name = "population")
 @Getter
 @Setter
 @Builder
@@ -22,33 +22,33 @@ import lombok.ToString;
 @ToString
 public class Population {
 
-	@Id
-	@Column(length = 8)
-	private String adstrdCode;
-	
-	@Column
-	private double totalLocal;
+    @Id
+    @Column(length = 8)
+    private String adstrdCode;
 
-	@Column
-	private double totalMale;
-	@Column
-	private double maleTo19;
-	@Column
-	private double maleTo39;
-	@Column
-	private double maleTo59;
-	@Column
-	private double maleTo74;
-	
-	@Column
-	private double totalFemale;
-	@Column
-	private double femaleTo19;
-	@Column
-	private double femaleTo39;
-	@Column
-	private double femaleTo59;
-	@Column
-	private double femaleTo74;
-	
+    @Column
+    private double totalLocal;
+
+    @Column
+    private double totalMale;
+    @Column
+    private double maleTo19;
+    @Column
+    private double maleTo39;
+    @Column
+    private double maleTo59;
+    @Column
+    private double maleTo74;
+
+    @Column
+    private double totalFemale;
+    @Column
+    private double femaleTo19;
+    @Column
+    private double femaleTo39;
+    @Column
+    private double femaleTo59;
+    @Column
+    private double femaleTo74;
+
 }

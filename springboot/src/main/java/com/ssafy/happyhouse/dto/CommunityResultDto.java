@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 public class CommunityResultDto {
 
-	private int result;
-	private CommunityDto dto;
-	private List<CommunityDto> list;
-	private int count;
+    private int result;
+    private CommunityDto dto;
+    private List<CommunityDto> list;
+    private int count;
 
 }

@@ -15,18 +15,18 @@ import lombok.ToString;
 @Builder
 public class PopulationDto {
 
-	private String adstrdCode;
-	private double totalLocal;
+    private String adstrdCode;
+    private double totalLocal;
 
-	private double totalMale;
-	private double maleTo19;
-	private double maleTo39;
-	private double maleTo59;
-	private double maleTo74;
-	
-	private double totalFemale;
-	private double femaleTo19;
-	private double femaleTo39;
-	private double femaleTo59;
-	private double femaleTo74;
+    private double totalMale;
+    private double maleTo19;
+    private double maleTo39;
+    private double maleTo59;
+    private double maleTo74;
+
+    private double totalFemale;
+    private double femaleTo19;
+    private double femaleTo39;
+    private double femaleTo59;
+    private double femaleTo74;
 }

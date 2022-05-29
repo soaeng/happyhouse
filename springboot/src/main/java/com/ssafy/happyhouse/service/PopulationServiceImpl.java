@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import com.ssafy.happyhouse.dto.PopulationDto;
 
 public class PopulationServiceImpl {
-	public PopulationDto getPopulation(String date, String adstrd) {
-		return null;
-	}
+    public PopulationDto getPopulation(String date, String adstrd) {
+        return null;
+    }
 }
