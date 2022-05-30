@@ -14,7 +14,7 @@
                             <div class="form-control-icon"><i class="bi bi-person"></i></div>
                         </div>
                         <div class="form-group position-relative has-icon-left mb-3">
-                            <input type="password" class="form-control form-control-xl" id="userPassword" v-model="$store.state.login.userPassword" placeholder="Password">
+                            <input type="password" @keydown.enter="login" class="form-control form-control-xl" id="userPassword" v-model="$store.state.login.userPassword" placeholder="Password">
                             <div class="form-control-icon"><i class="bi bi-shield-lock"></i></div>
                         </div>
                         <div class="form-check form-check-lg d-flex align-items-end mb-5">

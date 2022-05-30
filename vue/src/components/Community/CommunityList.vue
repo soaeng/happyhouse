@@ -9,7 +9,7 @@
                     </div><!-- end of .list-info -->
                     <!-- end of .community-info -->
                     <fieldset class="form-group d-flex align-items-center justify-content-center mb-0 w-50">
-                        <select @change="setType" id="searchType" class="form-select w-auto" style="margin-right: .5rem;">
+                        <select v-model="searchType"  @change="setType" id="searchType" class="form-select w-auto" style="margin-right: .5rem;">
                             <option value="title" selected>제목</option>
                             <option value="content">내용</option>
                             <option value="all">전체&nbsp;&nbsp;</option>
@@ -68,8 +68,6 @@
 
 <script>
 import Vue from "vue";
-import VueAlertify from "vue-alertify";
-Vue.use(VueAlertify);
 
 import http from "@/common/axios.js";
 import util from "@/common/util.js";
@@ -83,6 +81,7 @@ export default {
     data() {
         return {
             target: "community", // for pagination
+            searchType: "title",
         };
     },
     computed: {
@@ -94,11 +93,10 @@ export default {
         // util
         makeDateStr: util.makeDateStr,
         setType(){
-            console.log(document.querySelector('#searchType').value);
-            this.$store.state.community.type = document.querySelector('#searchType').value;
+            this.$store.commit("SET_COMMUNITY_SEARCH_TYPE", this.searchType);
         },
         getCommunityList() {
-            console.log(this.$store.state.community.type)
+            this.setType();
             this.$store.dispatch("communityList");
         },
         initPage(){
@@ -146,6 +144,7 @@ export default {
 
     created() {
         this.getCommunityList();
+        this.setType();
     },
 
     filters: {

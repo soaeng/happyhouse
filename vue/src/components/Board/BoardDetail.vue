@@ -39,15 +39,18 @@
                 </div><!-- end of .card-body -->
             </div><!-- end of .card-content-->
         </div><!-- end of .card -->
+        <div class="btn-box text-center">
+            <router-link to="/board" class="btn btn-primary">목록으로</router-link>
+        </div>
     </section>
 </template>
 
 <script>
 import Vue from "vue";
-import VueAlertify from "vue-alertify";
-Vue.use(VueAlertify);
-
 import http from "@/common/axios.js";
+
+import Swal from 'vue-sweetalert2';
+Vue.use(Swal);
 
 export default {
     name: 'BoardDetail',
@@ -69,18 +72,23 @@ export default {
     methods: {
         // delete
         changeToDelete() {
-            var $this = this; // alertify.confirm-function()에서 this 는 alertify 객체
-            this.$alertify.confirmWithTitle(
-                "공지사항 삭제",
-                "이 글을 삭제하시겠습니까?",
-                function () {
-                    // board.boardId 사용 X
-                    $this.boardDelete(); // $this 사용
-                },
-                function () {
-                    console.log("cancel");
+            var deleteBtn = this.$swal;
+
+            deleteBtn.fire({
+                title: '공지사항 삭제',
+                text: "해당 게시글을 삭제하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DC3545',
+                cancelButtonColor:'#C6CFCF',
+                confirmButtonText: '삭제',
+                cancelButtonText: '취소',
+            }).then((result) => {
+                if(result.isConfirmed){
+                    this.boardDelete();
+                    
                 }
-            );
+            });
         },
 
         async boardDelete() {
@@ -92,7 +100,12 @@ export default {
                 if (data.result == "login") { // 원래는 로그인페이지로 보냈지만 이번에는 doLogout 메소드로 보냄
                     this.doLogout();
                 } else {
-                    this.$alertify.success("글이 삭제되었습니다.");
+                    this.$swal.fire({
+                        title: '삭제',
+                        text: '해당 글이 삭제되었습니다.',
+                        icon: 'success',
+                        confirmButtonColor: '#198754',
+                    });
                     this.$router.push("/board")
                 }
             } catch (error) {
@@ -113,6 +126,7 @@ export default {
 </script>
 
 <style scoped>
+@import url('../../../public/assets/vendors/sweetalert2/sweetalert2.min.css');
 /*-- board-detail --*/
 .board-info i::before{margin-top: .25rem; margin-right: .35rem;}
 .board-info p{font-weight: 500; font-size: 14px;}

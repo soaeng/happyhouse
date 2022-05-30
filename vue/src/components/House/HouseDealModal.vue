@@ -381,7 +381,6 @@ export default {
 
         async addBookmarkDeal(e){
             let dealNo = e.target.dataset.no;
-            let userSeq = this.userSeq;
             let bookmark = e.target.dataset.bookmark;
             let data = null;
             

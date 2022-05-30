@@ -9,7 +9,7 @@
                     </div><!-- end of .list-info -->
                     <!-- end of .board-info -->
                     <fieldset class="form-group d-flex align-items-center justify-content-center mb-0 w-50">
-                        <select @change="setType" id="searchType" class="form-select w-auto" style="margin-right: .5rem;">
+                        <select v-model="searchType" @change="setType" id="searchType" class="form-select w-auto" style="margin-right: .5rem;">
                             <option value="title" selected>제목</option>
                             <option value="content">내용</option>
                             <option value="all">전체&nbsp;&nbsp;</option>
@@ -70,9 +70,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import VueAlertify from "vue-alertify";
-Vue.use(VueAlertify);
 
 import http from "@/common/axios.js";
 import util from "@/common/util.js";
@@ -85,7 +82,7 @@ export default {
 
     data() {
         return {
-            
+            searchType: "title",
         };
     },
     computed: {
@@ -97,11 +94,10 @@ export default {
         // util
         makeDateStr: util.makeDateStr,
         setType(){
-            console.log(document.querySelector('#searchType').value);
-            this.$store.state.board.type = document.querySelector('#searchType').value;
+            this.$store.commit("SET_BOARD_SEARCH_TYPE", this.searchType);
         },
         getBoardList() {
-            console.log(this.$store.state.board.type)
+            this.setType();
             this.$store.dispatch("boardList");
         },
         initPage(){

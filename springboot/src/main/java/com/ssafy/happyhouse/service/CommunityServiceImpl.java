@@ -35,9 +35,8 @@ public class CommunityServiceImpl implements CommunityService {
 
     String uploadFolder = "upload" + File.separator + "community";
 
-    String uploadPath = "C:" + File.separator + "Users" + File.separator + "sodud" + File.separator + "Desktop" + File.separator + "SSAFY"
-            + File.separator + "vue" + File.separator + "vue_cli"
-            + File.separator + "happyhouse-final" + File.separator + "vue"
+    String uploadPath = "C:" + File.separator + "study" + File.separator + "happyhouse"
+            + File.separator + "vue"
             + File.separator + "public"
             + File.separator + "assets";
 
@@ -306,14 +305,17 @@ public class CommunityServiceImpl implements CommunityService {
             log.info("----- 커뮤니티 검색 -----");
             list.forEach(board -> log.info(board));
             int len = list.size();
+
             for (int i = 0; i < len; i++) {
                 List<CommunityFileDto> fileList = dao.communityDetailFileList(list.get(i).getBoardId());
+                List<ReplyDto> replyList = dao.replyList(list.get(i).getBoardId());
                 list.get(i).setFileList(fileList);
-                // log.info(list.get(i));
+                list.get(i).setReplyList(replyList);
+                log.info(list.get(i));
             }
 
             int count = dao.communityListKeywordTotalCount(communityParamDto);
-            // log.info("검색된 커뮤니티 총 수: " + count);
+            log.info("검색된 커뮤니티 총 수: " + count);
 
             communityResultDto.setList(list);
             communityResultDto.setCount(count);

@@ -26,7 +26,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Autowired
     BoardDao dao;
-    String uploadFolder = "upload";
+    String uploadFolder = "upload" + File.separator + "board";
 
     String uploadPath = "C:" + File.separator + "study" + File.separator + "happyhouse"
             + File.separator + "vue"

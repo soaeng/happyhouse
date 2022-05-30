@@ -38,9 +38,9 @@
 import Vue from 'vue';
 import CKEditor from '@ckeditor/ckeditor5-vue2';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import VueAlertify from 'vue-alertify'; 
 
-Vue.use(CKEditor).use(VueAlertify);
+import Swal from 'vue-sweetalert2';
+Vue.use(CKEditor).use(Swal);
 
 import http from "@/common/axios.js";
 
@@ -101,7 +101,13 @@ export default {
                 }else{
                     console.log(">>>>>> communityInsert");
                     console.log(data);
-                    this.$alertify.success('글이 등록되었습니다.');
+                    this.$swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '게시글이 등록되었습니다.',
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
                     this.$router.push("/comm");
                 }
             } catch(error){

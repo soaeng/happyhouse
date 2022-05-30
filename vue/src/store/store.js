@@ -194,6 +194,9 @@ export default new Vuex.Store({
     SET_BOARD_TITLE(state, title) {
       state.board.title = title;
     },
+    SET_BOARD_SEARCH_TYPE(state, type) {
+      state.board.type = type;
+    },
 
 
     ///////////////////////////////////////////////////////////////////////// mutations - COMMUNITY
@@ -222,7 +225,9 @@ export default new Vuex.Store({
     SET_COMMUNITY_TITLE(state, title) {
       state.community.title = title;
     },
-
+    SET_COMMUNITY_SEARCH_TYPE(state, type) {
+      state.community.type = type;
+    },
 
 
     ///////////////////////////////////////////////////////////////////////// mutations - ADDRESS

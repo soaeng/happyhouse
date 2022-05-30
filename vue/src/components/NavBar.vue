@@ -13,7 +13,7 @@
                 </div>
                 <div class="sidebar-menu">
                     <ul class="menu">
-
+                        
                         <li class="sidebar-item">
                             <router-link to="/board" class='sidebar-link' @click.native="initSearch">
                                 <i class="bi bi-megaphone-fill"></i>
@@ -51,12 +51,13 @@
                         </li>
                         
                         <li class="sidebar-item">
-                            <router-link to="/comm" class='sidebar-link'>
+                            <router-link to="/comm" class='sidebar-link' @click.native="initSearchComm">
                                 <i class="bi bi-people-fill"></i>
                                 <span>커뮤니티</span>
                             </router-link>
                         </li>
-
+                    </ul>
+                    <ul class="menu">
                         <li class="sidebar-item">
                             <router-link to="/userInfo" class='sidebar-link'>
                                 <i class="bi bi-person-fill"></i>
@@ -70,8 +71,6 @@
                                 <span>로그아웃</span>
                             </a>
                         </li>
-
-
                     </ul>
                 </div>
             </div>
@@ -89,9 +88,28 @@ export default {
     },
 
     mounted() {
+
+    },
+
+    created(){
+        document.querySelectorAll('ul li.sidebar-item').forEach(el => {
+            console.log(el);
+            el.addEventListener('click', function(){
+                this.siblings(el, 'active');
+                el.classList.add('active');
+            })
+        });
     },
 
     methods: {
+        siblings(t, removeClass) { 
+            console.log(t);
+            const children = t.parentElement.children;
+            for (var i = 0; i < children.length; i++) {
+                children[i].classList.remove(removeClass);
+            }
+            t.classList.add(removeClass)
+        },
         slideToggle(t,e,o){0===t.clientHeight?this.j(t,e,o,!0):this.j(t,e,o)},
         slideUp(t,e,o){this.j(t,e,o)},
         slideDown(t,e,o){this.j(t,e,o,!0)},
@@ -123,13 +141,6 @@ export default {
             // Scroll into active sidebar
             document.querySelector('.sidebar-item.active').scrollIntoView(false);
         },
-        siblings(t, removeClass) { 
-            const children = t.parentElement.children;
-            for (var i = 0; i < children.length; i++) { 
-                children[i].classList.remove(removeClass) 
-            }
-            t.classList.add(removeClass);
-        },
         initArea(){
             this.$store.state.address.sido = "0";
             this.$store.state.address.gugun = "0";
@@ -142,6 +153,11 @@ export default {
             this.$store.state.board.type = "";
             this.$store.dispatch("boardList");
         },
+        initSearchComm(){
+            this.$store.state.community.keyword = "";
+            this.$store.state.community.type = "";
+            this.$store.dispatch("communityList");
+        },
         doLogout() { 
             sessionStorage.clear();
             this.$store.commit("SET_LOGIN", { isLogin: false, userName: "", userEmail: "", userPassword: "", userProfileImageUrl: "" });
@@ -152,6 +168,7 @@ export default {
 </script>
 
 <style scoped>
+.sidebar-menu{height: calc(100%-150px);}
 .bi.bi-house-fill::before{
     margin-top: .3rem;
     margin-right: .5rem;

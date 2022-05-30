@@ -89,9 +89,9 @@
 
 <script>
 import Vue from "vue";
-import VueAlertify from "vue-alertify";
 
-Vue.use(VueAlertify);
+import Swal from 'vue-sweetalert2';
+Vue.use(Swal);
 
 import util from "@/common/util.js";
 import http from "@/common/axios.js";
@@ -122,32 +122,42 @@ export default {
         makeTimeStr: util.makeTimeStr,
         // delete
         changeToDelete() {
-            var $this = this; // alertify.confirm-function()에서 this 는 alertify 객체
-            this.$alertify.confirmWithTitle(
-                "게시글 삭제",
-                "이 글을 삭제하시겠습니까?",
-                function () {
-                    // community.communityId 사용 X
-                    $this.communityDelete(); // $this 사용
-                },
-                function () {
-                    console.log("cancel");
+            var deleteBtn = this.$swal;
+
+            deleteBtn.fire({
+                title: '게시글 삭제',
+                text: "해당 게시글을 삭제하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DC3545',
+                cancelButtonColor:'#C6CFCF',
+                confirmButtonText: '삭제',
+                cancelButtonText: '취소',
+            }).then((result) => {
+                if(result.isConfirmed){
+                    this.boardDelete();
+                    
                 }
-            );
+            });
         },
         changeToDeleteReply(e) {
-            var $this = this; // alertify.confirm-function()에서 this 는 alertify 객체
-            this.$alertify.confirmWithTitle(
-                "댓글 삭제",
-                "이 댓글을 삭제하시겠습니까?",
-                function () {
-                    // community.communityId 사용 X
-                    $this.removeReply(e); // $this 사용
-                },
-                function () {
-                    console.log("cancel");
+            var deleteBtn = this.$swal;
+
+            deleteBtn.fire({
+                title: '댓글 삭제',
+                text: "해당 댓글을 삭제하시겠습니까?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#DC3545',
+                cancelButtonColor:'#C6CFCF',
+                confirmButtonText: '삭제',
+                cancelButtonText: '취소',
+            }).then((result) => {
+                if(result.isConfirmed){
+                    this.boardDelete();
+                    
                 }
-            );
+            });
         },
         sidebarToggle(){
             document.getElementById('sidebar').classList.toggle('active');
@@ -169,7 +179,12 @@ export default {
                 if (data.result == "login") { // 원래는 로그인페이지로 보냈지만 이번에는 doLogout 메소드로 보냄
                     this.doLogout();
                 } else {
-                    this.$alertify.success("글이 삭제되었습니다.");
+                    this.$swal.fire({
+                        title: '삭제',
+                        text: '해당 글이 삭제되었습니다.',
+                        icon: 'success',
+                        confirmButtonColor: '#198754',
+                    });
                     this.$router.push("/comm")
                 }
             } catch (error) {
@@ -190,7 +205,13 @@ export default {
                 }else{
                     console.log(">>>>>> replyInsert");
                     console.log(data);
-                    this.$alertify.success('댓글이 등록되었습니다.');
+                    this.$swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '댓글이 등록되었습니다.',
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
                     this.communityDetail();
                 }
             } catch(error){
@@ -213,7 +234,13 @@ export default {
                 }else{
                     console.log(">>>>>> replyUpdate");
                     console.log(data);
-                    this.$alertify.success('댓글이 수정되었습니다.');
+                    this.$swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '댓글이 수정되었습니다.',
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
                     this.textareaToggle(e);
                     this.communityDetail();
                 }
@@ -236,7 +263,13 @@ export default {
                 }else{
                     console.log(">>>>>> replyRemove");
                     console.log(data);
-                    this.$alertify.success('댓글이 삭제되었습니다.');
+                    this.$swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: '댓글이 삭제되었습니다.',
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
                     this.communityDetail();
                 }
 
