@@ -89,10 +89,8 @@
 
 <script>
 import Vue from "vue";
-
-import Swal from 'vue-sweetalert2';
+import Swal from "vue-sweetalert2"
 Vue.use(Swal);
-
 import util from "@/common/util.js";
 import http from "@/common/axios.js";
 

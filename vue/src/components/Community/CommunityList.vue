@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import Vue from "vue";
 
 import http from "@/common/axios.js";
 import util from "@/common/util.js";

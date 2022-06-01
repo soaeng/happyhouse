@@ -21,72 +21,76 @@
             </div>
         </div> <!-- end of .page-title -->
         <section class="section">
-            <div class="card">
-                <div class="card-header">
-                    <fieldset class="form-group d-flex align-items-center justify-content-center mb-0">
-                        <select class="form-select" id="sido" v-model="sido">
-                            <option value="0" selected>시/도</option>
-                            <option v-for="(sido, index) in sidoList" :key="index" :value="sido.code">{{ sido.name }}</option>
-                        </select>
-                        <select class="form-select" id="gugun" v-model="gugun">
-                            <option value="0" selected>구/군</option>
-                            <option v-for="(gugun, index) in gugunList" :key="index" :value="gugun.code">{{ gugun.name }}</option>
-                        </select>
-                        <select class="form-select d-inline" id="dong" v-model="dong">
-                            <option value="0" selected>읍/면/동</option>
-                            <option v-for="(dong, index) in dongList" :key="index" :value="dong.code">{{ dong.name }}</option>
-                        </select>
-                        <button class="btn btn-primary" type="button" @click="addBookmarkArea">등록</button>
-                    </fieldset>
-                </div><!-- end of .card-header -->
-                <div class="card-body">
-                    <table class="table table-hover mb-0 text-center">
-                        <colgroup>
-                            <col width="25%">
-                            <col width="22.5%">
-                            <col width="22.5%">
-                            <col width="10%">
-                            <col width="10%">
-                            <col width="10%">
-                        </colgroup>
-                        <thead class="bg-primary text-white">
-                            <tr>
-                                <th>시/도</th>
-                                <th>구/군</th>
-                                <th>읍/면/동</th>
-                                <th>뉴스</th>
-                                <th>검색</th>
-                                <th>삭제</th>
-                            </tr>
-                        </thead>
-                        <tbody v-if="bookmarkAreaList.length > 0">
-                            <tr v-for="(area, index) in bookmarkAreaList" :key="index">
-                                <td>{{ area.cityName }}</td>
-                                <td>{{ area.gugunName }}</td>
-                                <td>{{ area.name }}</td>
-                                <td>
-                                    <a style="cursor:pointer" @click="getAreaNews" @mouseup="closeNews">
-                                        <i class="bi bi-newspaper" :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a style="cursor:pointer"  class="text-success" @click="go2HouseMain">
-                                        <i class="bi bi-arrow-right-circle-fill" :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode"></i>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a style="cursor:pointer"  class="text-danger" @click="removeBookmarkArea">
-                                        <i class="bi bi-dash-circle-fill" :data-code="area.code"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div v-if="bookmarkAreaList.length == 0" class="w-100 text-center" style="border-bottom: 1px solid #DEDEDE;">
-                        <p class="pt-5 pb-5 text-sm mb-0">등록된 관심거래가 없습니다.</p>
-                    </div>
-                </div><!-- end of .card-body -->
-            </div><!-- end of .card -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <fieldset class="form-group d-flex align-items-center justify-content-center mb-0">
+                                <select class="form-select" id="sido" v-model="sido">
+                                    <option value="0" selected>시/도</option>
+                                    <option v-for="(sido, index) in sidoList" :key="index" :value="sido.code">{{ sido.name }}</option>
+                                </select>
+                                <select class="form-select" id="gugun" v-model="gugun">
+                                    <option value="0" selected>구/군</option>
+                                    <option v-for="(gugun, index) in gugunList" :key="index" :value="gugun.code">{{ gugun.name }}</option>
+                                </select>
+                                <select class="form-select d-inline" id="dong" v-model="dong">
+                                    <option value="0" selected>읍/면/동</option>
+                                    <option v-for="(dong, index) in dongList" :key="index" :value="dong.code">{{ dong.name }}</option>
+                                </select>
+                                <button class="btn btn-primary" type="button" @click="addBookmarkArea">등록</button>
+                            </fieldset>
+                        </div><!-- end of .card-header -->
+                        <div class="card-body">
+                            <table class="table table-hover mb-0 text-center">
+                                <colgroup>
+                                    <col width="25%">
+                                    <col width="22.5%">
+                                    <col width="22.5%">
+                                    <col width="10%">
+                                    <col width="10%">
+                                    <col width="10%">
+                                </colgroup>
+                                <thead class="bg-primary text-white">
+                                    <tr>
+                                        <th>시/도</th>
+                                        <th>구/군</th>
+                                        <th>읍/면/동</th>
+                                        <th>뉴스</th>
+                                        <th>검색</th>
+                                        <th>삭제</th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="bookmarkAreaList.length > 0">
+                                    <tr v-for="(area, index) in bookmarkAreaList" :key="index">
+                                        <td>{{ area.cityName }}</td>
+                                        <td>{{ area.gugunName }}</td>
+                                        <td>{{ area.name }}</td>
+                                        <td>
+                                            <a style="cursor:pointer" @click="getAreaNews" @mouseup="closeNews">
+                                                <i class="bi bi-newspaper" :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a style="cursor:pointer"  class="text-success" @click="go2HouseMain">
+                                                <i class="bi bi-arrow-right-circle-fill" :data-code="area.code" :data-city="area.cityCode" :data-gugun="area.gugunCode"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a style="cursor:pointer"  class="text-danger" @click="removeBookmarkArea">
+                                                <i class="bi bi-dash-circle-fill" :data-code="area.code"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div v-if="bookmarkAreaList.length == 0" class="w-100 text-center" style="border-bottom: 1px solid #DEDEDE;">
+                                <p class="pt-5 pb-5 text-sm mb-0">등록된 관심거래가 없습니다.</p>
+                            </div>
+                        </div><!-- end of .card-body -->
+                    </div><!-- end of .card -->
+                </div>
+            </div>
         </section>
 
         <section class="section">
@@ -160,6 +164,11 @@
 <script>
 import http from "@/common/axios.js";
 import Chart from 'chart.js/auto';
+
+import Vue from "vue";
+import Swal from "vue-sweetalert2"
+Vue.use(Swal);
+
 export default {
     name: 'BookmarkArea',
     
@@ -448,8 +457,10 @@ export default {
                 if( data.result == 'login' ){
                     this.doLogout();
                 }else{
+                    
                     this.getBookmarkAreaList();
                     this.initArea();
+                    
                 }
 
             } catch(error){
@@ -474,6 +485,7 @@ export default {
                 }else{
                     this.getBookmarkAreaList();
                     this.destroyChart();
+
                 }
 
             } catch(error){

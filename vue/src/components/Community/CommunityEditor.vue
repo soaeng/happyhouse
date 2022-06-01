@@ -38,9 +38,9 @@
 import Vue from 'vue';
 import CKEditor from '@ckeditor/ckeditor5-vue2';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
-import Swal from 'vue-sweetalert2';
-Vue.use(CKEditor).use(Swal);
+import Swal from "vue-sweetalert2"
+Vue.use(Swal);
+Vue.use(CKEditor)
 
 import http from "@/common/axios.js";
 

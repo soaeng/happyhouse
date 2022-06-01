@@ -46,12 +46,10 @@
 </template>
 
 <script>
-import Vue from "vue";
+import Vue from 'vue';
 import http from "@/common/axios.js";
-
-import Swal from 'vue-sweetalert2';
+import Swal from "vue-sweetalert2"
 Vue.use(Swal);
-
 export default {
     name: 'BoardDetail',
 
@@ -126,7 +124,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('../../../public/assets/vendors/sweetalert2/sweetalert2.min.css');
 /*-- board-detail --*/
 .board-info i::before{margin-top: .25rem; margin-right: .35rem;}
 .board-info p{font-weight: 500; font-size: 14px;}

@@ -69,9 +69,8 @@
 
 <script>
 import Vue from "vue";
-import VueAlertify from "vue-alertify";
-Vue.use(VueAlertify);
-
+import Swal from "vue-sweetalert2"
+Vue.use(Swal);
 import http from "@/common/axios.js";
 
 export default {
@@ -168,18 +167,53 @@ export default {
                 console.log(data);
 
                 if (data.result == "success") {
-                let $this = this;
-                this.$alertify.alert("회원가입을 축하합니다. 로그인 페이지로 이동합니다", function () {
-                    $this.$router.push("/login");
-                });
+                    let $this = this;
+                    this.$swal.fire({
+                        icon: 'success',
+                        title:'SUCCESS',
+                        text: '회원가입을 축하합니다. 로그인 페이지로 이동합니다.',
+                        showConfirmButton: false,
+                        timer: 1200,
+                        timerProgressBar: true,
+                    });
+                    setTimeout(function(){
+                        $this.$router.push("/login");
+                    }, 1200);
                 } else {
-                console.log("RegisterVue: error : ");
-                this.$alertify.error("서버에 문제가 발생했습니다.");
+                    this.$swal.mixin({
+                        toast: true,
+                        position: 'bottom-right',
+                        icon: 'warning',
+                        iconColor: 'white',
+                        background: 'tomato',
+                        title: '서버에 문제가 발생했습니다.',
+                        customClass: {
+                            popup: 'd-flex',
+                            title: 'text-white',
+                        },
+                        showConfirmButton: false,
+                        timer: 2000,
+                        padding: '.5rem 1rem'
+                    });
                 }
             } catch (error) {
                 console.log("RegisterVue: error : ");
                 console.log(error);
-                this.$alertify.error("서버에 문제가 발생했습니다.");
+                this.$swal.mixin({
+                    toast: true,
+                    position: 'bottom-right',
+                    icon: 'warning',
+                    iconColor: 'white',
+                    background: 'tomato',
+                    title: '서버에 문제가 발생했습니다.',
+                    customClass: {
+                        popup: 'd-flex',
+                        title: 'text-white',
+                    },
+                    showConfirmButton: false,
+                    timer: 2000,
+                    padding: '.5rem 1rem'
+                });
             }
         },
     },
@@ -191,35 +225,35 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-body{background-color:#fff}
-#auth{height:100vh;overflow-x:hidden}
-#auth #auth-right{
-    height:100%;
-    background:url(../../public/assets/images/bg/4853433.jpg),
-    linear-gradient(90deg,#2d499d,#3f5491)
-}
-#auth #auth-left{
-    padding:4rem 2.5rem 4rem 3.5rem;
-}
-#auth #auth-left .auth-title{
-    font-size:1.3rem; margin-bottom:1.2rem;
+    body{background-color:#fff}
+    #auth{height:100vh;overflow-x:hidden}
+    #auth #auth-right{
+        height:100%;
+        background:url(../../public/assets/images/bg/4853433.jpg),
+        linear-gradient(90deg,#2d499d,#3f5491)
     }
-#auth #auth-left .auth-subtitle{
-    font-size:1.7rem;line-height:2.5rem;color:#a8aebb;
+    #auth #auth-left{
+        padding:4rem 2.5rem 4rem 3.5rem;
     }
-#auth #auth-left .auth-logo{
-        margin-bottom:7rem;
+    #auth #auth-left .auth-title{
+        font-size:1.3rem; margin-bottom:1.2rem;
+        }
+    #auth #auth-left .auth-subtitle{
+        font-size:1.7rem;line-height:2.5rem;color:#a8aebb;
+        }
+    #auth #auth-left .auth-logo{
+            margin-bottom:7rem;
+        }
+    .form-group input[type="text"],.form-group input[type="email"], .form-group input[type="password"]{font-size: 1rem;}
+    @media screen and (max-width:767px){
+        #auth #auth-left{padding:5rem}
+        .auth-logo h1 a{font-size: 2.34rem;}
     }
-.form-group input[type="text"],.form-group input[type="email"], .form-group input[type="password"]{font-size: 1rem;}
-@media screen and (max-width:767px){
-    #auth #auth-left{padding:5rem}
-    .auth-logo h1 a{font-size: 2.34rem;}
-}
 
-.bi.bi-house-fill::before{
-    margin-top: .5rem;
-    margin-right: .5rem;
-}
-.form-control-icon{width: 46px;}
-.form-control-icon .bi::before{margin-top: 1rem; padding-left: .3rem; font-size: 1.4rem;}
+    .bi.bi-house-fill::before{
+        margin-top: .5rem;
+        margin-right: .5rem;
+    }
+    .form-control-icon{width: 46px;}
+    .form-control-icon .bi::before{margin-top: 1rem; padding-left: .3rem; font-size: 1.4rem;}
 </style>

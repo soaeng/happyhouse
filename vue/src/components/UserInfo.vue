@@ -85,9 +85,8 @@
 
 <script>
 import Vue from "vue";
-import VueAlertify from "vue-alertify";
-Vue.use(VueAlertify);
-
+import Swal from "vue-sweetalert2"
+Vue.use(Swal);
 import http from "@/common/axios.js";
 
 export default {    

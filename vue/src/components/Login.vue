@@ -44,9 +44,8 @@
 
 <script>
 import Vue from 'vue';
-import VueAlertify from 'vue-alertify'; 
-Vue.use(VueAlertify);
-
+import Swal from "vue-sweetalert2"
+Vue.use(Swal);
 import http from "@/common/axios.js";
 
 export default {
@@ -87,9 +86,9 @@ export default {
 
                 }catch(error){
                     if( error.response.status == '404'){
-                        this.$alertify.error('이메일 또는 비밀번호를 확인하세요.');
+                        // this.$alertify.error('이메일 또는 비밀번호를 확인하세요.');
                     }else{
-                        this.$alertify.error('서버에 문제가 발생했습니다.');
+                        // this.$alertify.error('서버에 문제가 발생했습니다.');
                     }
                 }
             } else{ // kakao Login
@@ -118,7 +117,7 @@ export default {
                         console.clear();
                         this.register(account);
                     }else{
-                        this.$alertify.error('Opps!! 서버에 문제가 발생했습니다.');
+                        // this.$alertify.error('Opps!! 서버에 문제가 발생했습니다.');
                     }
                 }
             }
@@ -137,11 +136,11 @@ export default {
                 this.login(account);
 
                 } else {
-                this.$alertify.error("서버에 문제가 발생했습니다.");
+                // this.$alertify.error("서버에 문제가 발생했습니다.");
                 }
             } catch (error) {
                 console.log(error);
-                this.$alertify.error("서버에 문제가 발생했습니다.");
+                // this.$alertify.error("서버에 문제가 발생했습니다.");
             }
         },
         kakaoLogin() {
